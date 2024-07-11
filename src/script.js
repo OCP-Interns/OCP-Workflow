@@ -1,25 +1,4 @@
 document.getElementById('face-id-btn').addEventListener('click', async () => {
-	//const imageBlob = await fetch('../assets/e.png').then((response) => {
-	//	return response.blob();
-	//});
-
-	//const formData = new FormData();
-	//formData.append('file', imageBlob, 'e.png');
-
-	//const response = await axios({
-	//	method: 'post',
-	//	url: 'http://localhost:5000/face-recognition',
-	//	data: formData,
-	//	headers: {
-	//		'Content-Type': 'multipart/form-data',
-	//		'Access-Control-Allow-Origin': '*'
-	//	}
-	//}).then((response) => {
-	//	console.log(response.data);
-	//}).catch((error) => {
-	//	console.error('Error: ', error);
-	//});
-
 	try {
 		const stream = await navigator.mediaDevices.getUserMedia({ video: true });
 		const track = stream.getVideoTracks()[0];
