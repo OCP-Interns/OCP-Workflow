@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OCP Workflow</title>
+
+	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+
+	<link rel="stylesheet" href="./css/reset.css">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+	<div class="window-controls">
+		<span id="minimize-btn"></span>
+		<span id="maximize-btn"></span>
+		<span id="close-btn"></span>
+	</div>
+
+	<div id="sign-in-page" class="wrapper">
+		<div class="container-fluid">
+			<div class="row">
+				<div id="logo-container" class="col col-sm-4 col-md-5 d-flex justify-content-center align-items-center">
+					<img src="../assets/ocp-logo-white.png" alt="OpenShift Container Platform Logo" class="img-fluid">
+				</div>
+
+				<div class="col col-sm-8 col-md-7 d-flex justify-content-center align-items-center">
+					<div
+						class="container w-75 d-flex flex-column justify-content-center align-items-center text-center gap-2">
+						<h1 class='text-center fw-bold'>Sign in</h1>
+						<p class='text-center mb-2'>
+							Welcome to OCP Group!<br />
+							Please enter your credentials to get access to employee details.
+						</p>
+
+						<div class='line'></div>
+
+						<form action="" class="d-flex flex-column gap-2 w-100 mt-2" method="POST">
+							<div class="form-group mb-2">
+								<label for="reg-num">Registration Number</label>
+								<input type="text" class="form-control g-border-radius" id="reg-num" name="reg-num"
+									placeholder="Enter your registration number" required>
+							</div>
+							<div class="form-group mb-2">
+								<label for="password">Password</label>
+								<input type="password" class="form-control g-border-radius" id="password"
+									name="password" placeholder="Enter your password" required>
+							</div>
+							<div class="form-group form-check d-flex align-items-start gap-2">
+								<input type="checkbox" class="form-check-input fully-rounded" id="remember-me">
+								<label class="form-check-label" for="remember-me">Remember me</label>
+							</div>
+							<input type="submit" class="btn btn-primary g-border-radius" value="Sign in">
+						</form>
+
+						<div class='separator-or w-100 d-flex align-items-center justify-content-center gap-2'>
+							<div class='line'></div>
+							<span>or</span>
+							<div class='line'></div>
+						</div>
+
+						<button id="face-id-btn" type="button"
+							class="btn btn-primary fully-rounded d-flex align-items-center gap-2">
+							<i class="bi bi-camera-fill"></i>
+							<span>Sign in with Face ID</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+		document.getElementById('face-id-btn').addEventListener('click', async () => {
+			const imageBlob = await fetch('../assets/e.png').then((response) => {
+				return response.blob();
+			});
+
+			const formData = new FormData();
+			formData.append('file', imageBlob, 'e.png');
+
+			const response = await axios({
+				method: 'post',
+				url: 'http://localhost:5000/face-recognition',
+				data: formData,
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'Access-Control-Allow-Origin': '*'
+				}
+			}).then((response) => {
+				console.log(response.data);
+			}).catch((error) => {
+				console.error('Error: ', error);
+			});
+		});
+
+		document.getElementById('minimize-btn').addEventListener('click', () => {
+			window.electron.minimize();
+		});
+		document.getElementById('maximize-btn').addEventListener('click', () => {
+			window.electron.maximize();
+		});
+		document.getElementById('close-btn').addEventListener('click', () => {
+			window.electron.close();
+		});
+	</script>
+</body>
+
+</html>
