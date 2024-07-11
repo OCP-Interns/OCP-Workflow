@@ -13,6 +13,9 @@ src/api/venv
 # Compiled Sass files
 src/css/*.css
 
+# Exclude the reset.css file from getting ignored
+!src/css/reset.css
+
 # Log files
 *.log
 
@@ -26,3 +29,6 @@ src/css/*.css
 # Miscellaneous
 .DS_Store
 Thumbs.db
+
+# Images
+assets/i_*

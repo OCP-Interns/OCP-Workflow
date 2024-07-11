@@ -7,17 +7,15 @@ app = Flask(__name__)
 CORS(app)
 
 known_face_encodings = []
-known_face_names = ["Mark"]
+known_face_names = ["Mark Iplier"]
 
-image_of_known_person = face_recognition.load_image_file("../../assets/mark.png")
+image_of_known_person = face_recognition.load_image_file("../../assets/i_mark.png")
 known_person_face_encoding = face_recognition.face_encodings(image_of_known_person)[0]
 
 known_face_encodings.append(known_person_face_encoding)
 
 @app.route('/face-recognition', methods=['POST'])
 def face_recognition_api():
-	print(list(request.files))
-
 	if 'file' not in request.files:
 		return jsonify({'error': 'No file part'})
 	
@@ -42,6 +40,8 @@ def face_recognition_api():
 				name = known_face_names[best_match_index]
 
 			face_names.append(name)
+
+		print('Found:', face_names)
 
 		return jsonify({'face_names': face_names})
 
