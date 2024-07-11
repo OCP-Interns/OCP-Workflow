@@ -75,40 +75,7 @@
 
 	<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<script>
-		document.getElementById('face-id-btn').addEventListener('click', async () => {
-			const imageBlob = await fetch('../assets/e.png').then((response) => {
-				return response.blob();
-			});
-
-			const formData = new FormData();
-			formData.append('file', imageBlob, 'e.png');
-
-			const response = await axios({
-				method: 'post',
-				url: 'http://localhost:5000/face-recognition',
-				data: formData,
-				headers: {
-					'Content-Type': 'multipart/form-data',
-					'Access-Control-Allow-Origin': '*'
-				}
-			}).then((response) => {
-				console.log(response.data);
-			}).catch((error) => {
-				console.error('Error: ', error);
-			});
-		});
-
-		document.getElementById('minimize-btn').addEventListener('click', () => {
-			window.electron.minimize();
-		});
-		document.getElementById('maximize-btn').addEventListener('click', () => {
-			window.electron.maximize();
-		});
-		document.getElementById('close-btn').addEventListener('click', () => {
-			window.electron.close();
-		});
-	</script>
+	<script src="./script.js"></script>
 </body>
 
 </html>
