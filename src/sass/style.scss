@@ -24,6 +24,28 @@ html {
 	font-family: 'Inter', sans-serif;
 }
 
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="checkbox"],
+a {
+	outline: unset;
+}
+a {
+	text-decoration: none;
+	color: $select-color;
+	transition: all $transition-speed;
+
+	&:hover {
+		text-decoration: underline;
+		color: darken($select-color, 10%);
+	}
+	&:focus {
+		text-decoration: underline;
+		color: darken($select-color, 20%);
+	}
+}
+
 
 // <== Utilities ==>
 .fully-rounded {
@@ -142,14 +164,22 @@ html {
 					letter-spacing: 0.05rem;
 					transition: all $transition-speed;
 					background-color: $gray;
+					border-radius: $g-border-radius !important;
 
 					&:focus {
 						background-color: $light-gray;
 						box-shadow: inset 0px 0px 0px 2px $select-color;
 					}
-
 					::placeholder {
 						color: rgba($color: #000, $alpha: 0.5);
+					}
+				}
+
+				#password {
+					padding-right: 3.2rem;
+
+					&:focus {
+						z-index: -1;
 					}
 				}
 
@@ -170,6 +200,39 @@ html {
 							background-color: darken($primary-color, 10%);
 						}
 					}
+				}
+
+				#show-password-btn {
+					padding-right: 1rem;
+					cursor: default;
+					inset: 0 auto;
+
+					.bi-eye-slash-fill,
+					.bi-eye-fill {
+						display: none;
+					}
+					.bi-eye-slash,
+					.bi-eye-slash-fill,
+					.bi-eye-fill {
+						font-size: 1.2rem;
+						transition: all $transition-speed;
+					}
+					&:hover .bi-eye-slash,
+					&:hover .bi-eye-fill {
+						display: none;
+					}
+					&:hover .bi-eye-slash-fill {
+						display: inline;
+					}
+					&:focus {
+						outline: none;
+						border: 1px solid $gray;
+					}
+				}
+
+				//! Temporary
+				&:has(#remember-me) {
+					display: none;
 				}
 			}
 

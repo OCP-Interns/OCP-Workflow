@@ -1,18 +1,24 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify, render_template
 import face_recognition
 import numpy as np
+import json
 
-app = Flask(__name__)
-CORS(app)
+from db import init_db
+from sign_in import sign_in_bp, session_bp
+from extensions import *
+from db import Personnel
 
-known_face_encodings = []
-known_face_names = ["Mark Iplier"]
+def create_app():	
+	cors.init_app(app)
+	bcrypt.init_app(app)
+	db = init_db(app)
 
-image_of_known_person = face_recognition.load_image_file("../../assets/i_mark.png")
-known_person_face_encoding = face_recognition.face_encodings(image_of_known_person)[0]
+	app.register_blueprint(sign_in_bp)
+	app.register_blueprint(session_bp)
+	
+	return app, db
 
-known_face_encodings.append(known_person_face_encoding)
+app, db = create_app()
 
 @app.route('/face-recognition', methods=['POST'])
 def face_recognition_api():
@@ -24,26 +30,66 @@ def face_recognition_api():
 	if file.filename == '':
 		return jsonify({'error': 'No selected file'})
 	
+	print('File:', file.filename)
+	print('\033[92m + File received successfully\033[0m')
+	
 	if file:
 		image = face_recognition.load_image_file(file)
 		face_locations = face_recognition.face_locations(image)
 		face_encodings = face_recognition.face_encodings(image, face_locations)
 
-		face_names = []
+		print('Number of faces:', len(face_encodings))
+		if len(face_encodings) == 0:
+			return jsonify({'error': 'No face detected'})
+		print('\033[92m + Face detected successfully\033[0m')
+
+		# Compare face encoding with known face encodings from the database
 		for face_encoding in face_encodings:
-			matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-			name = "Unknown Person"
+			personnel = Personnel.query.filter_by(deleted=False).all()
 
-			face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-			best_match_index = np.argmin(face_distances)
-			if matches[best_match_index]:
-				name = known_face_names[best_match_index]
+			for person in personnel:
+				known_face_encoding = np.array(json.loads(person.face_encoding))
+				results = face_recognition.compare_faces([known_face_encoding], face_encoding)
 
-			face_names.append(name)
+				if results[0]:
+					return jsonify({
+						'cin': person.cin,
+						'first_name': person.first_name,
+						'last_name': person.last_name,
+						'reg_num': person.reg_num,
+						'dept': person.dept,
+						'phone': person.phone,
+						'email': person.email
+					})
+				
+		return jsonify({'error': 'No match found'})
 
-		print('Found:', face_names)
+# Insert the default personnel data
+with app.app_context():
+	if not Personnel.query.first():
+		image_of_default_person = face_recognition.load_image_file("../../assets/i_me.png")
+		face_encodings = face_recognition.face_encodings(image_of_default_person)
 
-		return jsonify({'face_names': face_names})
+		if not face_encodings:
+			raise Exception('No face detected in the image')
+		
+		default_person_face_encoding = face_encodings[0]
+		db.session.add(Personnel(
+			cin='HH123456',
+			first_name='Someone',
+			last_name='Guy',
+			reg_num='123456',
+			dept='IT',
+			phone='123456',
+			email='someguy@gmail.com',
+			password=bcrypt.generate_password_hash('123456').decode('utf-8'),
+			deleted=False,
+			face_encoding=json.dumps(default_person_face_encoding.tolist())
+		))
+		db.session.commit()
+		print('\033[92m + Default user inserted successfully\033[0m')
+	else:
+		print('\033[94m - Default user already exists\033[0m')
 
 if __name__ == '__main__':
 	app.run(debug=True)
