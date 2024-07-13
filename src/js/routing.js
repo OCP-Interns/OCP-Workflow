@@ -1,23 +1,28 @@
-document.getElementById('sign-in-form').addEventListener('submit', function(e) {
+document.getElementById('sign-in-form').addEventListener('submit', async function(e) {
 	e.preventDefault();
 
-	fetch('http://localhost:5000/sign-in', {
+	const formData = new FormData(this);
+	console.log(formData.get('reg_num'));
+	const response = await fetch('http://localhost:5000/sign-in', {
 		method: 'POST',
-		body: new FormData(this),
+		body: JSON.stringify(Object.fromEntries(formData)),
 		headers: {
-			'Accept': 'application/json'
+			'Content-Type': 'application/json'
 		}
-	})
-	.then(response => response.json())
-	.then(data => {
-		if (data.success) {
-			localStorage.setItem('user', JSON.stringify(data.user));
-			window.location.href = 'dashboard.html'
-		} else {
-			alert(data.message || 'Invalid credentials');
-		}
-	})
-	.catch(error => {
-		console.error('Error:', error);
 	});
+
+	const data = await response.json();
+	if (data.success) {
+		const remember = formData.get('remember_me') === 'on';
+		if (remember) {
+			console.log('Saving session');
+			window.electron.saveSession(data.user);
+		} else {
+			console.log('Clearing session');
+			window.electron.clearSession();
+		}
+		window.location.href = 'dashboard.html'
+	} else {
+		alert(data.message || 'Invalid credentials');
+	}
 });

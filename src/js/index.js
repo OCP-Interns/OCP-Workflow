@@ -1,12 +1,11 @@
 const { app, BrowserWindow, ipcMain, session } = require('electron');
 const path = require('path');
-
-let fetch;
-
+const Storage = require('electron-store');
 try {
 	require('electron-reloader')(module);
-} catch { }
+} catch { };
 
+const storage = new Storage();
 let win;
 
 function createWindow() {
@@ -21,70 +20,34 @@ function createWindow() {
 		}
 	});
 
-	win.loadFile(path.join(__dirname, '../index.html'));
-
-	//import('node-fetch').then(({default: fetch}) => {
-	//	const maxRetries = 5;
-	//	const retryDelay = 2000;
-
-	//	let attempts = 0;
-	//	const attemptFetch = () => {
-	//		const userSession = localStorage.getItem('user');
-	//		if (userSession) {
-	//			fetch('http://localhost:5000/re-establish', {
-	//				method: 'POST',
-	//				headers: {
-	//					'Content-Type': 'application/json'
-	//				},
-	//				body: JSON.stringify({ user: JSON.parse(userSession) })
-	//			})
-	//			.then(response => response.json())
-	//			.then(data => {
-	//				if (data.success) {
-	//					console.log(data.message);
-	//					win.loadFile(path.join(__dirname, '../dashboard.html'));
-	//				} else {
-	//					console.log(data.message);
-	//					win.loadFile(path.join(__dirname, '../index.html'));
-	//				}
-	//			})
-	//			.catch(error => {
-	//				if (attempts < maxRetries) {
-	//					setTimeout(() => {
-	//						console.log('Retrying...');
-	//						attempts++;
-	//						setTimeout(attemptFetch, retryDelay);
-	//					}, retryDelay);
-	//				} else {
-	//					console.error('Error:', error);
-	//				}
-	//			});
-	//		}
-	//	};
-
-	//	attemptFetch();
-	//});
+	win.loadFile(path.join(__dirname, '../loader.html'));
+	console.log('Window created');
 
 	win.on('closed', () => {
 		win.destroy();
 	});
 }
 
-ipcMain.on('send-session', async (event, userSession) => {
-	const response = await fetch('http://localhost:5000/sign-in', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({ user: userSession })
-	});
+app.whenReady().then(() => {
+	createWindow();
 
-	const data = await response.json();
-	console.log(data);
-	event.reply('navigate', data.success ? 'dashboard' : 'index');
+	const userSession = storage.get('session');
+	if (userSession) {
+		win.webContents.send('validate-session', userSession);
+	} else {
+		// This means the user has to sign in again
+		win.loadFile(path.join(__dirname, '../index.html'));
+	}
 });
 
-app.whenReady().then(createWindow)
+ipcMain.on('save-session', (event, userSession) => {
+	console.log('Session saved');
+	storage.set('session', userSession);
+});
+ipcMain.on('clear-session', (event) => {
+	console.log('Session cleared');
+	storage.delete('session');
+});
 
 app.on('ready', () => {
 	const ses = session.fromPartition('persist:ocp-workflow');
