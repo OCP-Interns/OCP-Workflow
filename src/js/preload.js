@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('electron', {
 	maximize: () => ipcRenderer.send('maximize-window'),
 	close: () => ipcRenderer.send('close-window'),
 
-	saveSession: (userSession) => ipcRenderer.send('save-session', userSession),
+	saveSession: (user) => ipcRenderer.send('save-session', user),
 	clearSession: () => ipcRenderer.send('clear-session'),
 
 	send: (channel, data) => {
@@ -29,22 +29,37 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 		console.log('Attempting to validate session...');
 
 		if (userSession && !fetchSuccessful) {
+			// Check if the session has expired
+			const date = JSON.parse(userSession).date;
+			console.log('Difference:', Date.now() - date);
+			//                      7 days in milliseconds
+			if (Date.now() - date > 7 * 24 * 60 * 60 * 1000) {
+			// for testing purposes, we will set the session to expire in 30 seconds
+			//if (Date.now() - date > 30 * 1000) {
+				console.log('Session expired');
+				// Delete the session
+				ipcRenderer.send('clear-session');
+				window.location.href = 'index.html';
+				return;
+			}
+
 			fetch('http://localhost:5000/validate-session', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ user: JSON.parse(userSession) })
+				body: JSON.stringify({ user: JSON.parse(userSession).user })
 			})
 			.then(response => response.json())
 			.then(data => {
 				fetchSuccessful = true;
 				console.log('Fetch successful');
+				console.log(data.message);
 				if (data.success) {
-					console.log(data.message);
+					// Renew the session
+					ipcRenderer.send('save-session', userSession.user);
 					window.location.href = 'dashboard.html';
 				} else {
-					console.log(data.message);
 					window.location.href = 'index.html';
 				}
 			})

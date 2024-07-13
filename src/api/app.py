@@ -1,10 +1,8 @@
-from flask import Flask, request, jsonify, render_template
 import face_recognition
-import numpy as np
 import json
 
 from db import init_db
-from sign_in import sign_in_bp, session_bp
+from sign_in import sign_in_bp, session_bp, face_recognition_bp
 from extensions import *
 from db import Personnel
 
@@ -15,54 +13,11 @@ def create_app():
 
 	app.register_blueprint(sign_in_bp)
 	app.register_blueprint(session_bp)
+	app.register_blueprint(face_recognition_bp)
 	
 	return app, db
 
 app, db = create_app()
-
-@app.route('/face-recognition', methods=['POST'])
-def face_recognition_api():
-	if 'file' not in request.files:
-		return jsonify({'error': 'No file part'})
-	
-	file = request.files['file']
-
-	if file.filename == '':
-		return jsonify({'error': 'No selected file'})
-	
-	print('File:', file.filename)
-	print('\033[92m + File received successfully\033[0m')
-	
-	if file:
-		image = face_recognition.load_image_file(file)
-		face_locations = face_recognition.face_locations(image)
-		face_encodings = face_recognition.face_encodings(image, face_locations)
-
-		print('Number of faces:', len(face_encodings))
-		if len(face_encodings) == 0:
-			return jsonify({'error': 'No face detected'})
-		print('\033[92m + Face detected successfully\033[0m')
-
-		# Compare face encoding with known face encodings from the database
-		for face_encoding in face_encodings:
-			personnel = Personnel.query.filter_by(deleted=False).all()
-
-			for person in personnel:
-				known_face_encoding = np.array(json.loads(person.face_encoding))
-				results = face_recognition.compare_faces([known_face_encoding], face_encoding)
-
-				if results[0]:
-					return jsonify({
-						'cin': person.cin,
-						'first_name': person.first_name,
-						'last_name': person.last_name,
-						'reg_num': person.reg_num,
-						'dept': person.dept,
-						'phone': person.phone,
-						'email': person.email
-					})
-				
-		return jsonify({'error': 'No match found'})
 
 # Insert the default personnel data
 with app.app_context():

@@ -26,3 +26,39 @@ document.getElementById('sign-in-form').addEventListener('submit', async functio
 		alert(data.message || 'Invalid credentials');
 	}
 });
+
+document.getElementById('face-id-btn').addEventListener('click', async () => {
+	try {
+		const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+		const track = stream.getVideoTracks()[0];
+		const imageCapture = new ImageCapture(track);
+
+		const blob = await imageCapture.takePhoto();
+
+		track.stop();
+
+		const formData = new FormData();
+		formData.append('file', blob, 'capture.png');
+
+		const response = await axios({
+			method: 'post',
+			url: 'http://localhost:5000/face-recognition',
+			data: formData,
+			headers: {
+				'Content-Type': 'multipart/form-data',
+				'Access-Control-Allow-Origin': '*'
+			}
+		});
+
+		const data = response.data;
+		if (data.success) {
+			console.log('Saving session');
+			window.electron.saveSession(data.user);
+			window.location.href = 'dashboard.html';
+		} else {
+			alert(data.error || 'Face not recognized');
+		}
+	} catch (error) {
+		console.error('Error: ', error);
+	}
+});

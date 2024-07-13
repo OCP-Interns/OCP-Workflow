@@ -31,8 +31,11 @@ function createWindow() {
 app.whenReady().then(() => {
 	createWindow();
 
+	//! This is for development purposes only
+	storage.clear();
+
 	const userSession = storage.get('session');
-	if (userSession) {
+	if (userSession) {		
 		win.webContents.send('validate-session', userSession);
 	} else {
 		// This means the user has to sign in again
@@ -40,9 +43,11 @@ app.whenReady().then(() => {
 	}
 });
 
-ipcMain.on('save-session', (event, userSession) => {
+ipcMain.on('save-session', (event, user) => {
 	console.log('Session saved');
-	storage.set('session', userSession);
+	// Current date in milliseconds
+	const date = Date.now();
+	storage.set('session', JSON.stringify({ ...user, date }));
 });
 ipcMain.on('clear-session', (event) => {
 	console.log('Session cleared');
