@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Dashboard</title>
+        <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
+    </head>
+    <body>
+        <div class="container">
+            <button class="close" onclick="sendAction('close')"></button>
+            <button class="reduit" onclick="sendAction('reduit')"></button>
+            <button class="maximized" onclick="sendAction('maximized')"></button>
+        </div>
+        <div class="header">
+            <h5>ADMIN</h5>
+            <input class="search" type="search" name="search" id="search" placeholder="Search here...">
+            <img class="glass" src="../assets/img/glass.png" alt="glass">
+            <div class="user">
+                <h3>MORFI MAROUANE</h3>
+                <img class="userPic" src="../assets/mrf.jpg" alt="ss">
+            </div>
+        </div>
+        <div class="menu">
+            <div class="headerMenu">
+                <img class="icon" src="../assets/img/ocpIcon.png" alt="ocp">
+                <p>OCP</p> 
+                <button class="hideBtn"><img src="../assets/img/menu.png" alt="menu"></button>
+            </div>
+            <hr>
+            <div class="btnHead">
+                <button class="btnDash">
+                    <img class="dashIcon" src="../assets/img/dashboard.png" alt="d">
+                    <h6>DashBoard</h6>
+                </button>
+                <form action="manageTime.html">
+                <button class="btnEmp">
+                    <img class="empIcon" src="../assets/img/emp.png" alt="e">
+                    <h6>Employee Manage</h6>
+                </button></form>
+                <button class="btnEvent">
+                    <img class="EventIcon" src="../assets/img/networking.png" alt="p">
+                    <h6>Event Manage</h6>
+                </button>
+            </div>
+            <div class="btnFooter">
+                <button class="btnProfile">
+                    <img class="profilIcon" src="../assets/img/user.png" alt="u">
+                    <h6>Profile</h6>
+                </button>
+                <button class="btnOut">
+                    <img class="OutIcon" src="../assets/img/exit.png" alt="d">
+                    <h6>LogOut</h6>
+                </button>
+            </div>
+        </div>
+        <div class="body">
+
+        </div>
+        <script src="randerPage.js"></script>
+    </body>
+</html>

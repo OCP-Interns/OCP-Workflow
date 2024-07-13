@@ -9,19 +9,19 @@ let win;
 
 function createWindow() {
 	win = new BrowserWindow({
-		width: 1280,
-		height: 720,
+        width: 900,
+        height: 600,
 		frame: false,
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nodeIntegration: true
 		}
 	});
-
-	win.loadURL('http://localhost:5500/src/index.html');
+	win.loadURL('http://localhost:5500/src/dashboard.html');
 	win.on('closed', () => {
 		win.destroy();
 	});
+
 }
 
 app.whenReady().then(createWindow)
