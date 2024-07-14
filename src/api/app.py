@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import face_recognition
 import numpy as np
-from addTimeLine import BpAdd
+from addTimeLine import BpAdd, BpSelect
 
 app = Flask(__name__)
 app.register_blueprint(BpAdd)
+app.register_blueprint(BpSelect)
 CORS(app)
 
 known_face_encodings = []
@@ -18,7 +19,7 @@ face_encodings = face_recognition.face_encodings(image_of_known_person)
 
 if face_encodings:
 	known_person_face_encoding = face_encodings[0]
-else:
+else: 
 	print("ERROR: No faces were found in the image.")
 
 known_face_encodings.append(known_person_face_encoding)
