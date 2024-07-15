@@ -58,13 +58,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 const from = entry.from;
                 const to = entry.to;
 
-                const [fromH1, fromH2] = from.split(':').map(Number);
-                const [toH1, toH2] = to.split(':').map(Number);
+                let [fromH1, fromH2] = from.split(':').map(Number);
+                let [toH1, toH2] = to.split(':').map(Number);
 
                 let currentHour = fromH1;
                 let currentHour2 = fromH2;
 
-                while (currentHour < toH1 || (currentHour === toH1 && currentHour2 < toH2)) {
+                while (true) {
                     const time = `${currentHour < 10 ? '0' : ''}${currentHour}:${currentHour2 < 10 ? '0' : ''}${currentHour2}`;
                     const cellId = `${day}-${time}`;
                     const cell = document.getElementById(cellId);
@@ -78,10 +78,18 @@ document.addEventListener("DOMContentLoaded", function() {
                         console.error(`No cell found for ID: ${cellId}`);
                     }
 
+                    if (currentHour === toH1 && currentHour2 === toH2) {
+                        break;
+                    }
+
+                         
                     currentHour2++;
-                    if (currentHour2 === 60) {
+                    if (currentHour2 === 24) {
                         currentHour2 = 0;
                         currentHour++;
+                        if (currentHour === 24) {
+                            currentHour = 0;
+                        }
                     }
                 }
             });
