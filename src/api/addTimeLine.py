@@ -37,7 +37,6 @@ BpSelect = Blueprint('selectTable', __name__)
 @BpSelect.route('/SelectTable', methods=['GET'])
 
 def selectTable():
-
     query = "SELECT day, From_h, To_h FROM TableTimeEmp"
     cursor = connection.cursor()  
     try:
@@ -50,9 +49,11 @@ def selectTable():
                 "from": row[1],
                 "to": row[2]
             })
-        return jsonify(timetable), 200
+        return jsonify({"timetable": timetable}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
         cursor.close()
-          
+
+
+

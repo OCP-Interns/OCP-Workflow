@@ -54,7 +54,7 @@
         <div class="body">
             <form action="javascript:void(0);"><button class="add" onclick="changeBodyContent()">Add</button></form>
             <div class="table-container">
-                <form action="http://localhost:5000/SelectTable" method="GET"><table>
+            <table>
                     <thead>
                         <tr>
                             <th class="day">Day</th>
@@ -87,30 +87,30 @@
                     <tbody id="TimeTableBody">
                         <tr class="day-Monday">
                             <td class="day">Monday</td>
-                            <td class="time" id="monday-00:01"></td>
-                            <td class="time" id="monday-01:02"></td>
-                            <td class="time" id="monday-02:03"></td>
-                            <td class="time" id="monday-03:04"></td>
-                            <td class="time" id="monday-04:05"></td>
-                            <td class="time" id="monday-05:06"></td>
-                            <td class="time" id="monday-06:07"></td>
-                            <td class="time" id="monday-07:08"></td>
-                            <td class="time" id="monday-08:09"></td>
-                            <td class="time" id="monday-09:10"></td>
-                            <td class="time" id="monday-10:11"></td>
-                            <td class="time" id="monday-11:12"></td>
-                            <td class="time" id="monday-12:13"></td>
-                            <td class="time" id="monday-13:14"></td>
-                            <td class="time" id="monday-14:15"></td>
-                            <td class="time" id="monday-15:16"></td>
-                            <td class="time" id="monday-16:17"></td>
-                            <td class="time" id="monday-17:18"></td>
-                            <td class="time" id="monday-18:19"></td>
-                            <td class="time" id="monday-19:20"></td>
-                            <td class="time" id="monday-20:21"></td>
-                            <td class="time" id="monday-21:22"></td>
-                            <td class="time" id="monday-22:23"></td>
-                            <td class="time" id="monday-23:00"></td>
+                            <td class="time" id="Monday-00:01"></td>
+                            <td class="time" id="Monday-01:02"></td>
+                            <td class="time" id="Monday-02:03"></td>
+                            <td class="time" id="Monday-03:04"></td>
+                            <td class="time" id="Monday-04:05"></td>
+                            <td class="time" id="Monday-05:06"></td>
+                            <td class="time" id="Monday-06:07"></td>
+                            <td class="time" id="Monday-07:08"></td>
+                            <td class="time" id="Monday-08:09"></td>
+                            <td class="time" id="Monday-09:10"></td>
+                            <td class="time" id="Monday-10:11"></td>
+                            <td class="time" id="Monday-11:12"></td>
+                            <td class="time" id="Monday-12:13"></td>
+                            <td class="time" id="Monday-13:14"></td>
+                            <td class="time" id="Monday-14:15"></td>
+                            <td class="time" id="Monday-15:16"></td>
+                            <td class="time" id="Monday-16:17"></td>
+                            <td class="time" id="Monday-17:18"></td>
+                            <td class="time" id="Monday-18:19"></td>
+                            <td class="time" id="Monday-19:20"></td>
+                            <td class="time" id="Monday-20:21"></td>
+                            <td class="time" id="Monday-21:22"></td>
+                            <td class="time" id="Monday-22:23"></td>
+                            <td class="time" id="Monday-23:00"></td>
                         </tr>
                         <tr class="day-Tuesday">
                             <td class="day">Tuesday</td>
@@ -272,7 +272,7 @@
                             <td class="time" id="Sunday-22:23"></td>
                             <td class="time" id="Sunday-23:00"></td>                         </tr>
                     </tbody>
-                </table></form>
+                </table>
                 <a href="#"> Show More!</a>
         </div>
         
@@ -298,39 +298,11 @@
                     <label for="to">To:</label>
                     <select class="to" id="to" name="to"></select>
                     <br><br>
-                    <input class="addbtn" type="submit" value="ADD">                    
+                    <input id="add" class="addbtn" type="submit" value="ADD">                    
                 </form>
             </div>
         </template>
-        <script src="add.js">
-            document.addEventListener('DOMContentLoaded', (event) => {
-                fetch('/selectTable')
-                .then(response => response.json())
-                .then(data => {
-                    displaySchedule(data);
-                })
-                .catch(error => console.error('Error: ', error));
-            });
+        <script src="add.js"></script>
 
-            function displaySchedule(data) {
-                data.forEach(item => {
-                    const day = item.day;
-                    const from_time = item.from;
-                    const to_time = item.to;
-                    const from_cell = document.getElementById(`${day}-${from_time}`)
-                    const to_cell = document.getElementById(`${day}-${to_time}`);
-                    
-                    if (from_cell) {
-                        from_cell.style.backgroundColor = 'black';
-                        from_cell.textContent = `From ${from_time}`;
-                    }
-
-                    if (to_cell) {
-                        to_cell.style.backgroundColor = 'black';
-                        to_cell.textContent = `To ${to_time}`;
-                    }
-                });
-            }
-        </script>
     </body>
 </html>

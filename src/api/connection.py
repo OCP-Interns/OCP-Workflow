@@ -8,6 +8,6 @@ try:
         user='uuamb2qozqulxtk5',
         password='zdaQnAxlHkA4S0PNqOqv'
     )
-    
+    print('blan')
 except Error as error:
     print('Error connection: ', error)
