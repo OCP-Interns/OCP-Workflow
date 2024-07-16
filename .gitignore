@@ -31,4 +31,4 @@ src/css/*.css
 Thumbs.db
 
 # Images
-assets/i_*
+i_*
