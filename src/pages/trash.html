@@ -1,0 +1,38 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Trash bin{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/trash.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="header">
+	<h1>Trash Bin</h1>
+</div>
+<table class="employee-table">
+	<thead>
+		<tr>
+			<th>Photo</th>
+			<th>CIN</th>
+			<th>Name</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for employee in employees %}
+		<tr>
+			<td><img src="{{ url_for('static', filename='uploads/' + employee.photo) }}" alt="Profile Image" class="profile-image"></td>
+			<td>{{ employee.cin }}</td>
+			<td>{{ employee.last_name }} {{ employee.first_name }}</td>
+			<td>
+				<form action="{{ url_for('restore_employee', cin=employee.cin) }}" method="POST" style="display:inline;">
+					<button type="submit" class="btn restore">Restore</button>
+				</form>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

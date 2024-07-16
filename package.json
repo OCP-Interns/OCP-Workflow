@@ -2,11 +2,11 @@
 	"name": "desktop-app",
 	"version": "0.1.0",
 	"description": "",
-	"main": "src/js/index.js",
+	"main": "static/js/index.js",
 	"homepage": "./",
 	"scripts": {
 		"electron:serve": "concurrently -k \"cross-env BROWSER=none npm start\"",
-		"sass:watch": "sass --watch src/sass:src/css --no-source-map",
+		"sass:watch": "sass --watch src/sass:assets/css --no-source-map",
 		"flask:run": "cd src/api && .\\venv\\Scripts\\activate && flask run",
 		"start": "npm run sass:watch",
 		"dev": "concurrently -k \"npm run sass:watch\" \"npm run flask:run\" \"electron --inspect=9229 .\""

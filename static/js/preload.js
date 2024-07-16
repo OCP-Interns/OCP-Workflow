@@ -32,8 +32,8 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 			// Check if the session has expired
 			const date = JSON.parse(userSession).date;
 			console.log('Difference:', Date.now() - date);
-			//                      7 days in milliseconds
-			if (Date.now() - date > 7 * 24 * 60 * 60 * 1000) {
+			//                      3 days in milliseconds
+			if (Date.now() - date > 3 * 24 * 60 * 60 * 1000) {
 			// for testing purposes, we will set the session to expire in 30 seconds
 			//if (Date.now() - date > 30 * 1000) {
 				console.log('Session expired');
@@ -58,7 +58,7 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 				if (data.success) {
 					// Renew the session
 					ipcRenderer.send('save-session', userSession.user);
-					window.location.href = 'dashboard.html';
+					window.location.href = 'http://localhost:5000/dashboard';
 				} else {
 					window.location.href = 'index.html';
 				}

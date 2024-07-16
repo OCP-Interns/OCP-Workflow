@@ -1,9 +1,11 @@
 import face_recognition
 import json
+from flask import render_template
 
 from db import init_db
 from sign_in import sign_in_bp, session_bp, face_recognition_bp
-from extensions import *
+from routes import manage_bp, add_bp, edit_bp, delete_bp, trash_bp
+from init import *
 from db import Personnel
 
 def create_app():	
@@ -14,10 +16,19 @@ def create_app():
 	app.register_blueprint(sign_in_bp)
 	app.register_blueprint(session_bp)
 	app.register_blueprint(face_recognition_bp)
+	app.register_blueprint(manage_bp)
+	app.register_blueprint(add_bp)
+	app.register_blueprint(edit_bp)
+	app.register_blueprint(delete_bp)
+	app.register_blueprint(trash_bp)
 	
 	return app, db
 
 app, db = create_app()
+
+@app.route('/dashboard')
+def dashboard():
+	return render_template('dashboard.html')
 
 # Insert the default personnel data
 with app.app_context():
@@ -39,6 +50,8 @@ with app.app_context():
 			email='someguy@gmail.com',
 			password=bcrypt.generate_password_hash('123456').decode('utf-8'),
 			deleted=False,
+			is_admin=True,
+			image='',
 			face_encoding=json.dumps(default_person_face_encoding.tolist())
 		))
 		db.session.commit()

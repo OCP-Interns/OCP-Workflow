@@ -30,7 +30,6 @@ class Personnel(db.Model):
 	email = db.Column(db.String(255), nullable=False, unique=True)
 	password = db.Column(db.String(255), nullable=False)
 	deleted = db.Column(db.Boolean, nullable=False, default=False)
-	# which is better?
-	#image = db.Column(db.String(255), nullable=False)
-	# or
+	is_admin = db.Column(db.Boolean, nullable=False, default=False)
+	image = db.Column(db.String(255), nullable=False)
 	face_encoding = db.Column(db.JSON, nullable=False)

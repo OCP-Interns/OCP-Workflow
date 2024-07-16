@@ -1,6 +1,6 @@
 from flask import Blueprint, request, session, jsonify
 
-from extensions import bcrypt
+from init import bcrypt
 from db import Personnel
 
 sign_in_bp = Blueprint('sign_in', __name__)
@@ -27,8 +27,6 @@ def sign_in_api():
 		print('\033[93m - Session set to non-permanent\033[0m')
 		session.permanent = False
 
-	print('Session:', session)
-
 	print('\033[92m + User with registration number', user.reg_num, 'signed in successfully\033[0m')
 	return jsonify({'success': True, 'message': 'Signed in successfully', 'user': user.reg_num}), 200
 
@@ -41,6 +39,7 @@ def validate_session():
 	print('\033[92m + Session validated successfully\033[0m')
 
 	return jsonify({'success': True, 'message': 'Session validated successfully', 'user': reg_num}), 200
+
 
 import face_recognition
 import numpy as np

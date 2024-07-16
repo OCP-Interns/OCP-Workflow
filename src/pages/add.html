@@ -1,0 +1,148 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Add Employee{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<h2>Add Employee</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<ul class="flashes">
+	{% for category, message in messages %}
+	<li class="{{ category }}">{{ message }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<form class="row g-3 needs-validation" id="add-employee-form" method="POST" novalidate>
+	<div class="col-md-4">
+		<label for="first-name" class="form-label">First name</label>
+		<input type="text" class="form-control" id="first-name" placeholder="First name" pattern="[A-Za-z]{3,}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid first name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="last-name" class="form-label">Last name</label>
+		<input type="text" class="form-control" id="last-name" placeholder="Last name" pattern="[A-Za-z]{3,}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid last name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="cin" class="form-label">CIN</label>
+		<input type="text" class="form-control" id="cin" placeholder="CIN" pattern="[A-Z]{1,2}[0-9]{6}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid CIN. (e.g. AA123456)
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<label for="email" class="form-label">Email</label>
+		<input type="email" class="form-control" id="email" placeholder="Email" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid email address.
+		</div>
+	</div>
+	<div class="col-md-5">
+		<label for="phone" class="form-label">Phone</label>
+		<input type="text" class="form-control" id="phone" placeholder="Phone" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid phone number. (Moroccan phone number)
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<label for="function" class="form-label">Function</label>
+		<input type="text" class="form-control" id="function" placeholder="Function" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid function. (e.g. Engineer, Technician, etc.)
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="type" class="form-label">Type</label>
+		<input type="text" class="form-control" id="type" placeholder="Type" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid type. (e.g. Full-time, Part-time, etc.)
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="Photo" class="form-label">Photo</label>
+		<input type="file" class="form-control" id="Photo" accept="image/*" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please upload a valid profile photo. (It should be high quality and clear)
+		</div>
+	</div>
+
+	<div class="col-12">
+		<button class="btn btn-primary" type="submit">Submit form</button>
+	</div>
+</form>
+
+<!--<form action="" method="POST" enctype="multipart/form-data">
+	<div class="form-group">
+		<label for="cin">CIN</label>
+		<input type="text" id="cin" name="cin" placeholder="Enter the employee's CIN" required>
+	</div>
+	<div class="form-group">
+		<label for="last-name">Last Name</label>
+		<input type="text" id="last-name" name="last_name" placeholder="Enter the employee's last name" required>
+	</div>
+	<div class="form-group">
+		<label for="first-name">First Name</label>
+		<input type="text" id="first-name" name="first_name" placeholder="Enter the employee's first name" required>
+	</div>
+	<div class="form-group">
+		<label for="function">Fonction</label>
+		<input type="text" id="function" name="function" placeholder="Enter the employee's function" required>
+	</div>
+	<div class="form-group">
+		<label for="email">Email</label>
+		<input type="email" id="email" name="email" placeholder="Enter the employee's email address" required>
+	</div>
+	<div class="form-group">
+		<label for="phone">Phone</label>
+		<input type="text" id="phone" name="phone" placeholder="Enter the employee's phone number" required>
+	</div>
+	<div class="form-group">
+		<label for="type">Type</label>
+		<input type="text" id="type" name="type" placeholder="Enter the employee's type" required>
+	</div>
+	<div class="form-group">
+		<label for="photo">Photo</label>
+		<input type="file" id="photo" name="photo" required>
+	</div>
+	<button type="submit" class="submit-button">Submit</button>
+</form>-->
+{% endblock content %}
+
+{% block scripts %}
+{% endblock %}
