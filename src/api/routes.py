@@ -17,7 +17,6 @@ add_bp = Blueprint('add_employee', __name__)
 def add_employee():
 	if request.method == 'POST':
 		print('POST')
-		#return render_template('add.html')
 		return {'success': True, 'message': 'Employee added successfully'}, 200
 	else:
 		print('GET')
