@@ -33,7 +33,7 @@ app.whenReady().then(() => {
 	createWindow();
 
 	//! This is for development purposes only
-	//storage.clear();
+	storage.clear();
 
 	const userSession = storage.get('session');
 	if (userSession) {		
