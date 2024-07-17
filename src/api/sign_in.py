@@ -34,7 +34,7 @@ def sign_in_api():
 		return jsonify({'success': True, 'message': 'Signed in successfully', 'user': user.reg_num}), 200
 	else:
 		print('GET: Sign in')
-		return render_template('sign-in.html')
+		return render_template('index.html')
 
 session_bp = Blueprint('session', __name__)
 @session_bp.route('/validate-session', methods=['POST'])
