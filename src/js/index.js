@@ -21,8 +21,6 @@ function createWindow() {
 	});
 
 	win.loadFile(path.join(__dirname, '../pages/loader.html'));
-	//win.loadFile(path.join(__dirname, '../../src/pages/loader.html'));
-	//win.loadURL('http://localhost:5000/');
 	console.log('Window created');
 
 	win.on('closed', () => {
@@ -35,7 +33,7 @@ app.whenReady().then(() => {
 	console.log('App ready');
 
 	//! This is for development purposes only
-	storage.clear();
+	//storage.clear();
 
 	const userSession = storage.get('session');
 	win.webContents.send('validate-session', userSession);
@@ -49,8 +47,7 @@ ipcMain.on('save-session', (event, user) => {
 });
 ipcMain.on('clear-session', (event) => {
 	console.log('Session cleared');
-	//storage.delete('session');
-	storage.set('session', null);
+	storage.delete('session');
 });
 
 app.on('ready', () => {

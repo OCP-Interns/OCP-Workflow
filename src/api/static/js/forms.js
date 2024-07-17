@@ -15,7 +15,7 @@ if (faceIDButton) {
 
 			const response = await axios({
 				method: 'post',
-				url: 'http://localhost:5000/face-recognition',
+				url: '/face-recognition',
 				data: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -27,7 +27,7 @@ if (faceIDButton) {
 			if (data.success) {
 				console.log('Saving session');
 				window.electron.saveSession(data.user);
-				window.location.href = 'http://localhost:5000/dashboard';
+				window.location.href = '/dashboard';
 			} else {
 				alert(data.error || 'Face not recognized');
 			}
@@ -89,7 +89,7 @@ if (faceIDButton) {
 //});
 
 // ========= Handle Sign In =========
-handleFormSubmitJSON('sign-in-form', 'http://localhost:5000/sign-in', (data, formData) => {},
+handleFormSubmitJSON('sign-in-form', '/sign-in', (data, formData) => {},
 	(data, formData) => {
 		const remember = formData.get('remember_me') === 'on';
 		console.log(data);
@@ -100,11 +100,11 @@ handleFormSubmitJSON('sign-in-form', 'http://localhost:5000/sign-in', (data, for
 			console.log('Clearing session');
 			window.electron.clearSession();
 		}
-		window.location.href = 'http://localhost:5000/dashboard';
+		window.location.href = '/dashboard';
 	}, 'Invalid credentials');
 
 // ========= Manage Employees =========
-handleFormSubmitJSON('add-employee-form', 'http://localhost:5000/add-employee', (data, formData) => {
+handleFormSubmitJSON('add-employee-form', '/add-employee', (data, formData) => {
 		console.log(data);
 	}, (data, formData) => {
 		alert('Employee added successfully');
@@ -154,7 +154,7 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 					event.stopPropagation();
 
 					const formData = new FormData(form);
-					const response = await fetch('http://localhost:5000/add-employee', {
+					const response = await fetch('/add-employee', {
 						method: 'POST',
 						body: JSON.stringify(Object.fromEntries(formData)),
 						headers: {
@@ -166,7 +166,7 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 					console.log(data);
 
 					if (data.success) {
-						window.location.href = 'http://localhost:5000/manage-employees';
+						window.location.href = '/manage-employees';
 					} else {
 						alert(data.message || 'Failed to add employee');
 					}
