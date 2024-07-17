@@ -39,7 +39,8 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 				console.log('Session expired');
 				// Delete the session
 				ipcRenderer.send('clear-session');
-				window.location.href = 'index.html';
+				//window.location.href = 'index.html';
+				window.location.href = 'http://localhost:5000/sign-in';
 				return;
 			}
 
@@ -60,7 +61,8 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 					ipcRenderer.send('save-session', userSession.user);
 					window.location.href = 'http://localhost:5000/dashboard';
 				} else {
-					window.location.href = 'index.html';
+					//window.location.href = 'index.html';
+					window.location.href = 'http://localhost:5000/sign-in';
 				}
 			})
 			.catch(error => {

@@ -4,7 +4,7 @@ from flask import render_template
 
 from db import init_db
 from sign_in import sign_in_bp, session_bp, face_recognition_bp
-from routes import manage_bp, add_bp, edit_bp, delete_bp, trash_bp
+from routes import dashboard_bp, manage_bp, add_bp, edit_bp, delete_bp, trash_bp
 from init import *
 from db import Personnel
 
@@ -16,6 +16,7 @@ def create_app():
 	app.register_blueprint(sign_in_bp)
 	app.register_blueprint(session_bp)
 	app.register_blueprint(face_recognition_bp)
+	app.register_blueprint(dashboard_bp)
 	app.register_blueprint(manage_bp)
 	app.register_blueprint(add_bp)
 	app.register_blueprint(edit_bp)

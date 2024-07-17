@@ -10,8 +10,8 @@
 		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-	<link rel="stylesheet" href="../../static/css/reset.css">
-	<link rel="stylesheet" href="../../static/css/style.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div id="logo-container" class="col col-sm-4 col-md-5 d-flex justify-content-center align-items-center">
-					<img src="../../static/images/ocp-logo-white.png" alt="OpenShift Container Platform Logo" class="img-fluid">
+					<img src="{{ url_for('static', filename='images/ocp-logo-white.png') }}" alt="OCP Group Logo" class="img-fluid">
 				</div>
 
 				<div class="col col-sm-8 col-md-7 d-flex justify-content-center align-items-center">
@@ -91,13 +91,13 @@
 		</div>
 	</div>
 
-	<script src="../../static/js/renderer.js"></script>
+	<script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<script src="../../static/js/script.js"></script>
-	<script src="../../static/js/forms.js"></script>
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/forms.js') }}"></script>
 </body>
 
 </html>

@@ -1,14 +1,8 @@
-# Node.js dependencies
-/node_modules
-
-# Electron build artifacts
-/dist
+# Virtual environment
+venv/
 
 # Python cache files
 __pycache__/
-
-# Flask virtual environment
-src/api/venv
 
 # Log files
 *.log

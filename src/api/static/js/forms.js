@@ -104,12 +104,12 @@ handleFormSubmitJSON('sign-in-form', 'http://localhost:5000/sign-in', (data, for
 	}, 'Invalid credentials');
 
 // ========= Manage Employees =========
-//handleFormSubmitJSON('add-employee-form', 'http://localhost:5000/add-employee', (data, formData) => {
-//		console.log(data);
-//	}, (data, formData) => {
-//		alert('Employee added successfully');
-//		document.getElementById('add-employee-form').reset();
-//	}, 'Failed to add employee');
+handleFormSubmitJSON('add-employee-form', 'http://localhost:5000/add-employee', (data, formData) => {
+		console.log(data);
+	}, (data, formData) => {
+		alert('Employee added successfully');
+		document.getElementById('add-employee-form').reset();
+	}, 'Failed to add employee');
 
 // A generic function to handle all the form submissions
 function handleFormSubmitJSON(formId, url, callback, successCallback, message = '') {

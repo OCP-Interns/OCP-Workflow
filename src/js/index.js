@@ -20,8 +20,9 @@ function createWindow() {
 		}
 	});
 
-	//win.loadFile(path.join(__dirname, '../pages/loader.html'));
-	win.loadFile(path.join(__dirname, '../../src/pages/loader.html'));
+	win.loadFile(path.join(__dirname, '../pages/loader.html'));
+	//win.loadFile(path.join(__dirname, '../../src/pages/loader.html'));
+	//win.loadURL('http://localhost:5000/');
 	console.log('Window created');
 
 	win.on('closed', () => {
@@ -33,14 +34,15 @@ app.whenReady().then(() => {
 	createWindow();
 
 	//! This is for development purposes only
-	storage.clear();
+	//storage.clear();
 
 	const userSession = storage.get('session');
 	if (userSession) {		
 		win.webContents.send('validate-session', userSession);
 	} else {
 		// This means the user has to sign in again
-		win.loadFile(path.join(__dirname, '../../src/pages/index.html'));
+		//win.loadFile(path.join(__dirname, '../../src/pages/index.html'));
+		win.loadURL('http://localhost:5000/sign-in');
 	}
 });
 
