@@ -52,7 +52,7 @@
         </div>
 
         <div class="body">
-            <form action="javascript:void(0);"><button class="add" onclick="changeBodyContent()">Add</button></form>
+            <form action="javascript:void(0);"><button class="add" onclick="changeBodyContent_add()">Add</button></form>
             <div class="table-container">
             <table>
                     <thead>
@@ -64,7 +64,7 @@
                             <th class="time">03:04</th>
                             <th class="time">04:05</th>
                             <th class="time">05:06</th>
-                            <th class="time">06:07</th>
+                        <th class="time">06:07</th>
                             <th class="time">07:08</th>
                             <th class="time">08:09</th>
                             <th class="time">09:10</th>
@@ -276,7 +276,7 @@
                 <a href="#"> Show More!</a>
         </div>
         
-        <template id="card-template">
+        <template id="card-template_add">
             <div class="card" id="add">
                 <button class="back" onclick="restoreOriginalContent()"></button>
                 <h2>Add Time Work</h2>
@@ -302,7 +302,8 @@
                 </form>
             </div>
         </template>
-        <script src="add.js"></script>
+
+        <script src="TimeTable.js"></script>
 
     </body>
 </html>

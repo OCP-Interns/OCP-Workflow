@@ -1,11 +1,11 @@
-function changeBodyContent() {
+function changeBodyContent_add() {
     var bodyDiv = document.querySelector('.body');
     if (!window.originalBodyContent) {
         window.originalBodyContent = bodyDiv.innerHTML;
     }
 
     if (!document.getElementById('add')) {
-        var template = document.getElementById('card-template');
+        var template = document.getElementById('card-template_add');
         var card = template.content.cloneNode(true);
 
         bodyDiv.appendChild(card);
@@ -33,14 +33,14 @@ function changeBodyContent() {
         document.getElementById('add').style.display = "block";
     }
     
-}
+};
 
 function restoreOriginalContent() {
     var overlay = document.querySelector('.card');
     if (overlay) {
         overlay.remove();
     }
-}
+};
 
 document.addEventListener("DOMContentLoaded", function() {
     fetch('http://localhost:5000/SelectTable')
@@ -64,36 +64,47 @@ document.addEventListener("DOMContentLoaded", function() {
                 let currentHour = fromH1;
                 let currentHour2 = fromH2;
 
-                while (true) {
-                    const time = `${currentHour < 10 ? '0' : ''}${currentHour}:${currentHour2 < 10 ? '0' : ''}${currentHour2}`;
-                    const cellId = `${day}-${time}`;
-                    const cell = document.getElementById(cellId);
+               
+                const time = `${currentHour < 10 ? '0' : ''}${currentHour}:${currentHour2 < 10 ? '0' : ''}${currentHour2}`;
+                const cellId = `${day}-${time}`;
+                const cell = document.getElementById(cellId);
 
-                    console.log(`Looking for cell with ID: ${cellId}`);
+                console.log(`Looking for cell with ID: ${cellId}`);
 
-                    if (cell) {
-                        cell.style.backgroundColor = 'black';
-                        console.log('Updated cell:', cell);
-                    } else {
-                        console.error(`No cell found for ID: ${cellId}`);
-                    }
-
-                    if (currentHour === toH1 && currentHour2 === toH2) {
-                        break;
-                    }
-
-                         
-                    currentHour2++;
-                    if (currentHour2 === 24) {
-                        currentHour2 = 0;
-                        currentHour++;
-                        if (currentHour === 24) {
-                            currentHour = 0;
-                        }
-                    }
+                if (cell) {                        
+                    cell.style.backgroundColor = 'black';
+                    const btn = document.createElement('button');
+                    btn.classList.add('deletebtn');
+                    btn.addEventListener('click', () => HandleEvent(day, time));
+                    cell.appendChild(btn);
+                    console.log('Updated cell:', cell);
+                } else {
+                    console.error(`No cell found for ID: ${cellId}`);
                 }
+
+                    
             });
         })
         .catch(error => console.error('Error fetching timetable:', error));
+
 });
 
+function HandleEvent(day, from) {
+    fetch('http://localhost:5000/DeleteWork', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `day=${encodeURIComponent(day)}&from=${encodeURIComponent(from)}`
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Delete successful:', data);
+    })
+    .catch(error => console.error('Error deleting entry:', error));
+}

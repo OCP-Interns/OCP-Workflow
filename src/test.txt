@@ -16,3 +16,69 @@ fetch('http://localhost:5000/SelectTable')
     })
     .catch(error => console.error('Error fetching timetable:', error));
 });
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+from flask import Flask, request, jsonify, Blueprint
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://uuamb2qozqulxtk5:zdaQnAxlHkA4S0PNqOqv@bcqkw1nmvy6embwex6i5-mysql.services.clever-cloud.com:3306/bcqkw1nmvy6embwex6i5'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+db.init_app(app)
+
+class TableTimeEmp(db.Model):
+    __tablename__ = 'TableTimeEmp'
+    id = db.Column(db.Integer, primary_key=True)
+    day = db.Column(db.String(50), nullable=False)
+    from_h = db.Column(db.String(50), nullable=False)
+    to_h = db.Column(db.String(50), nullable=False)
+
+BpAdd = Blueprint('add', __name__)
+
+@BpAdd.route('/addTime', methods=['POST'])
+def add_time_work():
+    data = request.form
+    day = data.get('day')
+    from_time = data.get('from')
+    to_time = data.get('to')
+
+    new_time = TableTimeEmp(day=day, from_h=from_time, to_h=to_time)
+
+    try:
+        db.session.add(new_time)
+        db.session.commit()
+        return jsonify({"message": "Time added successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+BpSelect = Blueprint('selectTable', __name__)
+
+@BpSelect.route('/SelectTable', methods=['GET'])
+def selectTable():
+    try:
+        results = TableTimeEmp.query.all()
+        timetable = [
+            {"day": result.day, "from": result.from_h, "to": result.to_h}
+            for result in results
+        ]
+        return jsonify({"timetable": timetable}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+    
+
+
+
+
+
+
+
+

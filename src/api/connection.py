@@ -8,6 +8,7 @@ try:
         user='uuamb2qozqulxtk5',
         password='zdaQnAxlHkA4S0PNqOqv'
     )
-    print('blan')
-except Error as error:
-    print('Error connection: ', error)
+    if connection.is_connected():
+        print('Connected to MySQL database')
+except Error as e:
+    print(f"Error connecting to MySQL database: {e}")
