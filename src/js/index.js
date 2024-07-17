@@ -32,18 +32,13 @@ function createWindow() {
 
 app.whenReady().then(() => {
 	createWindow();
+	console.log('App ready');
 
 	//! This is for development purposes only
-	//storage.clear();
+	storage.clear();
 
 	const userSession = storage.get('session');
-	if (userSession) {		
-		win.webContents.send('validate-session', userSession);
-	} else {
-		// This means the user has to sign in again
-		//win.loadFile(path.join(__dirname, '../../src/pages/index.html'));
-		win.loadURL('http://localhost:5000/sign-in');
-	}
+	win.webContents.send('validate-session', userSession);
 });
 
 ipcMain.on('save-session', (event, user) => {
@@ -54,7 +49,8 @@ ipcMain.on('save-session', (event, user) => {
 });
 ipcMain.on('clear-session', (event) => {
 	console.log('Session cleared');
-	storage.delete('session');
+	//storage.delete('session');
+	storage.set('session', null);
 });
 
 app.on('ready', () => {

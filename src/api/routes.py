@@ -1,6 +1,12 @@
 from flask import Blueprint, request, render_template
 from db import Personnel
 
+ping_bp = Blueprint('ping', __name__)
+@ping_bp.route('/ping')
+def ping():
+	print('\033[92m + Pong\033[0m')
+	return 'Pong', 200
+
 dashboard_bp = Blueprint('dashboard', __name__)
 @dashboard_bp.route('/dashboard')
 def dashboard():
