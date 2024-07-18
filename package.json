@@ -9,7 +9,7 @@
 		"sass:watch": "sass --watch src/sass:src/api/static/css --no-source-map",
 		"flask:run": "cd src/api && .\\venv\\Scripts\\activate && flask run",
 		"start": "npm run sass:watch",
-		"dev": "concurrently -k \"npm run sass:watch\" \"npm run flask:run\" \"electron --inspect=9229 .\""
+		"dev": "concurrently -k \"npm run sass:watch\" \"npm run flask:run\" \"electron .\""
 	},
 	"repository": {
 		"type": "git",

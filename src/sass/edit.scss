@@ -1,0 +1,22 @@
+#timetable {
+	width: 100%;
+	overflow-x: scroll;
+
+	table {
+		width: 100%;
+		
+		th {
+			background-color: #f5f5f5;
+			border: 1px solid #ddd;
+			text-align: center;
+			padding: 1rem;
+			white-space: nowrap;
+		}
+
+		td {
+			border: 1px solid #ddd;
+			text-align: center;
+			padding: 8px;
+		}
+	}
+}

@@ -19,7 +19,8 @@ contextBridge.exposeInMainWorld('electron', {
 console.log('Preload script loaded');
 
 ipcRenderer.on('validate-session', (event, userSession) => {
-	const serverUrl = 'https://graceful-gladys-ocp-interns-5dc15e30.koyeb.app';
+	//const serverUrl = 'https://graceful-gladys-ocp-interns-5dc15e30.koyeb.app';
+	const serverUrl = 'http://localhost:5000';
 	const pingEndpoint = `${serverUrl}/ping`;
 	const signInUrl = `${serverUrl}/sign-in`;
 	const dashboardUrl = `${serverUrl}/dashboard`;

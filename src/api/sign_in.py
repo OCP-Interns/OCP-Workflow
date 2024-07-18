@@ -48,8 +48,8 @@ def validate_session():
 
 
 import face_recognition
-import numpy as np
-import json
+from cloudinary.utils import cloudinary_url
+from urllib.request import urlopen
 
 face_recognition_bp = Blueprint('face_recognition', __name__)
 @face_recognition_bp.route('/face-recognition', methods=['POST'])
@@ -80,7 +80,9 @@ def face_recognition_api():
 			personnel = Personnel.query.filter_by(deleted=False).all()
 
 			for person in personnel:
-				known_face_encoding = np.array(json.loads(person.face_encoding))
+				person_image_url = cloudinary_url(person.photo)[0]
+				known_image = face_recognition.load_image_file(urlopen(person_image_url))
+				known_face_encoding = face_recognition.face_encodings(known_image)[0]
 				results = face_recognition.compare_faces([known_face_encoding], face_encoding)
 
 				if results[0]:

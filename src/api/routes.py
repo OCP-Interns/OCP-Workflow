@@ -1,5 +1,6 @@
 from flask import Blueprint, request, render_template
 from db import Personnel
+from cloudinary.utils import cloudinary_url
 
 ping_bp = Blueprint('ping', __name__)
 @ping_bp.route('/ping')
@@ -16,7 +17,7 @@ manage_bp = Blueprint('manage_employees', __name__)
 @manage_bp.route('/manage-employees')
 def manage_employees():
 	employees = Personnel.query.filter_by(deleted=False).all()
-	return render_template('manage.html', employees=employees)
+	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url)
 
 add_bp = Blueprint('add_employee', __name__)
 @add_bp.route('/add-employee', methods=['POST', 'GET'])
@@ -35,7 +36,7 @@ def edit_employee(cin):
 	if request.method == 'POST':
 		print('POST')
 		print(f'Editing employee with CIN: {cin}')
-		return render_template('edit.html', employee=employee)
+		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url)
 	else:
 		print('GET')
 		print(f'Showing employee with CIN: {cin}')

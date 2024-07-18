@@ -6,7 +6,6 @@ from db import init_db
 from sign_in import sign_in_bp, session_bp, face_recognition_bp
 from routes import ping_bp, dashboard_bp, manage_bp, add_bp, edit_bp, delete_bp, trash_bp
 from init import *
-from db import Personnel
 
 def create_app():	
 	cors.init_app(app)
@@ -32,10 +31,16 @@ app, db = create_app()
 def dashboard():
 	return render_template('dashboard.html')
 
+from db import Personnel
+from cloudinary.utils import cloudinary_url
+from urllib.request import urlopen
+
 # Insert the default personnel data
 with app.app_context():
 	if not Personnel.query.first():
-		image_of_default_person = face_recognition.load_image_file("../../assets/i_me.png")
+		# Load image from cloudinary
+		image_url = cloudinary_url('i_me')[0]
+		image_of_default_person = face_recognition.load_image_file(urlopen(image_url))
 		face_encodings = face_recognition.face_encodings(image_of_default_person)
 
 		if not face_encodings:
@@ -46,15 +51,14 @@ with app.app_context():
 			cin='HH123456',
 			first_name='Someone',
 			last_name='Guy',
-			reg_num='123456',
+			reg_num='IT123456',
 			dept='IT',
 			phone='123456',
 			email='someguy@gmail.com',
 			password=bcrypt.generate_password_hash('123456').decode('utf-8'),
 			deleted=False,
 			is_admin=True,
-			image='',
-			face_encoding=json.dumps(default_person_face_encoding.tolist())
+			photo='i_me'
 		))
 		db.session.commit()
 		print('\033[92m + Default user inserted successfully\033[0m')

@@ -10,3 +10,17 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 cors = CORS()
 bcrypt = Bcrypt()
+
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+cloudinary.config(
+	cloud_name = os.getenv('CLOUD_NAME'),
+	api_key = os.getenv('API_KEY'),
+	api_secret = os.getenv('API_SECRET'),
+	secure = True
+)
+
+#res = cloudinary.uploader.upload("static/images/i_me.png", public_id = "i_me")
+#print('\033[92m +', cloudinary_url(res['public_id']), '\033[0m')
