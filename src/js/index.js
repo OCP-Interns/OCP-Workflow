@@ -25,6 +25,13 @@ function createWindow() {
 
 	win.on('closed', () => {
 		win.destroy();
+		fetch('/exit', {
+			method: 'POST'
+		}).then(() => {
+			console.log('Server stopped');
+		}).catch((error) => {
+			console.error('Error: ', error);
+		});
 	});
 }
 
@@ -48,11 +55,6 @@ ipcMain.on('save-session', (event, user) => {
 ipcMain.on('clear-session', (event) => {
 	console.log('Session cleared');
 	storage.delete('session');
-});
-
-app.on('ready', () => {
-	const ses = session.fromPartition('persist:ocp-workflow');
-	//ses.clearStorageData();
 });
 
 app.on('window-all-closed', () => {

@@ -38,7 +38,7 @@ if (faceIDButton) {
 }
 
 // ========= Handle Sign In =========
-handleFormSubmitJSON('sign-in-form', '/sign-in', (data, formData) => {},
+handleFormSubmit('sign-in-form', '/sign-in', (formData) => {},
 	(data, formData) => {
 		const remember = formData.get('remember_me') === 'on';
 		console.log(data);
@@ -50,18 +50,19 @@ handleFormSubmitJSON('sign-in-form', '/sign-in', (data, formData) => {},
 			window.electron.clearSession();
 		}
 		window.location.href = '/dashboard';
-	}, 'Invalid credentials');
+	}, 'Invalid credentials', true);
 
 // ========= Manage Employees =========
-handleFormSubmitJSON('add-employee-form', '/add-employee', (data, formData) => {
-		console.log(data);
-	}, (data, formData) => {
-		alert('Employee added successfully');
-		document.getElementById('add-employee-form').reset();
-	}, 'Failed to add employee');
+//handleFormSubmit('add-employee-form', '/add-employee', (formData) => {
+//		console.log('Adding employee');
+//		console.log(Object.fromEntries(formData));
+//	}, (data, formData) => {
+//		alert('Employee added successfully');
+//		document.getElementById('add-employee-form').reset();
+//	}, 'Failed to add employee');
 
 // A generic function to handle all the form submissions
-function handleFormSubmitJSON(formId, url, callback, successCallback, message = '') {
+function handleFormSubmit(formId, url, callback, successCallback, message = '', use_json = false) {
 	const form = document.getElementById(formId);
 	if (!form)
 		return;
@@ -69,17 +70,20 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		const response = await fetch(url, {
+		callback(formData);
+
+		const response = use_json ? await fetch(url, {
 			method: 'POST',
 			body: JSON.stringify(Object.fromEntries(formData)),
 			headers: {
 				'Content-Type': 'application/json'
 			}
+		}) : await fetch(url, {
+			method: 'POST',
+			body: formData
 		});
 
 		const data = await response.json();
-		callback(data, formData);
-
 		if (data.success) {
 			successCallback(data, formData);
 		} else {
@@ -93,6 +97,7 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 	'use strict';
 	const forms = document.querySelectorAll('.needs-validation');
 	Array.from(forms).forEach((form) => {
+		console.log(form);
 		form.addEventListener('submit', async (event) => {
 			if (!form.checkValidity()) {
 				event.preventDefault();
@@ -105,10 +110,7 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 					const formData = new FormData(form);
 					const response = await fetch('/add-employee', {
 						method: 'POST',
-						body: JSON.stringify(Object.fromEntries(formData)),
-						headers: {
-							'Content-Type': 'application/json'
-						}
+						body: formData
 					});
 
 					const data = await response.json();

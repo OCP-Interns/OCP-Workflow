@@ -1,10 +1,8 @@
 import face_recognition
-import json
-from flask import render_template
 
 from db import init_db
 from sign_in import sign_in_bp, session_bp, face_recognition_bp
-from routes import ping_bp, dashboard_bp, manage_bp, add_bp, edit_bp, delete_bp, trash_bp
+from routes import ping_bp, exit_bp, dashboard_bp, manage_bp, add_bp, edit_bp, delete_bp, trash_bp
 from init import *
 
 def create_app():	
@@ -13,6 +11,7 @@ def create_app():
 	db = init_db(app)
 
 	app.register_blueprint(ping_bp)
+	app.register_blueprint(exit_bp)
 	app.register_blueprint(sign_in_bp)
 	app.register_blueprint(session_bp)
 	app.register_blueprint(face_recognition_bp)
@@ -26,10 +25,6 @@ def create_app():
 	return app, db
 
 app, db = create_app()
-
-@app.route('/dashboard')
-def dashboard():
-	return render_template('dashboard.html')
 
 from db import Personnel
 from cloudinary.utils import cloudinary_url
