@@ -38,7 +38,8 @@ if (faceIDButton) {
 }
 
 // ========= Handle Sign In =========
-handleFormSubmit('sign-in-form', '/sign-in', (formData) => {},
+handleFormSubmit('sign-in-form', 'submit', '/sign-in',
+	(formData) => true,
 	(data, formData) => {
 		const remember = formData.get('remember_me') === 'on';
 		console.log(data);
@@ -53,24 +54,50 @@ handleFormSubmit('sign-in-form', '/sign-in', (formData) => {},
 	}, 'Invalid credentials', true);
 
 // ========= Manage Employees =========
-//handleFormSubmit('add-employee-form', '/add-employee', (formData) => {
-//		console.log('Adding employee');
-//		console.log(Object.fromEntries(formData));
-//	}, (data, formData) => {
-//		alert('Employee added successfully');
-//		document.getElementById('add-employee-form').reset();
-//	}, 'Failed to add employee');
+handleFormSubmit('add-employee-form', 'form-validated', '/add-employee',
+	(formData) => {
+		// Check the size of the image
+		const file = formData.get('photo');
+		if (file.size > 1000000) {
+			alert('Image size should not exceed 1MB');
+			return false;
+		}
+		return true;
+	},
+	(data, formData) => {
+		alert('Employee added successfully');
+		window.location.href = '/manage-employees';
+	}, 'Failed to add employee');
 
+handleFormSubmit('edit-employee-form', 'submit', `/edit-employee/${employeeCIN}`,
+	(formData) => {
+		// Check the size of the image if an image was uploaded
+		const file = formData.get('photo');
+		if (file && file.size > 1000000) {
+			alert('Image size should not exceed 1MB');
+			return false;
+		}
+		return true;
+	},
+	(data, formData) => {
+		alert('Employee updated successfully');
+		window.location.href = '/manage-employees';
+	}, 'Failed to update employee');
+
+// ========= General =========
 // A generic function to handle all the form submissions
-function handleFormSubmit(formId, url, callback, successCallback, message = '', use_json = false) {
+function handleFormSubmit(formId, event, url, callback, successCallback, message = '', use_json = false) {
 	const form = document.getElementById(formId);
 	if (!form)
 		return;
-	form.addEventListener('submit', async (e) => {
+	form.addEventListener(event, async (e) => {
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		callback(formData);
+		var valid = callback(formData);
+		if (!valid) {
+			return;
+		}
 
 		const response = use_json ? await fetch(url, {
 			method: 'POST',
@@ -92,6 +119,11 @@ function handleFormSubmit(formId, url, callback, successCallback, message = '', 
 	});
 }
 
+// A custom event to handle form validation
+const formValidatedEvent = new Event('form-validated', {
+	detail: { message: 'Form has been validated successfully' }
+});
+
 // Handle all bootstrap form validations
 (function() {
 	'use strict';
@@ -106,23 +138,7 @@ function handleFormSubmit(formId, url, callback, successCallback, message = '', 
 				if (form.id === 'add-employee-form') {
 					event.preventDefault();
 					event.stopPropagation();
-
-					const formData = new FormData(form);
-					const response = await fetch('/add-employee', {
-						method: 'POST',
-						body: formData
-					});
-
-					const data = await response.json();
-					console.log(data);
-
-					if (data.success) {
-						window.location.href = '/manage-employees';
-					} else {
-						alert(data.message || 'Failed to add employee');
-					}
-
-					console.log('Form validated');
+					form.dispatchEvent(formValidatedEvent);
 				}
 			}
 

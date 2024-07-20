@@ -5,6 +5,10 @@
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+<script>
+	const employeeCIN = "{{ employee.cin }}";
+</script>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +17,92 @@
 	/
 	<a href="#" onclick="showTimetable()">Edit Timetable</a>
 </div>
-<form action="{{ url_for('edit_employee.edit_employee', cin=employee.cin) }}" method="POST" id="edit-form"
+<form class="row g-3 needs-validation" id="edit-employee-form" method="POST" novalidate>
+	<div class="col-md-4">
+		<label for="first-name" class="form-label">First name</label>
+		<input type="text" class="form-control" id="first-name" placeholder="First name" pattern="[A-Za-z]{3,}"
+			name="first_name" value="{{ employee.first_name }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid first name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="last-name" class="form-label">Last name</label>
+		<input type="text" class="form-control" id="last-name" placeholder="Last name" pattern="[A-Za-z]{3,}"
+			name="last_name" value="{{ employee.last_name }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid last name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="cin" class="form-label">CIN</label>
+		<input type="text" class="form-control" id="cin" placeholder="CIN" pattern="[A-Z]{1,2}[0-9]{6}" name="cin"
+			value="{{ employee.cin }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid CIN. (e.g. AA123456)
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<label for="email" class="form-label">Email</label>
+		<input type="email" class="form-control" id="email" placeholder="Email" name="email" value="{{ employee.email }}"
+			required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid email address.
+		</div>
+	</div>
+	<div class="col-md-5">
+		<label for="phone" class="form-label">Phone</label>
+		<input type="text" class="form-control" id="phone" placeholder="Phone" pattern="[0-9]{10}" name="phone"
+			value="{{ employee.phone }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid phone number. (e.g. 0612345678)
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<label for="shift" class="form-label">Shift Type</label>
+		<select class="form-select" id="shift" name="shift" required>
+			<option value="normal" {% if employee.shift == "normal" %}selected{% endif %}>Normal Shift</option>
+			<option value="split" {% if employee.shift == "split" %}selected{% endif %}>Split Shift</option>
+			<option value="rotating" {% if employee.shift == "rotating" %}selected{% endif %}>Rotating Shift</option>
+		</select>
+	</div>
+	<div class="col-md-6">
+		<label for="photo" class="form-label">Photo</label>
+		<input type="file" class="form-control" id="photo" accept="image/*" name="photo">
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please upload a valid image.
+		</div>
+	</div>
+	<div class="col-md-2">
+		<img src="{{ cloudinary_url(employee.photo)[0] }}" alt="Employee Photo" class="img-thumbnail">
+	</div>
+
+	<div class="col-12">
+		<button class="btn btn-primary" type="submit">Submit</button>
+	</div>
+</form>
+
+<!--<form action="{{ url_for('employee_routes.edit_employee', cin=employee.cin) }}" method="POST" id="edit-form"
 	enctype="multipart/form-data">
 	<h2>Edit Employee</h2>
 	<div class="form-group">
@@ -52,7 +141,7 @@
 		<input type="file" id="photo" name="photo">
 	</div>
 	<button type="submit" class="submit-btn">Submit</button>
-</form>
+</form>-->
 <div class="table-container" id="timetable-container" style="display: none;">
 	<h2>Time Table</h2>
 	<button class="add-btn" id="add-btn">Add</button>
@@ -295,15 +384,14 @@
 
 	// <!--! Will later be replaced-->
 	// Add time header, add time cells to the timetable, ana add day cells to the timetable
-	const timeHeader = document.querySelector("#timetable thead tr");
-	for (let i = 0; i < 24; i++) {
-		const th = document.createElement("th");
-		th.textContent = `${i < 10 ? "0" + i : i}:00 - ${i + 1 < 10 ? "0" + (i + 1) : i + 1}:00`;
-		timeHeader.appendChild(th);
-	}
+	//const timeHeader = document.querySelector("#timetable thead tr");
+	//for (let i = 0; i < 24; i++) {
+	//	const th = document.createElement("th");
+	//	th.textContent = `${i < 10 ? "0" + i : i}:00 - ${i + 1 < 10 ? "0" + (i + 1) : i + 1}:00`;
+	//	timeHeader.appendChild(th);
+	//}
 
-	const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-	const TimeTableBody = document.querySelector("#timetable tbody");
-
+	//const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+	//const TimeTableBody = document.querySelector("#timetable tbody");
 </script>
 {% endblock %}

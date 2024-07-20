@@ -76,27 +76,22 @@
 	</div>
 
 	<div class="col-md-4">
-		<label for="function" class="form-label">Function</label>
-		<input type="text" class="form-control" id="function" placeholder="Function" name="function" required>
+		<label for="shift" class="form-label">Shift Type</label>
+		<select class="form-select" id="shift" name="shift" required>
+			<option value="" selected disabled>Select a shift type</option>
+			<option value="normal">Normal Shift</option>
+			<option value="split">Split Shift</option>
+			<option value="rotating">Rotating Shift</option>
+		</select>
 		<div class="valid-feedback">
 			Looks good!
 		</div>
 		<div class="invalid-feedback">
-			Please enter a valid function. (e.g. Engineer, Technician, etc.)
+			Please select a shift type.
 		</div>
 	</div>
-	<div class="col-md-4">
-		<label for="type" class="form-label">Type</label>
-		<input type="text" class="form-control" id="type" placeholder="Type" name="type" required>
-		<div class="valid-feedback">
-			Looks good!
-		</div>
-		<div class="invalid-feedback">
-			Please enter a valid type. (e.g. Full-time, Part-time, etc.)
-		</div>
-	</div>
-	<div class="col-md-4">
-		<label for="Photo" class="form-label">Photo</label>
+	<div class="col-md-8">
+		<label for="photo" class="form-label">Photo</label>
 		<input type="file" class="form-control" id="photo" accept="image/*" name="photo" required>
 		<div class="valid-feedback">
 			Looks good!
@@ -107,7 +102,7 @@
 	</div>
 
 	<div class="col-12">
-		<button class="btn btn-primary" type="submit">Submit form</button>
+		<button class="btn btn-primary" type="submit">Submit</button>
 	</div>
 </form>
 

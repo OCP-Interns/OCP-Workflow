@@ -21,17 +21,18 @@ def init_db(app):
 class Personnel(db.Model):
 	__tablename__ = 'personnel'
 	reg_num = db.Column(db.String(255), primary_key=True)
+	photo = db.Column(db.String(255), nullable=False)
 	cin = db.Column(db.String(255), unique=True)
+
 	first_name = db.Column(db.String(255), nullable=False)
 	last_name = db.Column(db.String(255), nullable=False)
-	dept = db.Column(db.String(255), nullable=False)
 	phone = db.Column(db.String(255), nullable=False)
 	email = db.Column(db.String(255), nullable=False, unique=True)
 	password = db.Column(db.String(255), nullable=False)
+	shift = db.Column(db.String(255), nullable=False) # Values: 'normal', 'split', 'rotating'
+
 	deleted = db.Column(db.Boolean, nullable=False, default=False)
 	is_admin = db.Column(db.Boolean, nullable=False, default=False)
-	photo = db.Column(db.String(255), nullable=False)
-	#face_encoding = db.Column(db.JSON, nullable=False)
 
 class TimeTable(db.Model):
 	__tablename__ = 'timetable'

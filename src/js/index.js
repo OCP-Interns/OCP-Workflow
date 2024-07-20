@@ -50,7 +50,10 @@ ipcMain.on('save-session', (event, user) => {
 	console.log('Session saved');
 	// Current date in milliseconds
 	const date = Date.now();
-	storage.set('session', JSON.stringify({ ...user, date }));
+
+	console.log(user);
+
+	storage.set('session', JSON.stringify({ user, date }));
 });
 ipcMain.on('clear-session', (event) => {
 	console.log('Session cleared');

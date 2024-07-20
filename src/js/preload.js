@@ -60,6 +60,8 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 			return;
 		}
 
+		console.log(userSession);
+		console.log(JSON.parse(userSession).user);
 		fetch(validateSessionEndpoint, {
 			method: 'POST',
 			headers: {
