@@ -374,24 +374,12 @@
 <script>
 	function showEditForm() {
 		document.getElementById("timetable-container").style.display = "none";
-		document.getElementById("edit-form").style.display = "block";
+		document.getElementById("edit-employee-form").style.display = "flex";
 	}
 
 	function showTimetable() {
 		document.getElementById("timetable-container").style.display = "block";
-		document.getElementById("edit-form").style.display = "none";
+		document.getElementById("edit-employee-form").style.display = "none";
 	}
-
-	// <!--! Will later be replaced-->
-	// Add time header, add time cells to the timetable, ana add day cells to the timetable
-	//const timeHeader = document.querySelector("#timetable thead tr");
-	//for (let i = 0; i < 24; i++) {
-	//	const th = document.createElement("th");
-	//	th.textContent = `${i < 10 ? "0" + i : i}:00 - ${i + 1 < 10 ? "0" + (i + 1) : i + 1}:00`;
-	//	timeHeader.appendChild(th);
-	//}
-
-	//const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-	//const TimeTableBody = document.querySelector("#timetable tbody");
 </script>
 {% endblock %}
