@@ -2,7 +2,7 @@ import face_recognition
 
 from db import init_db
 from sign_in import sign_in_bp
-from routes import general_bp, employee_bp
+from routes import general_bp, employee_bp,events_bp
 from init import *
 
 def create_app():	
@@ -13,6 +13,7 @@ def create_app():
 	app.register_blueprint(sign_in_bp)
 	app.register_blueprint(general_bp)
 	app.register_blueprint(employee_bp)
+	app.register_blueprint(events_bp)
 	
 	return app, db
 
