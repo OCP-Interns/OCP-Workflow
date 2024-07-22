@@ -2,7 +2,6 @@ body {
 	font-family: Arial, sans-serif;
 	background-color: #f8f9fa;
 	margin: 0;
-	padding: 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -10,12 +9,6 @@ body {
 }
 
 .container {
-	padding: 20px;
-	margin-top: 200px;
-	margin-right: 50px;
-	margin-bottom: 200px;
-	width: 60000px;
-	height: 470px;
 	align-items: start;
 }
 
