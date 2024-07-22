@@ -58,9 +58,8 @@ function addTableTimeTonJson(event) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    console.log(`matricule: ${regNum}`);
-
-    fetch(`http://localhost:5000/timetable/${regNum}`)
+    console.log(`matricule: ${employeeNum}`);
+    fetch(`http://localhost:5000/timetable/${employeeNum}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay ' + response.statusText);
