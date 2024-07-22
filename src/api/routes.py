@@ -187,3 +187,38 @@ def restore_employee(cin):
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
 	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url)
+
+
+schedule = {day: {f'{hour:02}:00 - {hour + 1:02}:00': [] for hour in range(23)} for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}
+for day in schedule:
+    schedule[day]['23:00 - 00:00'] = []
+
+events_bp = Blueprint('events', __name__)
+
+@events_bp.route('/events', methods=['GET', 'POST'])
+def events():
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    hours = [f'{hour:02}:00 - {hour + 1:02}:00' for hour in range(23)] + ['23:00 - 00:00']
+    employees = Personnel.query.filter_by(deleted=False).all()
+    
+    if request.method == 'POST':
+        day = request.form['day']
+        start_hour = request.form['start_hour']
+        end_hour = request.form['end_hour']
+        event = request.form['event']
+        event_emp = request.form['event_emp']  # Get the selected employee
+        
+        start_index = hours.index(start_hour)
+        end_index = hours.index(end_hour)
+        
+        if start_index <= end_index:
+            for hour in hours[start_index:end_index + 1]:
+                schedule[day][hour].append((event, event_emp))
+        else:
+            for hour in hours[start_index:]:
+                schedule[day][hour].append((event, event_emp))
+            next_day = days[(days.index(day) + 1) % 7]
+            for hour in hours[:end_index + 1]:
+                schedule[next_day][hour].append((event, event_emp))
+    
+    return render_template('event.html', days=days, hours=hours, schedule=schedule, employees=employees)
