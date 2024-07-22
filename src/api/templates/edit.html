@@ -54,8 +54,8 @@
 
 	<div class="col-md-7">
 		<label for="email" class="form-label">Email</label>
-		<input type="email" class="form-control" id="email" placeholder="Email" name="email" value="{{ employee.email }}"
-			required>
+		<input type="email" class="form-control" id="email" placeholder="Email" name="email"
+			value="{{ employee.email }}" required>
 		<div class="valid-feedback">
 			Looks good!
 		</div>
@@ -71,16 +71,16 @@
 			Looks good!
 		</div>
 		<div class="invalid-feedback">
-			Please enter a valid phone number. (e.g. 0612345678)
+			Please enter a valid phone number. (Moroccan phone number)
 		</div>
 	</div>
 
 	<div class="col-md-4">
 		<label for="shift" class="form-label">Shift Type</label>
 		<select class="form-select" id="shift" name="shift" required>
-			<option value="normal" {% if employee.shift == "normal" %}selected{% endif %}>Normal Shift</option>
-			<option value="split" {% if employee.shift == "split" %}selected{% endif %}>Split Shift</option>
-			<option value="rotating" {% if employee.shift == "rotating" %}selected{% endif %}>Rotating Shift</option>
+			<option value="normal" {% if employee.shift=="normal" %}selected{% endif %}>Normal Shift</option>
+			<option value="split" {% if employee.shift=="split" %}selected{% endif %}>Split Shift</option>
+			<option value="rotating" {% if employee.shift=="rotating" %}selected{% endif %}>Rotating Shift</option>
 		</select>
 	</div>
 	<div class="col-md-6">
