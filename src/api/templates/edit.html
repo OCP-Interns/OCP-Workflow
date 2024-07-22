@@ -8,15 +8,16 @@
 
 <script>
 	const employeeCIN = "{{ employee.cin }}";
+	const employeeNum = "{{ employee.reg_num }}";
 </script>
 {% endblock %}
 
 {% block content %}
 <div class="links">
-	<a href="#" onclick="showEditForm()">Edit Details</a>
-	/
+	<a href="#" onclick="showEditForm()">Edit Details</a> /
 	<a href="#" onclick="showTimetable()">Edit Timetable</a>
 </div>
+
 <form class="row g-3 needs-validation" id="edit-employee-form" method="POST" novalidate>
 	<div class="col-md-4">
 		<label for="first-name" class="form-label">First name</label>
@@ -142,244 +143,60 @@
 	</div>
 	<button type="submit" class="submit-btn">Submit</button>
 </form>-->
-<div class="table-container" id="timetable-container" style="display: none;">
-	<h2>Time Table</h2>
-	<button class="add-btn" id="add-btn">Add</button>
-	<table id="timetable">
+
+<div class="table" id="timetable" style="display: none;">
+	<button onclick="handleADD_show()">Add</button>
+	<div class="card" id="card" style="display: none;">
+		<form action="{{ url_for('AddTableTime.AddTableTime', personnel_reg_num=employee.reg_num) }}" method="POST" onsubmit="addTableTimeTonJson(event)">
+		<button type="button" id="back" class="back" onclick="handleADD_hide()">Back</button>
+		<h1>Add your Time-Table</h1>
+		<div class="day">
+			<label for="day">Select the Day:</label>
+			<select id="day" name="day">
+				<option value="Monday">Monday</option>
+				<option value="Tuesday">Tuesday</option>
+				<option value="Wednesday">Wednesday</option>
+				<option value="Thursday">Thursday</option>
+				<option value="Friday">Friday</option>
+				<option value="Saturday">Saturday</option>
+				<option value="Sunday">Sunday</option>
+			</select>
+		</div>
+		<div class="from">
+			<label for="from">From:</label>
+			<select class="from" id="from" name="from"></select>
+		</div>
+		<div class="To">
+			<label for="To">To:</label>
+			<select class="To" id="To" name="To"></select>
+		</div>
+		<input type="hidden" name="timetable_json" id="timetable_json">
+		<input type="submit" value="ADD">
+	</form>
+	</div>
+	<table>
 		<thead>
 			<tr>
-				<th class="day">Day</th>
-				<th>00:00 - 01:00</th>
-				<th>01:00 - 02:00</th>
-				<th>02:00 - 03:00</th>
-				<th>03:00 - 04:00</th>
-				<th>04:00 - 05:00</th>
-				<th>05:00 - 06:00</th>
-				<th>06:00 - 07:00</th>
-				<th>07:00 - 08:00</th>
-				<th>08:00 - 09:00</th>
-				<th>09:00 - 10:00</th>
-				<th>10:00 - 11:00</th>
-				<th>11:00 - 12:00</th>
-				<th>12:00 - 13:00</th>
-				<th>13:00 - 14:00</th>
-				<th>14:00 - 15:00</th>
-				<th>15:00 - 16:00</th>
-				<th>16:00 - 17:00</th>
-				<th>17:00 - 18:00</th>
-				<th>18:00 - 19:00</th>
-				<th>19:00 - 20:00</th>
-				<th>20:00 - 21:00</th>
-				<th>21:00 - 22:00</th>
-				<th>22:00 - 23:00</th>
-				<th>23:00 - 00:00</th>
+				<th class="time">Time</th>
+				{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+					<th class="day">{{ day }}</th>
+				{% endfor %}
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="day monday">
-				<td class="day">Monday</td>
-				<td class="monday-00"></td>
-				<td class="monday-01"></td>
-				<td class="monday-02"></td>
-				<td class="monday-03"></td>
-				<td class="monday-04"></td>
-				<td class="monday-05"></td>
-				<td class="monday-06"></td>
-				<td class="monday-07"></td>
-				<td class="monday-08"></td>
-				<td class="monday-09"></td>
-				<td class="monday-10"></td>
-				<td class="monday-11"></td>
-				<td class="monday-12"></td>
-				<td class="monday-13"></td>
-				<td class="monday-14"></td>
-				<td class="monday-15"></td>
-				<td class="monday-16"></td>
-				<td class="monday-17"></td>
-				<td class="monday-18"></td>
-				<td class="monday-19"></td>
-				<td class="monday-20"></td>
-				<td class="monday-21"></td>
-				<td class="monday-22"></td>
-				<td class="monday-23"></td>
-			</tr>
-			<tr class="day tuesday">
-				<td class="day">Tuesday</td>
-				<td class="tuesday-00"></td>
-				<td class="tuesday-01"></td>
-				<td class="tuesday-02"></td>
-				<td class="tuesday-03"></td>
-				<td class="tuesday-04"></td>
-				<td class="tuesday-05"></td>
-				<td class="tuesday-06"></td>
-				<td class="tuesday-07"></td>
-				<td class="tuesday-08"></td>
-				<td class="tuesday-09"></td>
-				<td class="tuesday-10"></td>
-				<td class="tuesday-11"></td>
-				<td class="tuesday-12"></td>
-				<td class="tuesday-13"></td>
-				<td class="tuesday-14"></td>
-				<td class="tuesday-15"></td>
-				<td class="tuesday-16"></td>
-				<td class="tuesday-17"></td>
-				<td class="tuesday-18"></td>
-				<td class="tuesday-19"></td>
-				<td class="tuesday-20"></td>
-				<td class="tuesday-21"></td>
-				<td class="tuesday-22"></td>
-				<td class="tuesday-23"></td>
-			</tr>
-			<tr class="day wednesday">
-				<td class="day">Wednesday</td>
-				<td class="wednesday-00"></td>
-				<td class="wednesday-01"></td>
-				<td class="wednesday-02"></td>
-				<td class="wednesday-03"></td>
-				<td class="wednesday-04"></td>
-				<td class="wednesday-05"></td>
-				<td class="wednesday-06"></td>
-				<td class="wednesday-07"></td>
-				<td class="wednesday-08"></td>
-				<td class="wednesday-09"></td>
-				<td class="wednesday-10"></td>
-				<td class="wednesday-11"></td>
-				<td class="wednesday-12"></td>
-				<td class="wednesday-13"></td>
-				<td class="wednesday-14"></td>
-				<td class="wednesday-15"></td>
-				<td class="wednesday-16"></td>
-				<td class="wednesday-17"></td>
-				<td class="wednesday-18"></td>
-				<td class="wednesday-19"></td>
-				<td class="wednesday-20"></td>
-				<td class="wednesday-21"></td>
-				<td class="wednesday-22"></td>
-				<td class="wednesday-23"></td>
-			</tr>
-			<tr class="day thursday">
-				<td class="day">Thursday</td>
-				<td class="thursday-00"></td>
-				<td class="thursday-01"></td>
-				<td class="thursday-02"></td>
-				<td class="thursday-03"></td>
-				<td class="thursday-04"></td>
-				<td class="thursday-05"></td>
-				<td class="thursday-06"></td>
-				<td class="thursday-07"></td>
-				<td class="thursday-08"></td>
-				<td class="thursday-09"></td>
-				<td class="thursday-10"></td>
-				<td class="thursday-11"></td>
-				<td class="thursday-12"></td>
-				<td class="thursday-13"></td>
-				<td class="thursday-14"></td>
-				<td class="thursday-15"></td>
-				<td class="thursday-16"></td>
-				<td class="thursday-17"></td>
-				<td class="thursday-18"></td>
-				<td class="thursday-19"></td>
-				<td class="thursday-20"></td>
-				<td class="thursday-21"></td>
-				<td class="thursday-22"></td>
-				<td class="thursday-23"></td>
-			</tr>
-			<tr class="day friday">
-				<td class="day">Friday</td>
-				<td class="friday-00"></td>
-				<td class="friday-01"></td>
-				<td class="friday-02"></td>
-				<td class="friday-03"></td>
-				<td class="friday-04"></td>
-				<td class="friday-05"></td>
-				<td class="friday-06"></td>
-				<td class="friday-07"></td>
-				<td class="friday-08"></td>
-				<td class="friday-09"></td>
-				<td class="friday-10"></td>
-				<td class="friday-11"></td>
-				<td class="friday-12"></td>
-				<td class="friday-13"></td>
-				<td class="friday-14"></td>
-				<td class="friday-15"></td>
-				<td class="friday-16"></td>
-				<td class="friday-17"></td>
-				<td class="friday-18"></td>
-				<td class="friday-19"></td>
-				<td class="friday-20"></td>
-				<td class="friday-21"></td>
-				<td class="friday-22"></td>
-				<td class="friday-23"></td>
-			</tr>
-			<tr class="day saturday">
-				<td class="day">Saturday</td>
-				<td class="saturday-00"></td>
-				<td class="saturday-01"></td>
-				<td class="saturday-02"></td>
-				<td class="saturday-03"></td>
-				<td class="saturday-04"></td>
-				<td class="saturday-05"></td>
-				<td class="saturday-06"></td>
-				<td class="saturday-07"></td>
-				<td class="saturday-08"></td>
-				<td class="saturday-09"></td>
-				<td class="saturday-10"></td>
-				<td class="saturday-11"></td>
-				<td class="saturday-12"></td>
-				<td class="saturday-13"></td>
-				<td class="saturday-14"></td>
-				<td class="saturday-15"></td>
-				<td class="saturday-16"></td>
-				<td class="saturday-17"></td>
-				<td class="saturday-18"></td>
-				<td class="saturday-19"></td>
-				<td class="saturday-20"></td>
-				<td class="saturday-21"></td>
-				<td class="saturday-22"></td>
-				<td class="saturday-23"></td>
-			</tr>
-			<tr class="day sunday">
-				<td class="day">Sunday</td>
-				<td class="sunday-00"></td>
-				<td class="sunday-01"></td>
-				<td class="sunday-02"></td>
-				<td class="sunday-03"></td>
-				<td class="sunday-04"></td>
-				<td class="sunday-05"></td>
-				<td class="sunday-06"></td>
-				<td class="sunday-07"></td>
-				<td class="sunday-08"></td>
-				<td class="sunday-09"></td>
-				<td class="sunday-10"></td>
-				<td class="sunday-11"></td>
-				<td class="sunday-12"></td>
-				<td class="sunday-13"></td>
-				<td class="sunday-14"></td>
-				<td class="sunday-15"></td>
-				<td class="sunday-16"></td>
-				<td class="sunday-17"></td>
-				<td class="sunday-18"></td>
-				<td class="sunday-19"></td>
-				<td class="sunday-20"></td>
-				<td class="sunday-21"></td>
-				<td class="sunday-22"></td>
-				<td class="sunday-23"></td>
-			</tr>
+			{% for i in range(24) %}
+				<tr>
+					<th class="time">{{ '%02d:00'|format(i) }}</th>
+					{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+						<td class="time" id="{{ day }}-{{ '%02d:00'|format(i) }}"></td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
 		</tbody>
 	</table>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block scripts %}
-<script>
-	function showEditForm() {
-		document.getElementById("timetable-container").style.display = "none";
-		document.getElementById("edit-employee-form").style.display = "flex";
-	}
-
-	function showTimetable() {
-		document.getElementById("timetable-container").style.display = "block";
-		document.getElementById("edit-employee-form").style.display = "none";
-	}
-</script>
+<script src="../static/js/tabletime.js" defer></script>
 {% endblock %}

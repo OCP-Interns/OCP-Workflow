@@ -1,10 +1,10 @@
 from flask import Blueprint, request,jsonify, render_template, session
-from db import Personnel,Event
+from db import Personnel, Event, TimeTable, db
 import cloudinary
 from cloudinary.utils import cloudinary_url
 import secrets
 from init import bcrypt
-from db import db
+import json
 import hashlib
 import os
 import qrcode
@@ -189,9 +189,42 @@ def restore_employee(cin):
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
 	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url)
-events_bp = Blueprint('events', __name__)
+
+@employee_bp.route('/AddTableTime/<personnel_reg_num>', methods=['GET', 'POST'])
+def AddTableTime(personnel_reg_num):
+    if request.method == 'POST':
+        timetable_json = request.form.get('timetable_json')
+        if timetable_json:
+            timetable_data = json.loads(timetable_json)
+            new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
+            db.session.add(new_entry)
+            db.session.commit()
+            print('reg_num : ', personnel_reg_num, ' added by post method')
+        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
+    else:
+        print('reg_num : ', personnel_reg_num, ' accessed by get method')
+        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
+
+def GetEMPBy_reg_num(reg_num):
+    return Personnel.query.filter_by(reg_num=reg_num).first()
+
+@employee_bp.route('/timetable/<personnel_reg_num>', methods=['GET'])
+def TimeView(personnel_reg_num):
+    timetable = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).all()
+    print(f"Requested timetable for personnel_reg_num: {personnel_reg_num}")
+    if timetable:
+        timetable_data = [entry.json for entry in timetable]
+        return jsonify({'timetable': timetable_data})
+    else:
+        print(f"No timetable found for personnel_reg_num: {personnel_reg_num}")
+        return jsonify({'error': 'Timetable not found'}), 404
+	
+@employee_bp.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
+def deleteTableTime():
+	pass
 
 
+####### EVENTS ROUTES #######
 events_bp = Blueprint('events', __name__)
 
 # Création du dossier QR codes si nécessaire
@@ -251,4 +284,3 @@ def events():
                     schedule[next_day][hour].append((event.event, event.event_type))
     
     return render_template('template.html', days=days, hours=hours, schedule=schedule)
-
