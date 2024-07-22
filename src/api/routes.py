@@ -1,4 +1,4 @@
-from flask import Blueprint, request,jsonify, render_template, session
+from flask import Blueprint, request, jsonify, render_template, session
 from db import Personnel, Event, TimeTable, db
 import cloudinary
 from cloudinary.utils import cloudinary_url
@@ -192,32 +192,32 @@ def trash():
 
 @employee_bp.route('/AddTableTime/<personnel_reg_num>', methods=['GET', 'POST'])
 def AddTableTime(personnel_reg_num):
-    if request.method == 'POST':
-        timetable_json = request.form.get('timetable_json')
-        if timetable_json:
-            timetable_data = json.loads(timetable_json)
-            new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
-            db.session.add(new_entry)
-            db.session.commit()
-            print('reg_num : ', personnel_reg_num, ' added by post method')
-        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
-    else:
-        print('reg_num : ', personnel_reg_num, ' accessed by get method')
-        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
+	if request.method == 'POST':
+		timetable_json = request.form.get('timetable_json')
+		if timetable_json:
+			timetable_data = json.loads(timetable_json)
+			new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
+			db.session.add(new_entry)
+			db.session.commit()
+			print('reg_num : ', personnel_reg_num, ' added by post method')
+		return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
+	else:
+		print('reg_num : ', personnel_reg_num, ' accessed by get method')
+		return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
 
 def GetEMPBy_reg_num(reg_num):
-    return Personnel.query.filter_by(reg_num=reg_num).first()
+	return Personnel.query.filter_by(reg_num=reg_num).first()
 
 @employee_bp.route('/timetable/<personnel_reg_num>', methods=['GET'])
 def TimeView(personnel_reg_num):
-    timetable = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).all()
-    print(f"Requested timetable for personnel_reg_num: {personnel_reg_num}")
-    if timetable:
-        timetable_data = [entry.json for entry in timetable]
-        return jsonify({'timetable': timetable_data})
-    else:
-        print(f"No timetable found for personnel_reg_num: {personnel_reg_num}")
-        return jsonify({'error': 'Timetable not found'}), 404
+	timetable = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).all()
+	print(f"Requested timetable for personnel_reg_num: {personnel_reg_num}")
+	if timetable:
+		timetable_data = [entry.json for entry in timetable]
+		return jsonify({'timetable': timetable_data})
+	else:
+		print(f"No timetable found for personnel_reg_num: {personnel_reg_num}")
+		return jsonify({'error': 'Timetable not found'}), 404
 	
 @employee_bp.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
 def deleteTableTime():
@@ -230,57 +230,57 @@ events_bp = Blueprint('events', __name__)
 # Création du dossier QR codes si nécessaire
 qr_codes_dir = os.path.join('static', 'qr_codes')
 if not os.path.exists(qr_codes_dir):
-    os.makedirs(qr_codes_dir)
+	os.makedirs(qr_codes_dir)
 
 @events_bp.route('/events', methods=['POST', 'GET'])
 def events():
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    hours = [f'{hour:02}:00 - ' for hour in range(23)] + ['23:00 - 00:00']
-    
-    if request.method == 'POST':
-        try:
-            day = request.form.get('day')
-            start_hour = request.form.get('start_hour')
-            end_hour = request.form.get('end_hour')
-            event = request.form.get('event')
-            event_type = request.form.get('event_type')
+	days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	hours = [f'{hour:02}:00 - ' for hour in range(23)] + ['23:00 - 00:00']
+	
+	if request.method == 'POST':
+		try:
+			day = request.form.get('day')
+			start_hour = request.form.get('start_hour')
+			end_hour = request.form.get('end_hour')
+			event = request.form.get('event')
+			event_type = request.form.get('event_type')
 
-            if not all([day, start_hour, end_hour, event, event_type]):
-                return jsonify({'success': False, 'message': 'Missing data'}), 400
+			if not all([day, start_hour, end_hour, event, event_type]):
+				return jsonify({'success': False, 'message': 'Missing data'}), 400
 
-            event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
-            db.session.add(event_obj)
-            db.session.commit()
+			event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
+			db.session.add(event_obj)
+			db.session.commit()
 
-            qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
-            qr_code = qrcode.make(qr_code_data)
-            qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
-            qr_code.save(qr_code_path)
+			qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
+			qr_code = qrcode.make(qr_code_data)
+			qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
+			qr_code.save(qr_code_path)
 
-            event_obj.qr_code_path = qr_code_path
-            db.session.commit()
+			event_obj.qr_code_path = qr_code_path
+			db.session.commit()
 
-            return render_template('template.html')
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'success': False, 'message': str(e)}), 500
+			return render_template('template.html')
+		except Exception as e:
+			db.session.rollback()
+			return jsonify({'success': False, 'message': str(e)}), 500
 
-    events = Event.query.all()
-    schedule = {day: {hour: [] for hour in hours} for day in days}
-    for event in events:
-        start_index = hours.index(event.start_hour)
-        end_index = hours.index(event.end_hour)
-        if start_index <= end_index:
-            for hour in hours[start_index:end_index + 1]:
-                if (event.event, event.event_type) not in schedule[event.day][hour]:
-                    schedule[event.day][hour].append((event.event, event.event_type))
-        else:
-            for hour in hours[start_index:]:
-                if (event.event, event.event_type) not in schedule[event.day][hour]:
-                    schedule[event.day][hour].append((event.event, event.event_type))
-            next_day = days[(days.index(event.day) + 1) % 7]
-            for hour in hours[:end_index + 1]:
-                if (event.event, event.event_type) not in schedule[next_day][hour]:
-                    schedule[next_day][hour].append((event.event, event.event_type))
-    
-    return render_template('template.html', days=days, hours=hours, schedule=schedule)
+	events = Event.query.all()
+	schedule = {day: {hour: [] for hour in hours} for day in days}
+	for event in events:
+		start_index = hours.index(event.start_hour)
+		end_index = hours.index(event.end_hour)
+		if start_index <= end_index:
+			for hour in hours[start_index:end_index + 1]:
+				if (event.event, event.event_type) not in schedule[event.day][hour]:
+					schedule[event.day][hour].append((event.event, event.event_type))
+		else:
+			for hour in hours[start_index:]:
+				if (event.event, event.event_type) not in schedule[event.day][hour]:
+					schedule[event.day][hour].append((event.event, event.event_type))
+			next_day = days[(days.index(event.day) + 1) % 7]
+			for hour in hours[:end_index + 1]:
+				if (event.event, event.event_type) not in schedule[next_day][hour]:
+					schedule[next_day][hour].append((event.event, event.event_type))
+	
+	return render_template('template.html', days=days, hours=hours, schedule=schedule)
