@@ -14,7 +14,8 @@
 
 {% block content %}
 <div class="links">
-	<a href="#" onclick="showEditForm()">Edit Details</a> /
+	<a href="#" onclick="showEditForm()">Edit Details</a>
+	/
 	<a href="#" onclick="showTimetable()">Edit Timetable</a>
 </div>
 
@@ -147,7 +148,7 @@
 <div class="table" id="timetable" style="display: none;">
 	<button onclick="handleADD_show()">Add</button>
 	<div class="card" id="card" style="display: none;">
-		<form action="{{ url_for('AddTableTime.AddTableTime', personnel_reg_num=employee.reg_num) }}" method="POST" onsubmit="addTableTimeTonJson(event)">
+		<form action="{{ url_for('employee_routes.AddTableTime', personnel_reg_num=employee.reg_num) }}" method="POST" onsubmit="addTableTimeTonJson(event)">
 		<button type="button" id="back" class="back" onclick="handleADD_hide()">Back</button>
 		<h1>Add your Time-Table</h1>
 		<div class="day">
@@ -198,5 +199,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="../static/js/tabletime.js" defer></script>
+<script src="{{ url_for('static', filename='js/tabletime.js') }}" defer></script>
 {% endblock %}

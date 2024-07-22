@@ -12,6 +12,8 @@ import qrcode
 def generate_8_digit_hash(value):
 	return hashlib.md5(str(value).encode()).hexdigest()[:8]
 
+
+
 ####### GENERAL ROUTES #######
 # Combine all the general routes into a single blueprint
 general_bp = Blueprint('general_routes', __name__)
@@ -31,10 +33,13 @@ def exit():
 def dashboard():
 	return render_template('dashboard.html')
 
+
+
 ####### EMPLOYEE ROUTES #######
 # Combine all the employee routes into a single blueprint
 employee_bp = Blueprint('employee_routes', __name__)
 
+## EMPLOYEES ##
 @employee_bp.route('/manage-employees')
 def manage_employees():
 	employees = Personnel.query.filter_by(deleted=False).all()
@@ -190,15 +195,25 @@ def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
 	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url)
 
+
+## TIMETABLE ##
 @employee_bp.route('/AddTableTime/<personnel_reg_num>', methods=['GET', 'POST'])
 def AddTableTime(personnel_reg_num):
 	if request.method == 'POST':
 		timetable_json = request.form.get('timetable_json')
 		if timetable_json:
 			timetable_data = json.loads(timetable_json)
-			new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
-			db.session.add(new_entry)
-			db.session.commit()
+			#! HERE
+			existing_employee = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).first()
+			existing_timetable = json.loads(existing_employee.json) if existing_employee else {}
+			add_time(timetable_data, existing_timetable, personnel_reg_num)
+
+			#?{
+			#new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
+			#db.session.add(new_entry)
+			#db.session.commit()
+			#?}
+
 			print('reg_num : ', personnel_reg_num, ' added by post method')
 		return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
 	else:
@@ -207,6 +222,61 @@ def AddTableTime(personnel_reg_num):
 
 def GetEMPBy_reg_num(reg_num):
 	return Personnel.query.filter_by(reg_num=reg_num).first()
+#! HERE
+# timetable_data = { "day": "<day>", "from": "<from>", "to": "<to>" }
+def to_interval(timetable_data):
+	# Convert the time to integers for easier comparison (e.g. "08:00" -> 8)
+	from_time = int(timetable_data["from"].split(":")[0])
+	to_time = int(timetable_data["to"].split(":")[0])
+	return [from_time, to_time]
+# Format:
+# {
+# 	"Monday": {
+# 		["from": "08:00", "to": "12:00"],
+# 		["from": "14:00", "to": "18:00"]
+# 	},
+# 	"Tuesday": {
+#		...
+# 	},
+# 	...
+# }
+
+# Look for the day in the timetable, if it exists:
+# 	- If the interval is already in the timetable, skip
+# 	- If the intervals overlap, merge them (along with other intervals that overlap)
+# 	- If the intervals don't overlap, add the interval
+# If the day doesn't exist, add the day and interval
+def add_time(timetable_data, timetable, reg_num):
+	day = timetable_data["day"]
+	interval_int = to_interval(timetable_data)
+	if day in timetable:
+		# Check if the interval is already in the timetable
+		for existing_interval in timetable[day]:
+			existing_interval_int = to_interval(existing_interval)
+			# Overlap check: if the start of the new interval is between the start and end of the existing interval,
+			# or if the end of the new interval is between the start and end of the existing interval, the intervals overlap
+			# Visual representation:
+			# Existing interval:			[--------]
+			# New interval:					    [--------]
+			# The resulting interval:		[---^----^---]
+			if (interval_int[0] >= existing_interval_int[0] and interval_int[0] <= existing_interval_int[1]) or (interval_int[1] >= existing_interval_int[0] and interval_int[1] <= existing_interval_int[1]):
+				# The intervals overlap, merge them
+				existing_interval['from'] = min(existing_interval_int[0], interval_int[0])
+				existing_interval['to'] = max(existing_interval_int[1], interval_int[1])
+				break
+		# The intervals don't overlap, add the interval
+		timetable[day].append({"from": timetable_data["from"], "to": timetable_data["to"]})
+	else:
+		# The day doesn't exist, add the day and interval
+		timetable[day] = [{"from": timetable_data["from"], "to": timetable_data["to"]}]
+	# Update the timetable in the database
+	employee = TimeTable.query.filter_by(personnel_reg_num=reg_num).first()
+	if employee:
+		employee.json = json.dumps(timetable)
+	else:
+		new_entry = TimeTable(personnel_reg_num=reg_num, json=json.dumps(timetable))
+		db.session.add(new_entry)
+	db.session.commit()
 
 @employee_bp.route('/timetable/<personnel_reg_num>', methods=['GET'])
 def TimeView(personnel_reg_num):
@@ -222,6 +292,7 @@ def TimeView(personnel_reg_num):
 @employee_bp.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
 def deleteTableTime():
 	pass
+
 
 
 ####### EVENTS ROUTES #######

@@ -1,1 +1,111 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Inter", sans-serif;
+}
 
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=checkbox],
+a {
+  outline: unset;
+}
+
+a {
+  text-decoration: none;
+  color: #4EAAED;
+  transition: all 0.2s;
+}
+a:hover {
+  text-decoration: underline;
+  color: #2094e8;
+}
+a:focus {
+  text-decoration: underline;
+  color: #1478c1;
+}
+
+.fully-rounded {
+  border-radius: 1000px !important;
+}
+
+.g-border-radius {
+  border-radius: 0.75rem;
+}
+
+.btn-primary {
+  background-color: #16B47B;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover {
+  background-color: #10875c !important;
+}
+.btn-primary:focus {
+  background-color: #10875c !important;
+  box-shadow: 0px 0px 0px 2px #4EAAED !important;
+}
+.btn-primary:active {
+  background-color: #0b593d !important;
+}
+
+form .form-group {
+  text-align: left;
+}
+form .form-group label:not([class=form-check-label]) {
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+}
+form .form-group input.text-field {
+  padding: 1rem;
+  border: none;
+  font-size: inherit;
+  font-weight: 300;
+  letter-spacing: 0.05rem;
+  transition: all 0.2s;
+  background-color: #EBEBEB;
+  border-radius: 0.75rem !important;
+}
+form .form-group input.text-field:focus {
+  background-color: #F8F8F8;
+  box-shadow: inset 0px 0px 0px 2px #4EAAED;
+}
+form .form-group input.text-field ::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+  padding: 0.6rem;
+}
+
+.window-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 0.75rem;
+}
+.window-controls span#minimize-btn, .window-controls span#maximize-btn, .window-controls span#close-btn {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 1000px;
+  margin: 0.2rem;
+  cursor: pointer;
+}
+.window-controls span#minimize-btn {
+  background-color: #FFD700;
+}
+.window-controls span#maximize-btn {
+  background-color: #FFA500;
+}
+.window-controls span#close-btn {
+  background-color: #FF6347;
+}

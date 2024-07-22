@@ -1,87 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
-body,
-html {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  font-family: "Inter", sans-serif;
-}
-
-input[type=text],
-input[type=password],
-input[type=email],
-input[type=checkbox],
-a {
-  outline: unset;
-}
-
-a {
-  text-decoration: none;
-  color: #4EAAED;
-  transition: all 0.2s;
-}
-a:hover {
-  text-decoration: underline;
-  color: #2094e8;
-}
-a:focus {
-  text-decoration: underline;
-  color: #1478c1;
-}
-
-.fully-rounded {
-  border-radius: 1000px !important;
-}
-
-.g-border-radius {
-  border-radius: 0.75rem;
-}
-
-.btn-primary {
-  background-color: #16B47B;
-  color: white;
-  border: none;
-  font-size: 1rem;
-  letter-spacing: 0.05rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-primary:hover {
-  background-color: #10875c !important;
-}
-.btn-primary:focus {
-  background-color: #10875c !important;
-  box-shadow: 0px 0px 0px 2px #4EAAED !important;
-}
-.btn-primary:active {
-  background-color: #0b593d !important;
-}
-
-.window-controls {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5rem 0.75rem;
-}
-.window-controls span#minimize-btn, .window-controls span#maximize-btn, .window-controls span#close-btn {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 1000px;
-  margin: 0.2rem;
-  cursor: pointer;
-}
-.window-controls span#minimize-btn {
-  background-color: #FFD700;
-}
-.window-controls span#maximize-btn {
-  background-color: #FFA500;
-}
-.window-controls span#close-btn {
-  background-color: #FF6347;
-}
-
 #sign-in-page {
   height: 100%;
   font-size: 0.9rem;
@@ -125,23 +42,6 @@ a:focus {
 #sign-in-page .container-fluid form .form-group label:not([class=form-check-label]) {
   font-weight: 500;
   margin-bottom: 0.35rem;
-}
-#sign-in-page .container-fluid form .form-group input:not([type=checkbox]) {
-  padding: 1rem;
-  border: none;
-  font-size: inherit;
-  font-weight: light;
-  letter-spacing: 0.05rem;
-  transition: all 0.2s;
-  background-color: #EBEBEB;
-  border-radius: 0.75rem !important;
-}
-#sign-in-page .container-fluid form .form-group input:not([type=checkbox]):focus {
-  background-color: #F8F8F8;
-  box-shadow: inset 0px 0px 0px 2px #4EAAED;
-}
-#sign-in-page .container-fluid form .form-group input:not([type=checkbox]) ::placeholder {
-  color: rgba(0, 0, 0, 0.5);
 }
 #sign-in-page .container-fluid form .form-group #password {
   padding-right: 3.2rem;
@@ -188,12 +88,6 @@ a:focus {
 #sign-in-page .container-fluid form .form-group #show-password-btn:focus {
   outline: none;
   border: 1px solid #EBEBEB;
-}
-#sign-in-page .container-fluid form .form-group:has(#remember-me) {
-  display: none;
-}
-#sign-in-page .container-fluid form .btn {
-  padding: 0.6rem;
 }
 #sign-in-page .container-fluid #face-id-btn {
   padding: 0.6rem 1.5rem;

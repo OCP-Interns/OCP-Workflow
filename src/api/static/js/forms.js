@@ -86,15 +86,14 @@ if (typeof employeeCIN !== 'undefined') {
 		}, 'Failed to update employee');
 }
 
-
-	// Handle Add Event
-handleFormSubmitJSON('add-event-form', '/events', (data, formData) => {
-	console.log(data);
-}, (data, formData) => {
-	alert('Event added successfully');
-	document.getElementById('add-event-form').reset();
-	location.reload(); 
-}, 'Failed to add event');
+// ========= Manage Events =========
+handleFormSubmit('add-event-form', '/events', (data, formData) => {
+		console.log(data);
+	}, (data, formData) => {
+		alert('Event added successfully');
+		document.getElementById('add-event-form').reset();
+		location.reload(); 
+	}, 'Failed to add event', true);
 
 // ========= General =========
 // A generic function to handle all the form submissions

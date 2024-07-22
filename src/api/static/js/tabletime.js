@@ -1,10 +1,10 @@
 function showEditForm() {
-    document.getElementById('edit-form').style.display = 'block';
+    document.getElementById('edit-employee-form').style.display = 'flex';
     document.getElementById('timetable').style.display = 'none';
 }
 
 function showTimetable() {
-    document.getElementById('edit-form').style.display = 'none';
+    document.getElementById('edit-employee-form').style.display = 'none';
     document.getElementById('timetable').style.display = 'block';
 }
 
