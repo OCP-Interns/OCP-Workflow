@@ -90,14 +90,15 @@ form .form-group input.text-field ::placeholder {
   position: absolute;
   top: 0;
   right: 0;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
 }
 .window-controls span#minimize-btn, .window-controls span#maximize-btn, .window-controls span#close-btn {
-  display: inline-block;
   width: 1rem;
   height: 1rem;
   border-radius: 1000px;
-  margin: 0.2rem;
   cursor: pointer;
 }
 .window-controls span#minimize-btn {
@@ -108,4 +109,9 @@ form .form-group input.text-field ::placeholder {
 }
 .window-controls span#close-btn {
   background-color: #FF6347;
+}
+.window-controls.solid {
+  position: relative;
+  width: 100%;
+  background-color: white;
 }

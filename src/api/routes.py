@@ -31,7 +31,7 @@ def exit():
 
 @general_bp.route('/dashboard')
 def dashboard():
-	return render_template('dashboard.html')
+	return render_template('dashboard.html', page='dashboard')
 
 
 
@@ -43,7 +43,7 @@ employee_bp = Blueprint('employee_routes', __name__)
 @employee_bp.route('/manage-employees')
 def manage_employees():
 	employees = Personnel.query.filter_by(deleted=False).all()
-	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url)
+	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url, page='employees')
 
 @employee_bp.route('/add-employee', methods=['POST', 'GET'])
 def add_employee():
@@ -110,7 +110,7 @@ def add_employee():
 			return {'success': False, 'message': 'Error adding employee'}, 500
 	else:
 		print('\033[94m - GET: Showing add employee form\033[0m')
-		return render_template('add.html')
+		return render_template('add.html', page='employees')
 
 @employee_bp.route('/edit-employee/<cin>', methods=['POST', 'GET'])
 def edit_employee(cin):
@@ -164,7 +164,7 @@ def edit_employee(cin):
 			return {'success': False, 'message': 'Error editing employee'}, 500
 	else:
 		print('\033[94m - GET: Showing edit employee form\033[0m')
-		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url)
+		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url, page='employees')
 
 @employee_bp.route('/delete-employee/<cin>', methods=['POST'])
 def delete_employee(cin):
@@ -193,7 +193,7 @@ def restore_employee(cin):
 @employee_bp.route('/trash-bin')
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
-	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url)
+	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url, page='trash')
 
 
 ## TIMETABLE ##
@@ -354,4 +354,4 @@ def events():
 				if (event.event, event.event_type) not in schedule[next_day][hour]:
 					schedule[next_day][hour].append((event.event, event.event_type))
 	
-	return render_template('template.html', days=days, hours=hours, schedule=schedule)
+	return render_template('template.html', days=days, hours=hours, schedule=schedule, page='events')
