@@ -1,11 +1,13 @@
-from flask import Blueprint, request, render_template, session
-from db import Personnel
+from flask import Blueprint, request,jsonify, render_template, session
+from db import Personnel,Event
 import cloudinary
 from cloudinary.utils import cloudinary_url
 import secrets
 from init import bcrypt
 from db import db
 import hashlib
+import os
+import qrcode
 
 def generate_8_digit_hash(value):
 	return hashlib.md5(str(value).encode()).hexdigest()[:8]
@@ -187,3 +189,66 @@ def restore_employee(cin):
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
 	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url)
+events_bp = Blueprint('events', __name__)
+
+
+events_bp = Blueprint('events', __name__)
+
+# Création du dossier QR codes si nécessaire
+qr_codes_dir = os.path.join('static', 'qr_codes')
+if not os.path.exists(qr_codes_dir):
+    os.makedirs(qr_codes_dir)
+
+@events_bp.route('/events', methods=['POST', 'GET'])
+def events():
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    hours = [f'{hour:02}:00 - ' for hour in range(23)] + ['23:00 - 00:00']
+    
+    if request.method == 'POST':
+        try:
+            day = request.form.get('day')
+            start_hour = request.form.get('start_hour')
+            end_hour = request.form.get('end_hour')
+            event = request.form.get('event')
+            event_type = request.form.get('event_type')
+
+            if not all([day, start_hour, end_hour, event, event_type]):
+                return jsonify({'success': False, 'message': 'Missing data'}), 400
+
+            event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
+            db.session.add(event_obj)
+            db.session.commit()
+
+            qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
+            qr_code = qrcode.make(qr_code_data)
+            qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
+            qr_code.save(qr_code_path)
+
+            event_obj.qr_code_path = qr_code_path
+            db.session.commit()
+
+            return render_template('template.html')
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'message': str(e)}), 500
+
+    events = Event.query.all()
+    schedule = {day: {hour: [] for hour in hours} for day in days}
+    for event in events:
+        start_index = hours.index(event.start_hour)
+        end_index = hours.index(event.end_hour)
+        if start_index <= end_index:
+            for hour in hours[start_index:end_index + 1]:
+                if (event.event, event.event_type) not in schedule[event.day][hour]:
+                    schedule[event.day][hour].append((event.event, event.event_type))
+        else:
+            for hour in hours[start_index:]:
+                if (event.event, event.event_type) not in schedule[event.day][hour]:
+                    schedule[event.day][hour].append((event.event, event.event_type))
+            next_day = days[(days.index(event.day) + 1) % 7]
+            for hour in hours[:end_index + 1]:
+                if (event.event, event.event_type) not in schedule[next_day][hour]:
+                    schedule[next_day][hour].append((event.event, event.event_type))
+    
+    return render_template('template.html', days=days, hours=hours, schedule=schedule)
+
