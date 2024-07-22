@@ -10,9 +10,6 @@ body {
 }
 
 .container {
-
-
-
 	padding: 20px;
 	margin-top: 200px;
 	margin-right: 50px;
@@ -37,7 +34,7 @@ h1 {
 	justify-content: start;
 }
 
-.add-employee {
+.add-employee, .add-tableTime {
 	display: inline-block;
 	outline: none;
 	padding: 10px 20px;
@@ -51,7 +48,7 @@ h1 {
 
 }
 
-.add-employee:hover {
+.add-employee:hover, .add-tableTime {
 	background-color: #218838;
 }
 

@@ -24,17 +24,16 @@ class Personnel(db.Model):
 	cin = db.Column(db.String(255), unique=True)
 	first_name = db.Column(db.String(255), nullable=False)
 	last_name = db.Column(db.String(255), nullable=False)
-	dept = db.Column(db.String(255), nullable=False)
 	phone = db.Column(db.String(255), nullable=False)
 	email = db.Column(db.String(255), nullable=False, unique=True)
 	password = db.Column(db.String(255), nullable=False)
 	deleted = db.Column(db.Boolean, nullable=False, default=False)
 	is_admin = db.Column(db.Boolean, nullable=False, default=False)
 	photo = db.Column(db.String(255), nullable=False)
-	#face_encoding = db.Column(db.JSON, nullable=False)
 
 class TimeTable(db.Model):
 	__tablename__ = 'timetable'
 	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	personnel_reg_num = db.Column(db.String(255), db.ForeignKey('personnel.reg_num'), nullable=False)
 	json = db.Column(db.JSON, nullable=False)
+	

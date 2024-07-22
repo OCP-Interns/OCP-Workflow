@@ -1,6 +1,7 @@
-from flask import Blueprint, request, render_template
-from db import Personnel
+from flask import Blueprint, request, render_template, jsonify
+from db import Personnel, TimeTable, db
 from cloudinary.utils import cloudinary_url
+import json
 
 ping_bp = Blueprint('ping', __name__)
 @ping_bp.route('/ping')
@@ -40,7 +41,7 @@ def edit_employee(cin):
 	else:
 		print('GET')
 		print(f'Showing employee with CIN: {cin}')
-		return render_template('edit.html', employee=employee)
+		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url)
 
 delete_bp = Blueprint('delete_employee', __name__)
 @delete_bp.route('/delete-employee/<cin>', methods=['POST', 'GET'])
@@ -60,3 +61,43 @@ trash_bp = Blueprint('trash', __name__)
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
 	return render_template('trash.html', employees=employees)
+
+AddTableTime_bp = Blueprint('AddTableTime', __name__)
+@AddTableTime_bp.route('/AddTableTime/<personnel_reg_num>', methods=['GET', 'POST'])
+def AddTableTime(personnel_reg_num):
+    if request.method == 'POST':
+        timetable_json = request.form.get('timetable_json')
+        if timetable_json:
+            timetable_data = json.loads(timetable_json)
+            new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
+            db.session.add(new_entry)
+            db.session.commit()
+            print('reg_num : ', personnel_reg_num, ' added by post method')
+        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
+    else:
+        print('reg_num : ', personnel_reg_num, ' accessed by get method')
+        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
+
+def GetEMPBy_reg_num(reg_num):
+    return Personnel.query.filter_by(reg_num=reg_num).first()
+
+time_view_bp = Blueprint('timetable', __name__)
+@time_view_bp.route('/timetable/<personnel_reg_num>', methods=['GET'])
+def TimeView(personnel_reg_num):
+    timetable = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).all()
+    print(f"Requested timetable for personnel_reg_num: {personnel_reg_num}")
+    if timetable:
+        timetable_data = [entry.json for entry in timetable]
+        return jsonify({'timetable': timetable_data})
+    else:
+        print(f"No timetable found for personnel_reg_num: {personnel_reg_num}")
+        return jsonify({'error': 'Timetable not found'}), 404
+	
+delete_tableTime = Blueprint('deleteTableTime', __name__)
+@delete_tableTime.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
+	
+def deleteTableTime():
+	pass
+
+
+
