@@ -1,6 +1,5 @@
 #timetable {
   width: 100%;
-  overflow-x: scroll;
 }
 #timetable table {
   width: 100%;
@@ -16,4 +15,7 @@
   border: 1px solid #ddd;
   text-align: center;
   padding: 8px;
+}
+#timetable table td.filled {
+  background-color: #181820;
 }

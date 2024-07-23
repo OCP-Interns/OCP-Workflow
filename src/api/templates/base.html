@@ -99,9 +99,9 @@
 		</div>
 		<div class="base-wrapper">
 			<div class="row">
-				<nav class="col col-sm-2 col-md-3 side-bar">
+				<nav class="col col-sm-2 side-bar">
 					<div class="logo">
-						<img src="{{ url_for('static', filename='images/ocp-logo-white.png') }}" alt="OCP Group Logo"
+						<img src="{{ url_for('static', filename='images/ocp-logo-white-text.png') }}" alt="OCP Group Logo"
 							class="img-fluid">
 					</div>
 					<ul class="menu">
@@ -143,7 +143,7 @@
 						</li>
 					</ul>
 				</nav>
-				<div class="col col-sm-10 col-md-9 main-content">
+				<div class="col col-sm-10 main-content">
 					<div class="row top-bar">
 						<div class="profile">
 							<div class="profile-info">
@@ -172,7 +172,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<script src="{{ url_for('static', filename='js/forms.js') }}" defer></script>
-	<script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+	<script src="{{ url_for('static', filename='js/window_controls.js') }}" defer></script>
 
 	{% block scripts %}
 	{% endblock %}
