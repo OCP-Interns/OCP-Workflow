@@ -1,5 +1,10 @@
 /* Intel font setup */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
+*{
+    font-family: "Inter", sans-serif;
+
+}
 
 body {
 	margin: 0;
@@ -39,11 +44,13 @@ body {
 .sidebar .menu {
 	list-style-type: none;
 	padding: 0;
+	margin-top: 40%;
 }
 
 .sidebar .menu-item {
 	padding: 15px 10px;
-	text-align: left;
+	text-align: left;	
+
 }
 
 .sidebar .menu-item a {
