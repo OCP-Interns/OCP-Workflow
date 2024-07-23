@@ -4,7 +4,7 @@ from flask import render_template
 
 from db import init_db
 from sign_in import sign_in_bp, session_bp, face_recognition_bp
-from routes import ping_bp, dashboard_bp, manage_bp, add_bp, edit_bp, delete_bp, trash_bp, AddTableTime_bp, time_view_bp
+from routes import ping_bp, dashboard_bp, manage_bp, add_bp, edit_bp, delete_bp, trash_bp, AddTableTime_bp, time_view_bp, delete_tableTime
 from init import *
 
 def create_app():	
@@ -24,6 +24,7 @@ def create_app():
 	app.register_blueprint(trash_bp)
 	app.register_blueprint(AddTableTime_bp)
 	app.register_blueprint(time_view_bp)
+	app.register_blueprint(delete_tableTime)
 	
 	return app, db
 

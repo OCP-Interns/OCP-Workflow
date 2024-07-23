@@ -1,6 +1,8 @@
 from flask import Blueprint, request, render_template, jsonify
 from db import Personnel, TimeTable, db
 from cloudinary.utils import cloudinary_url
+from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 import json
 
 ping_bp = Blueprint('ping', __name__)
@@ -95,9 +97,31 @@ def TimeView(personnel_reg_num):
 	
 delete_tableTime = Blueprint('deleteTableTime', __name__)
 @delete_tableTime.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
-	
-def deleteTableTime():
-	pass
+def deleteTableTime(personnel_reg_num):
+    try:
+        day = request.args.get('day')
+        time = request.args.get('time')
+        
+        if not day or not time:
+            return jsonify({'error': 'Missing day or time parameter'}), 400
+        
+        print(f"Received delete request for: {personnel_reg_num}, Day: {day}, Time: {time}")
 
+        entry = TimeTable.query.filter(
+            TimeTable.personnel_reg_num == personnel_reg_num,
+            func.json_extract(TimeTable.json, '$.day') == day,
+            func.json_extract(TimeTable.json, '$.from') == time
+        ).first()
+
+        if not entry:
+            print('mablanech')
+            return jsonify({'error': 'Entry not found'}), 404
+
+        db.session.delete(entry)
+        db.session.commit()
+        return jsonify({'message': 'Deleted successfully'})
+    except SQLAlchemyError as e:
+        print(f"Error deleting entry: {e}")
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 

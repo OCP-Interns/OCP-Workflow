@@ -57,9 +57,6 @@ function addTableTimeTonJson(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    console.log(`matricule: ${regNum}`);
-
     fetch(`http://localhost:5000/timetable/${regNum}`)
         .then(response => {
             if (!response.ok) {
@@ -93,6 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cell1 || cell2) {
                     console.log('OK')
                     cell1.style.backgroundColor = 'black';
+                    const btn = document.createElement('button');
+                    btn.classList.add('deleteBtn');
+                    btn.addEventListener('click', () => HandleEvent_Delete(day, time1));
+                    cell1.appendChild(btn);
                     cell2.style.backgroundColor = 'black';
                 } else {
                     console.error(`No cell found for ID: ${cellID1}`);
@@ -103,3 +104,28 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error fetching timetable: ', error));
 });
     
+function HandleEvent_Delete (day, time) {
+    const params = new URLSearchParams({
+        day: day,
+        time: time
+    });
+
+    console.log('params in js: ', params)
+
+    fetch(`http://localhost:5000/deleteTableTime/${regNum}?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('deleted successfully: ', data);
+    })
+    .catch(error => console.error('Error: ', error));
+}
