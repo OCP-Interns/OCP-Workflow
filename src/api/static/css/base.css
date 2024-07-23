@@ -63,7 +63,7 @@ body {
 }
 
 .sidebar .menu-item a:hover {
-	background-color: #575757;
+	background: linear-gradient(to right, #16B47B, #97BD14);
 }
 
 .sidebar .menu-item i {
@@ -71,7 +71,7 @@ body {
 }
 
 .sidebar .menu-item.active a {
-	background-color: #575757;
+	background: linear-gradient(to right, #16B47B, #97BD14);
 }
 
 .sidebar .menu-item:last-child {

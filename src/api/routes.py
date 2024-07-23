@@ -27,7 +27,9 @@ def exit():
 
 @general_bp.route('/dashboard')
 def dashboard():
-	return render_template('dashboard.html')
+	total_employees = Personnel.query.filter_by(deleted=False).count()
+
+	return render_template('dashboard.html', total_employees= total_employees)
 
 ####### EMPLOYEE ROUTES #######
 # Combine all the employee routes into a single blueprint
