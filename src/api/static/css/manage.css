@@ -4,7 +4,6 @@ body {
 	font-family: "Intel", sans-serif;
 	background-color: #f8f9fa;
 	margin: 0;
-	padding: 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -16,12 +15,6 @@ body {
 
 }
 .container {
-	padding: 20px;
-	margin-top: 200px;
-	margin-right: 50px;
-	margin-bottom: 200px;
-	width: 60000px;
-	height: 470px;
 	align-items: start;
 }
 
@@ -40,7 +33,7 @@ h1 {
 	justify-content: start;
 }
 
-.add-employee {
+.add-employee, .add-tableTime {
 	display: inline-block;
 	outline: none;
 	padding: 10px 20px;
@@ -56,7 +49,7 @@ h1 {
 
 }
 
-.add-employee:hover {
+.add-employee:hover, .add-tableTime {
 	background-color: #218838;
 }
 

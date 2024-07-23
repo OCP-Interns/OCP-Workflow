@@ -13,56 +13,58 @@
 	<!-- Font Awesome for icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 	{% block head %}
 	{% endblock %}
 </head>
 
 <body>
-	<div class="sidebar">
-		<div class="logo">
-			<img src="{{ url_for('static', filename='images/ocp_logo-white-text.png') }}" alt="OCP Logo">
+	{#<div class="wrapper">
+		<div class="sidebar">
+			<div class="logo">
+				<img src="{{ url_for('static', filename='images/ocp_logo-white-text.png') }}" alt="OCP Logo">
+			</div>
+			<ul class="menu">
+				<li class="menu-item active">
+					<a href="/dashboard">
+						<i class="fas fa-tachometer-alt"></i>
+						<span>Dashboard</span>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="/manage-employees">
+						<i class="fas fa-users"></i>
+						<span>Employees</span>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="">
+						<i class="fas fa-calendar-alt"></i>
+						<span>Meetings</span>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="/trash-bin">
+						<i class="fas fa-calendar-alt"></i>
+						<span>Trash bin</span>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="/events">
+						<i class="fas fa-sign-out-alt"></i>
+						<span>Event</span>
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="#logout">
+						<i class="fas fa-sign-out-alt"></i>
+						<span>Logout</span>
+					</a>
+				</li>
+			</ul>
 		</div>
-		<ul class="menu">
-			<li class="menu-item active">
-				<a href="/dashboard">
-					<i class="fas fa-tachometer-alt"></i>
-					<span>Dashboard</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a href="/manage-employees">
-					<i class="fas fa-users"></i>
-					<span>Employees</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a href="">
-					<i class="fas fa-calendar-alt"></i>
-					<span>Meetings</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a href="/trash-bin">
-					<i class="fas fa-calendar-alt"></i>
-					<span>Trash bin</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a href="/events">
-					<i class="fas fa-sign-out-alt"></i>
-					<span>Event</span>
-				</a>
-			</li>
-			<li class="menu-item">
-				<a href="#logout">
-					<i class="fas fa-sign-out-alt"></i>
-					<span>Logout</span>
-				</a>
-			</li>
-		</ul>
-	</div>
 
-	<div class="main-content">
 		<nav class="nav-bar">
 			<div class="search-box">
 				<input type="text" placeholder="Search...">
@@ -77,9 +79,88 @@
 
 			</div>
 		</nav>
-		<div class="container">
-			{% block content %}
-			{% endblock %}
+
+		<div class="main-content">
+			<div class="container">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+	</div>#}
+
+	{# Rewrite the above to make containers instead of using absolute position #}
+	<div class="container-fluid main-window">
+		<div class="window-bar">
+			<div class="window-controls solid">
+				<span id="minimize-btn"></span>
+				<span id="maximize-btn"></span>
+				<span id="close-btn"></span>
+			</div>
+		</div>
+		<div class="base-wrapper">
+			<div class="row">
+				<nav class="col col-sm-2 col-md-3 side-bar">
+					<div class="logo">
+						<img src="{{ url_for('static', filename='images/ocp-logo-white.png') }}" alt="OCP Group Logo"
+							class="img-fluid">
+					</div>
+					<ul class="menu">
+						<li class="menu-item {% if page == 'dashboard' %}active{% endif %}">
+							<a href="/dashboard">
+								<i class="fas fa-tachometer-alt"></i>
+								<span>Dashboard</span>
+							</a>
+						</li>
+						<li class="menu-item {% if page == 'employees' %}active{% endif %}">
+							<a href="/manage-employees">
+								<i class="fas fa-users"></i>
+								<span>Employees</span>
+							</a>
+						</li>
+						{#<li class="menu-item {% if page == 'meetings' %}active{% endif %}">
+							<a href="">
+								<i class="fas fa-calendar-alt"></i>
+								<span>Meetings</span>
+							</a>
+						</li>#}
+						<li class="menu-item {% if page == 'events' %}active{% endif %}">
+							<a href="/events">
+								<i class="fas fa-sign-out-alt"></i>
+								<span>Events</span>
+							</a>
+						</li>
+						<li class="menu-item {% if page == 'trash' %}active{% endif %}">
+							<a href="/trash-bin">
+								<i class="fas fa-trash"></i>
+								<span>Trash bin</span>
+							</a>
+						</li>
+						<li class="menu-item">
+							<a href="#logout">
+								<i class="fas fa-sign-out-alt"></i>
+								<span>Logout</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="col col-sm-10 col-md-9 main-content">
+					<div class="row top-bar">
+						<div class="profile">
+							<div class="profile-info">
+								<span class="name">John Doe</span>
+								<span class="fonction">Manager</span>
+							</div>
+							<img src="{{ url_for('static', filename='images/female.png') }}" alt="Profile Photo">
+						</div>
+					</div>
+					<main>
+						<div class="container">
+							{% block content %}
+							{% endblock %}
+						</div>
+					</main>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -90,7 +171,8 @@
 	<!-- Axios for making HTTP requests -->
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-	<script src="{{ url_for('static', filename='js/forms.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/forms.js') }}" defer></script>
+	<script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 
 	{% block scripts %}
 	{% endblock %}

@@ -69,20 +69,31 @@ handleFormSubmit('add-employee-form', 'form-validated', '/add-employee',
 		window.location.href = '/manage-employees';
 	}, 'Failed to add employee');
 
-handleFormSubmit('edit-employee-form', 'submit', `/edit-employee/${employeeCIN}`,
-	(formData) => {
-		// Check the size of the image if an image was uploaded
-		const file = formData.get('photo');
-		if (file && file.size > 1000000) {
-			alert('Image size should not exceed 1MB');
-			return false;
-		}
-		return true;
-	},
-	(data, formData) => {
-		alert('Employee updated successfully');
-		window.location.href = '/manage-employees';
-	}, 'Failed to update employee');
+if (typeof employeeCIN !== 'undefined') {
+	handleFormSubmit('edit-employee-form', 'form-validated', `/edit-employee/${employeeCIN}`,
+		(formData) => {
+			// Check the size of the image if an image was uploaded
+			const file = formData.get('photo');
+			if (file && file.size > 1000000) {
+				alert('Image size should not exceed 1MB');
+				return false;
+			}
+			return true;
+		},
+		(data, formData) => {
+			alert('Employee updated successfully');
+			window.location.href = '/manage-employees';
+		}, 'Failed to update employee');
+}
+
+// ========= Manage Events =========
+handleFormSubmit('add-event-form', '/events', (data, formData) => {
+		console.log(data);
+	}, (data, formData) => {
+		alert('Event added successfully');
+		document.getElementById('add-event-form').reset();
+		location.reload(); 
+	}, 'Failed to add event', true);
 
 // ========= General =========
 // A generic function to handle all the form submissions
@@ -125,7 +136,7 @@ const formValidatedEvent = new Event('form-validated', {
 });
 
 // Handle all bootstrap form validations
-(function() {
+(function () {
 	'use strict';
 	const forms = document.querySelectorAll('.needs-validation');
 	Array.from(forms).forEach((form) => {

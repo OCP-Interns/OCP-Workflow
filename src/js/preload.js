@@ -59,9 +59,7 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 			window.location.href = signInUrl;
 			return;
 		}
-
-		console.log(userSession);
-		console.log(JSON.parse(userSession).user);
+    
 		fetch(validateSessionEndpoint, {
 			method: 'POST',
 			headers: {

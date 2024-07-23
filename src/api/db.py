@@ -39,3 +39,13 @@ class TimeTable(db.Model):
 	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	personnel_reg_num = db.Column(db.String(255), db.ForeignKey('personnel.reg_num'), nullable=False)
 	json = db.Column(db.JSON, nullable=False)
+
+class Event(db.Model):
+    __tablename__ = 'event'
+    id = db.Column(db.Integer, primary_key=True)
+    day = db.Column(db.String(255), nullable=False)
+    start_hour = db.Column(db.String(255), nullable=False)
+    end_hour = db.Column(db.String(255), nullable=False)
+    event = db.Column(db.String(255), nullable=False)
+    event_type = db.Column(db.String(255), nullable=False)
+    qr_code_path = db.Column(db.String(255), nullable=True)

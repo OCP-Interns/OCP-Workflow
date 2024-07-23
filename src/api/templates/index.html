@@ -12,6 +12,7 @@
 
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
 </head>
 
 <body>
@@ -43,13 +44,13 @@
 							method="POST" id="sign-in-form">
 							<div class="form-group mb-2">
 								<label for="reg-num">Employee Number</label>
-								<input type="text" class="form-control" id="reg-num" name="reg_num"
+								<input type="text" class="form-control text-field" id="reg-num" name="reg_num"
 									placeholder="Enter your registration number" required>
 							</div>
 							<div class="form-group mb-2">
 								<label for="password">Password</label>
 								<div class="input-group">
-									<input type="password" class="form-control" id="password" name="password"
+									<input type="password" class="form-control text-field" id="password" name="password"
 										placeholder="Enter your password" required>
 									<button class="btn g-border-radius position-absolute end-0" type="button"
 										id="show-password-btn">

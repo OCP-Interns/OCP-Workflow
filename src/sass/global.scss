@@ -1,1 +1,137 @@
-@use 'variables' as *;
+// <== Imports ==>
+@use 'variables' as *; // Import all variables from the variables.scss file
+
+
+// <== Global ==>
+body,
+html {
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 100vh;
+	font-family: 'Inter', sans-serif;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="checkbox"],
+a {
+	outline: unset;
+}
+a {
+	text-decoration: none;
+	color: $select-color;
+	transition: all $transition-speed;
+
+	&:hover {
+		text-decoration: underline;
+		color: darken($select-color, 10%);
+	}
+	&:focus {
+		text-decoration: underline;
+		color: darken($select-color, 20%);
+	}
+}
+
+
+// <== Utilities ==>
+.fully-rounded { // Fully rounded border radius
+	border-radius: 1000px !important;
+}
+
+.g-border-radius { // Global border radius
+	border-radius: $g-border-radius;
+}
+
+.btn-primary { // Primary button
+	background-color: $primary-color;
+	color: white;
+	border: none;
+	font-size: 1rem;
+	letter-spacing: 0.05rem;
+	cursor: pointer;
+	transition: all $transition-speed;
+
+	&:hover {
+		background-color: darken($primary-color, 10%) !important;
+	}
+	&:focus {
+		background-color: darken($primary-color, 10%) !important;
+		box-shadow: 0px 0px 0px 2px $select-color !important;
+	}
+	&:active {
+		background-color: darken($primary-color, 20%) !important;
+	}
+}
+
+
+// <== Forms ==>
+form {
+	.form-group {
+		text-align: left;
+
+		label:not([class="form-check-label"]) {
+			font-weight: 500;
+			margin-bottom: 0.35rem;
+		}
+
+		input.text-field {
+			padding: 1rem;
+			border: none;
+			font-size: inherit;
+			font-weight: 300;
+			letter-spacing: 0.05rem;
+			transition: all $transition-speed;
+			background-color: $gray;
+			border-radius: $g-border-radius !important;
+
+			&:focus {
+				background-color: $light-gray;
+				box-shadow: inset 0px 0px 0px 2px $select-color;
+			}
+			::placeholder {
+				color: rgba($color: #000, $alpha: 0.5);
+			}
+		}
+	}
+}
+	
+.btn {
+	padding: 0.6rem;
+}
+
+
+// <== Window Controls ==>
+.window-controls {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0.75rem 1rem;
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+	
+	span#minimize-btn, span#maximize-btn, span#close-btn {
+		width: $window-bar-height;
+		height: $window-bar-height;
+		border-radius: 1000px;
+		cursor: pointer;
+	}
+
+	span#minimize-btn {
+		background-color: #FFD700;
+	}
+	span#maximize-btn {
+		background-color: #FFA500;
+	}
+	span#close-btn {
+		background-color: #FF6347;
+	}
+
+	&.solid {
+		position: relative;
+		width: 100%;
+		background-color: white;
+	}
+}
