@@ -20,7 +20,7 @@
 		<h2>{{ employee.cin }}</h2>
 		<p>{{ employee.last_name }} {{ employee.first_name }}</p>
 		<button class="btn edit"><a
-				href="{{ url_for('employee_routes.edit_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Edit</a></button>
+				href="{{ url_for('employee_routes.edit_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Details</a></button>
 		<button class="btn edit"><a
 				href="{{ url_for('employee_routes.edit_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Statistics</a></button>
 
