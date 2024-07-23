@@ -1,5 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
 body {
-	font-family: Arial, sans-serif;
+	font-family: "Intel", sans-serif;
 	background-color: #f8f9fa;
 	margin: 0;
 	display: flex;
@@ -8,6 +10,10 @@ body {
 	height: 100vh;
 }
 
+*{
+    font-family: "Inter", sans-serif;
+
+}
 .container {
 	align-items: start;
 }
@@ -17,12 +23,12 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 20px;
+	margin-top: -10%;
 }
 
 h1 {
 	font-size: 24px;
 	margin: 0;
-	margin-left: 10%;
 	align-items: start;
 	justify-content: start;
 }
@@ -33,11 +39,13 @@ h1 {
 	padding: 10px 20px;
 	border: none;
 	border-radius: 20px;
-	background-color: #28a745;
+	background-color: #16B47B;
 	color: white;
 	cursor: pointer;
 	font-size: 16px;
 	transition: background-color 0.3s;
+	text-decoration: none;
+
 
 }
 
@@ -47,16 +55,16 @@ h1 {
 
 .employee-card {
 	display: inline-block;
-	background-color: #e9f7ef;
+	background-color: #D9F6E4;
 	border-radius: 15px;
 	margin: 2%;
-	width: 150px;
+	width: 200px;
 	padding: 10px;
 	position: relative;
 	box-shadow: 10px 4px 8px rgba(0, 0, 0, 0.1);
 	text-align: center;
-	align-items: start;
-	justify-items: start;
+	align-items: center;
+	justify-items: center;
 
 }
 
@@ -67,9 +75,9 @@ h1 {
 	margin-bottom: 10px;
 }
 
-.employee-details {
+/*.employee-details {
 	text-align: left;
-}
+}*/
 
 .employee-details h2 {
 	font-size: 18px;
@@ -87,24 +95,31 @@ h1 {
 	padding: 5px 10px;
 	margin: 5px;
 	border: none;
-	border-radius: 5px;
-	background-color: #28a745;
+	background-color: #16B47B;
 	color: white;
 	cursor: pointer;
 	font-size: 14px;
 	transition: background-color 0.3s;
+	border-radius: 20px;
+	padding: 9px;
+	text-decoration: none;
 }
 
 .btn:hover {
-	background-color: #218838;
+	background-color: #108f60;	
 }
-
 .btn.edit {
-	background-color: #ffc107;
+	background-color: #16B47B;	
+
+}
+.btn.edit a{
+	color: white;
+	text-decoration:none;
+
 }
 
 .btn.edit:hover {
-	background-color: #e0a800;
+	background-color: #16B47B;
 }
 
 .btn.delete {

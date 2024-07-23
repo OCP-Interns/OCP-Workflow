@@ -31,9 +31,9 @@ def exit():
 
 @general_bp.route('/dashboard')
 def dashboard():
-	return render_template('dashboard.html', page='dashboard')
+	total_employees = Personnel.query.filter_by(deleted=False).count()
 
-
+	return render_template('dashboard.html', total_employees= total_employees)
 
 ####### EMPLOYEE ROUTES #######
 # Combine all the employee routes into a single blueprint
@@ -307,6 +307,7 @@ if not os.path.exists(qr_codes_dir):
 def events():
 	days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 	hours = [f'{hour:02}:00 - ' for hour in range(23)] + ['23:00 - 00:00']
+	employees = Personnel.query.filter_by(deleted=False).all()
 	
 	if request.method == 'POST':
 		try:
@@ -354,4 +355,4 @@ def events():
 				if (event.event, event.event_type) not in schedule[next_day][hour]:
 					schedule[next_day][hour].append((event.event, event.event_type))
 	
-	return render_template('template.html', days=days, hours=hours, schedule=schedule, page='events')
+	return render_template('template.html', days=days, hours=hours, schedule=schedule, page='events', employees=employees)
