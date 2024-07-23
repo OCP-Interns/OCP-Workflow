@@ -7,7 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
 <script>
-	const regNum = "{{ employee.reg_num }}";
+	const employeeCIN = "{{ employee.cin }}";
+	const employeeNum = "{{ employee.reg_num }}";
 </script>
 {% endblock %}
 
@@ -16,50 +17,95 @@
 	<a href="#" onclick="showEditForm()">Edit Details</a> /
 	<a href="#" onclick="showTimetable()">Edit Timetable</a>
 </div>
-<form action="{{ url_for('edit_employee.edit_employee', cin=employee.cin) }}" method="POST" id="edit-form" enctype="multipart/form-data" style="display: block;">
-	<h2>Edit Employee</h2>
-	<div class="form-group">
-		<label for="cin">CID</label>
-		<input type="text" id="cin" name="cin" value="{{ employee.cin }}" readonly>
-	</div>
-	<div class="form-group">
-		<label for="last_name">Last Name</label>
-		<input type="text" id="last_name" name="last_name" value="{{ employee.last_name }}">
-	</div>
-	<div class="form-group">
-		<label for="first_name">First Name</label>
-		<input type="text" id="first_name" name="first_name" value="{{ employee.first_name }}">
-	</div>
-	<div class="form-group">
-		<label for="function">Fonction</label>
-		<input type="text" id="function" name="function" value="{{ employee.fonction }}">
-	</div>
-	<div class="form-group">
-		<label for="email">Email</label>
-		<input type="email" id="email" name="email" value="{{ employee.email }}">
-	</div>
-	<div class="form-group">
-		<label for="phone">Phone</label>
-		<input type="text" id="phone" name="phone" value="{{ employee.phone }}">
-	</div>
-	<div class="form-group">
-		<label for="type">Type</label>
-		<input type="text" id="type" name="type" value="{{ employee.emp_type }}">
-	</div>
-	<div class="form-group">
-		<label for="photo">Photo</label>
-		<div class="photo-preview">
-			<img src="{{ cloudinary_url(employee.photo)[0] }}" alt="Employee Photo">
-		</div>
-		<input type="file" id="photo" name="photo">
-	</div>
-	<button type="submit" class="submit-btn">Submit</button>
-</form>
 
+<form class="row g-3 needs-validation" id="edit-employee-form" method="POST" novalidate>
+	<div class="col-md-4">
+		<label for="first-name" class="form-label">First name</label>
+		<input type="text" class="form-control" id="first-name" placeholder="First name" pattern="[A-Za-z]{3,}"
+			name="first_name" value="{{ employee.first_name }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid first name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="last-name" class="form-label">Last name</label>
+		<input type="text" class="form-control" id="last-name" placeholder="Last name" pattern="[A-Za-z]{3,}"
+			name="last_name" value="{{ employee.last_name }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid last name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="cin" class="form-label">CIN</label>
+		<input type="text" class="form-control" id="cin" placeholder="CIN" pattern="[A-Z]{1,2}[0-9]{6}" name="cin"
+			value="{{ employee.cin }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid CIN. (e.g. AA123456)
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<label for="email" class="form-label">Email</label>
+		<input type="email" class="form-control" id="email" placeholder="Email" name="email"
+			value="{{ employee.email }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid email address.
+		</div>
+	</div>
+	<div class="col-md-5">
+		<label for="phone" class="form-label">Phone</label>
+		<input type="text" class="form-control" id="phone" placeholder="Phone" pattern="[0-9]{10}" name="phone"
+			value="{{ employee.phone }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid phone number. (Moroccan phone number)
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<label for="shift" class="form-label">Shift Type</label>
+		<select class="form-select" id="shift" name="shift" required>
+			<option value="normal" {% if employee.shift=="normal" %}selected{% endif %}>Normal Shift</option>
+			<option value="split" {% if employee.shift=="split" %}selected{% endif %}>Split Shift</option>
+			<option value="rotating" {% if employee.shift=="rotating" %}selected{% endif %}>Rotating Shift</option>
+		</select>
+	</div>
+	<div class="col-md-6">
+		<label for="photo" class="form-label">Photo</label>
+		<input type="file" class="form-control" id="photo" accept="image/*" name="photo">
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please upload a valid image.
+		</div>
+	</div>
+	<div class="col-md-2">
+		<img src="{{ cloudinary_url(employee.photo)[0] }}" alt="Employee Photo" class="img-thumbnail">
+	</div>
+
+	<div class="col-12">
+		<button class="btn btn-primary" type="submit">Submit</button>
+	</div>
+</form>
 <div class="table" id="timetable" style="display: none;">
 	<button onclick="handleADD_show()">Add</button>
 	<div class="card" id="card" style="display: none;">
-		<form action="{{ url_for('AddTableTime.AddTableTime', personnel_reg_num=employee.reg_num) }}" method="POST" onsubmit="addTableTimeTonJson(event)">
+		<form action="{{ url_for('employee_routes.AddTableTime', personnel_reg_num=employee.reg_num) }}" method="POST" onsubmit="addTableTimeTonJson(event)">
 		<button type="button" id="back" class="back" onclick="handleADD_hide()">Back</button>
 		<h1>Add your Time-Table</h1>
 		<div class="day">
@@ -107,10 +153,8 @@
 		</tbody>
 	</table>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
-
 <script src="../static/js/tabletime.js" defer></script>
 {% endblock %}

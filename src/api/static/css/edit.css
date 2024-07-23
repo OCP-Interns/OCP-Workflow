@@ -1,18 +1,18 @@
-#timetable {
+#timetable-container {
   width: 100%;
   overflow-x: scroll;
 }
-#timetable table {
+#timetable-container table {
   width: 100%;
 }
-#timetable table th {
+#timetable-container table th {
   background-color: #f5f5f5;
   border: 1px solid #ddd;
   text-align: center;
   padding: 1rem;
   white-space: nowrap;
 }
-#timetable table td {
+#timetable-container table td {
   border: 1px solid #ddd;
   text-align: center;
   padding: 8px;

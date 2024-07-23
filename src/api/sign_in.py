@@ -4,6 +4,7 @@ from init import bcrypt
 from db import Personnel
 
 sign_in_bp = Blueprint('sign_in', __name__)
+
 @sign_in_bp.route('/sign-in', methods=['GET', 'POST'])
 def sign_in_api():
 	if request.method == 'POST':
@@ -36,14 +37,18 @@ def sign_in_api():
 		print('GET: Sign in')
 		return render_template('index.html')
 
-session_bp = Blueprint('session', __name__)
-@session_bp.route('/validate-session', methods=['POST'])
+@sign_in_bp.route('/validate-session', methods=['POST'])
 def validate_session():
 	reg_num = request.json.get('user')
 
+	# Check if the user exists in the database
+	user = Personnel.query.filter_by(reg_num=reg_num).first()
+	if user is None:
+		print('\033[91m - User', reg_num, 'not found\033[0m')
+		return jsonify({'success': False, 'message': 'User not found'}), 404
+
 	session['user'] = reg_num
 	print('\033[92m + Session validated successfully\033[0m')
-
 	return jsonify({'success': True, 'message': 'Session validated successfully', 'user': reg_num}), 200
 
 
@@ -51,8 +56,7 @@ import face_recognition
 from cloudinary.utils import cloudinary_url
 from urllib.request import urlopen
 
-face_recognition_bp = Blueprint('face_recognition', __name__)
-@face_recognition_bp.route('/face-recognition', methods=['POST'])
+@sign_in_bp.route('/face-recognition', methods=['POST'])
 def face_recognition_api():
 	if 'file' not in request.files:
 		return jsonify({'error': 'No file part'})

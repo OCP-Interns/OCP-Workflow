@@ -60,7 +60,7 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 			window.location.href = signInUrl;
 			return;
 		}
-		//if session valide hya hadik if not signin
+    
 		fetch(validateSessionEndpoint, {
 			method: 'POST',
 			headers: {

@@ -38,7 +38,8 @@ if (faceIDButton) {
 }
 
 // ========= Handle Sign In =========
-handleFormSubmitJSON('sign-in-form', '/sign-in', (data, formData) => {},
+handleFormSubmit('sign-in-form', 'submit', '/sign-in',
+	(formData) => true,
 	(data, formData) => {
 		const remember = formData.get('remember_me') === 'on';
 		console.log(data);
@@ -50,36 +51,78 @@ handleFormSubmitJSON('sign-in-form', '/sign-in', (data, formData) => {},
 			window.electron.clearSession();
 		}
 		window.location.href = '/dashboard';
-	}, 'Invalid credentials');
+	}, 'Invalid credentials', true);
 
 // ========= Manage Employees =========
-handleFormSubmitJSON('add-employee-form', '/add-employee', (data, formData) => {
-		console.log(data);
-	}, (data, formData) => {
+handleFormSubmit('add-employee-form', 'form-validated', '/add-employee',
+	(formData) => {
+		// Check the size of the image
+		const file = formData.get('photo');
+		if (file.size > 1000000) {
+			alert('Image size should not exceed 1MB');
+			return false;
+		}
+		return true;
+	},
+	(data, formData) => {
 		alert('Employee added successfully');
-		document.getElementById('add-employee-form').reset();
+		window.location.href = '/manage-employees';
 	}, 'Failed to add employee');
 
+if (typeof employeeCIN !== 'undefined') {
+	handleFormSubmit('edit-employee-form', 'form-validated', `/edit-employee/${employeeCIN}`,
+		(formData) => {
+			// Check the size of the image if an image was uploaded
+			const file = formData.get('photo');
+			if (file && file.size > 1000000) {
+				alert('Image size should not exceed 1MB');
+				return false;
+			}
+			return true;
+		},
+		(data, formData) => {
+			alert('Employee updated successfully');
+			window.location.href = '/manage-employees';
+		}, 'Failed to update employee');
+}
+
+
+	// Handle Add Event
+handleFormSubmitJSON('add-event-form', '/events', (data, formData) => {
+	console.log(data);
+}, (data, formData) => {
+	alert('Event added successfully');
+	document.getElementById('add-event-form').reset();
+	location.reload(); 
+}, 'Failed to add event');
+
+// ========= General =========
 // A generic function to handle all the form submissions
-function handleFormSubmitJSON(formId, url, callback, successCallback, message = '') {
+function handleFormSubmit(formId, event, url, callback, successCallback, message = '', use_json = false) {
 	const form = document.getElementById(formId);
 	if (!form)
 		return;
-	form.addEventListener('submit', async (e) => {
+	form.addEventListener(event, async (e) => {
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		const response = await fetch(url, {
+		var valid = callback(formData);
+		if (!valid) {
+			return;
+		}
+
+		const response = use_json ? await fetch(url, {
 			method: 'POST',
 			body: JSON.stringify(Object.fromEntries(formData)),
 			headers: {
 				'Content-Type': 'application/json'
 			}
+		}) : await fetch(url, {
+			method: 'POST',
+			body: formData
 		});
 
 		const data = await response.json();
-		callback(data, formData);
-
 		if (data.success) {
 			successCallback(data, formData);
 		} else {
@@ -88,11 +131,17 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 	});
 }
 
+// A custom event to handle form validation
+const formValidatedEvent = new Event('form-validated', {
+	detail: { message: 'Form has been validated successfully' }
+});
+
 // Handle all bootstrap form validations
-(function() {
+(function () {
 	'use strict';
 	const forms = document.querySelectorAll('.needs-validation');
 	Array.from(forms).forEach((form) => {
+		console.log(form);
 		form.addEventListener('submit', async (event) => {
 			if (!form.checkValidity()) {
 				event.preventDefault();
@@ -101,26 +150,7 @@ function handleFormSubmitJSON(formId, url, callback, successCallback, message = 
 				if (form.id === 'add-employee-form') {
 					event.preventDefault();
 					event.stopPropagation();
-
-					const formData = new FormData(form);
-					const response = await fetch('/add-employee', {
-						method: 'POST',
-						body: JSON.stringify(Object.fromEntries(formData)),
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					});
-
-					const data = await response.json();
-					console.log(data);
-
-					if (data.success) {
-						window.location.href = '/manage-employees';
-					} else {
-						alert(data.message || 'Failed to add employee');
-					}
-
-					console.log('Form validated');
+					form.dispatchEvent(formValidatedEvent);
 				}
 			}
 
