@@ -19,3 +19,18 @@
 #timetable table td.filled {
   background-color: #181820;
 }
+.button-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.day-button {
+	background-color: brown;
+	border: none;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	cursor: pointer;
+}
