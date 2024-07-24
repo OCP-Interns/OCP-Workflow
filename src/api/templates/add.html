@@ -17,10 +17,12 @@
 </ul>
 {% endif %}
 {% endwith %}
-<form class="row g-3 needs-validation" id="add-employee-form" method="POST" novalidate>
+<div class="container1">
+
+<form class="row g-3 needs-validation form-group" id="add-employee-form" method="POST" novalidate>
 	<div class="col-md-4">
 		<label for="first-name" class="form-label">First name</label>
-		<input type="text" class="form-control" id="first-name" placeholder="First name" pattern="[A-Za-z]{3,}"
+		<input type="text" class="form-control text-field" id="first-name" placeholder="First name" pattern="[A-Za-z]{3,}"
 			name="first_name" required>
 		<div class="valid-feedback">
 			Looks good!
@@ -31,7 +33,7 @@
 	</div>
 	<div class="col-md-4">
 		<label for="last-name" class="form-label">Last name</label>
-		<input type="text" class="form-control" id="last-name" placeholder="Last name" pattern="[A-Za-z]{3,}"
+		<input type="text" class="form-control text-field" id="last-name" placeholder="Last name" pattern="[A-Za-z]{3,}"
 			name="last_name" required>
 		<div class="valid-feedback">
 			Looks good!
@@ -42,7 +44,7 @@
 	</div>
 	<div class="col-md-4">
 		<label for="cin" class="form-label">CIN</label>
-		<input type="text" class="form-control" id="cin" placeholder="CIN" pattern="[A-Z]{1,2}[0-9]{6}" name="cin"
+		<input type="text" class="form-control text-field" id="cin" placeholder="CIN" pattern="[A-Z]{1,2}[0-9]{6}" name="cin"
 			required>
 		<div class="valid-feedback">
 			Looks good!
@@ -54,7 +56,7 @@
 
 	<div class="col-md-7">
 		<label for="email" class="form-label">Email</label>
-		<input type="email" class="form-control" id="email" placeholder="Email" name="email" required>
+		<input type="email" class="form-control text-field" id="email" placeholder="Email" name="email" required>
 		<div class="valid-feedback">
 			Looks good!
 		</div>
@@ -64,7 +66,7 @@
 	</div>
 	<div class="col-md-5">
 		<label for="phone" class="form-label">Phone</label>
-		<input type="text" class="form-control" id="phone" placeholder="Phone" pattern="[0-9]{10}" name="phone"
+		<input type="text" class="form-control text-field" id="phone" placeholder="Phone" pattern="[0-9]{10}" name="phone"
 			required>
 		<div class="valid-feedback">
 			Looks good!
@@ -76,7 +78,7 @@
 
 	<div class="col-md-4">
 		<label for="shift" class="form-label">Shift Type</label>
-		<select class="form-select" id="shift" name="shift" required>
+		<select class="form-select text-field" id="shift" name="shift" required>
 			<option value="" selected disabled>Select a shift type</option>
 			<option value="normal">Normal Shift</option>
 			<option value="split">Split Shift</option>
@@ -91,7 +93,7 @@
 	</div>
 	<div class="col-md-8">
 		<label for="photo" class="form-label">Photo</label>
-		<input type="file" class="form-control" id="photo" accept="image/*" name="photo" required>
+		<input type="file" class="form-control text-field" id="photo" accept="image/*" name="photo" required>
 		<div class="valid-feedback">
 			Looks good!
 		</div>
@@ -101,7 +103,7 @@
 	</div>
 
 	<div class="col-12">
-		<button class="btn btn-primary" type="submit">Submit</button>
+		<button class="btn submit-button" type="submit">Submit</button>
 	</div>
 </form>
 
@@ -140,6 +142,7 @@
 	</div>
 	<button type="submit" class="submit-button">Submit</button>
 </form>-->
+</div>
 {% endblock content %}
 
 {% block scripts %}
