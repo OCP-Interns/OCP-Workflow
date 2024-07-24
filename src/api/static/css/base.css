@@ -46,16 +46,20 @@ body {
 .main-window .base-wrapper .row .side-bar .logo img {
   max-height: 100px;
 }
-
-.sidebar .menu {
-	list-style-type: none;
-	padding: 0;
-	margin-top: 40%;
+.main-window .base-wrapper .row .side-bar ul {
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  text-decoration: none;
+  list-style-type: none;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
-
-.sidebar .menu-item {
-	padding: 15px 10px;
-	text-align: left;
+.main-window .base-wrapper .row .side-bar ul li {
+  padding: 0.25rem 0;
+  width: 100%;
+  text-align: left;
 }
 .main-window .base-wrapper .row .side-bar ul li a {
   padding: 1rem 2rem;
