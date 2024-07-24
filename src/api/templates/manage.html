@@ -4,14 +4,13 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/manage.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <div class="header">
 	<h1>Manage Employees</h1>
-	<a href="{{ url_for('employee_routes.add_employee') }}" class="add-employee">Add Employee</a>
+	<a href="{{ url_for('employee_routes.add_employee') }}" class="add-employee btn-primary">Add Employee</a>
 </div>
 {% for employee in employees %}
 <div class="employee-card">
@@ -19,13 +18,15 @@
 	<div class="employee-details">
 		<h2>{{ employee.cin }}</h2>
 		<p>{{ employee.last_name }} {{ employee.first_name }}</p>
-		<button class="btn edit"><a
-				href="{{ url_for('employee_routes.edit_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Edit</a></button>
-		<button class="btn edit"><a
-				href="{{ url_for('employee_routes.edit_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Statistics</a></button>
+		<div class="d-flex  justify-content-center">
+			<a class="btn btn-primary"
+				href="{{ url_for('employee_routes.edit_employee_details', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Details</a>
+			<a class="btn btn-primary"
+				href="{{ url_for('employee_routes.edit_employee_details', cin=employee.cin, cloudinary_url=cloudinary_url) }}">Statistics</a>
+		</div>
 
-		<form action="{{ url_for('employee_routes.delete_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}" method="POST"
-			style="display:inline;">
+		<form action="{{ url_for('employee_routes.delete_employee', cin=employee.cin, cloudinary_url=cloudinary_url) }}"
+			method="POST" style="display:inline;">
 			<button type="submit" class="btn delete"><i class="fa fa-trash"></i></button>
 		</form>
 	</div>

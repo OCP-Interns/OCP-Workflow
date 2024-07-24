@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Employee - {{ employee.last_name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
+
+<script>
+	const employeeCIN = "{{ employee.cin }}";
+	const employeeNum = "{{ employee.reg_num }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="links">
+	<a href="{{ url_for('employee_routes.edit_employee_details', cin=employee.cin) }}">Edit Details</a>
+	/
+	<span>Edit Timetable</span>
+</div>
+
+<div class="table" id="timetable">
+	<button onclick="handleADD_show()">Add</button>
+	<div class="card" id="card" style="display: none;">
+		<form method="POST" class="row g-3 needs-validation" id="add-timetable-form" novalidate onsubmit="addTimeTableToJson(event)"
+			{#!action="{{ url_for('employee_routes.edit_employee_timetable', personnel_reg_num=employee.reg_num) }}" #}>
+			<button type="button" id="back" class="back btn btn-primary" onclick="handleADD_hide()">Back</button>
+			<h1>Add hours</h1>
+
+			<div class="form-group col-md-4">
+				<label for="day" class="form-label">Select the Day:</label>
+				<select id="day" name="day" class="form-select" required>
+					<option value="" selected disabled hidden>Select a day</option>
+					<option value="Monday">Monday</option>
+					<option value="Tuesday">Tuesday</option>
+					<option value="Wednesday">Wednesday</option>
+					<option value="Thursday">Thursday</option>
+					<option value="Friday">Friday</option>
+					<option value="Saturday">Saturday</option>
+					<option value="Sunday">Sunday</option>
+				</select>
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+				<div class="invalid-feedback">
+					Please select a day.
+				</div>
+			</div>
+
+			<div class="form-group col-md-4">
+				<label for="from" class="form-label">From:</label>
+				<select class="form-select" id="from" name="from" required>
+					<option value="" selected disabled hidden>Select a start time</option>
+				</select>
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+				<div class="invalid-feedback">
+					Please select a start time.
+				</div>
+			</div>
+
+			<div class="form-group col-md-4">
+				<label for="to" class="form-label">To:</label>
+				<select class="form-select" id="to" name="to" required>
+					<option value="" selected disabled hidden>Select an end time</option>
+				</select>
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+				<div class="invalid-feedback">
+					Please select an end time.
+				</div>
+			</div>
+
+			<input type="hidden" name="timetable_json" id="timetable_json">
+			<input type="submit" value="ADD" class="btn btn-primary">
+		</form>
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<th>Time</th>
+				{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+				<th class="day">{{ day }}</th>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for i in range(24) %}
+			<tr>
+				<th>{{ '%02d:00-%02d:00'|format(i, i+1) }}</th>
+				{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+				<td id="{{ day }}-{{ '%02d'|format(i) }}"></td>
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/timetable.js') }}" defer></script>
+{% endblock %}

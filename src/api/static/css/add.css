@@ -38,7 +38,12 @@
     flex-wrap: wrap;
     gap: 20px;
 }*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
+*{
+    font-family: "Inter", sans-serif;
+
+}
 .form-group {
     flex: 1 1 calc(50% - 20px);
     display: flex;

@@ -1,4 +1,4 @@
-from flask import Blueprint, request,jsonify, render_template, session
+from flask import Blueprint, request, jsonify, render_template, session
 from db import Personnel, Event, TimeTable, db
 import cloudinary
 from cloudinary.utils import cloudinary_url
@@ -10,9 +10,14 @@ import json
 import hashlib
 import os
 import qrcode
+from datetime import datetime
+
+
 
 def generate_8_digit_hash(value):
 	return hashlib.md5(str(value).encode()).hexdigest()[:8]
+
+
 
 ####### GENERAL ROUTES #######
 # Combine all the general routes into a single blueprint
@@ -31,16 +36,19 @@ def exit():
 
 @general_bp.route('/dashboard')
 def dashboard():
-	return render_template('dashboard.html')
+	total_employees = Personnel.query.filter_by(deleted=False).count()
+
+	return render_template('dashboard.html', total_employees= total_employees, page='dashboard')
 
 ####### EMPLOYEE ROUTES #######
 # Combine all the employee routes into a single blueprint
 employee_bp = Blueprint('employee_routes', __name__)
 
+## EMPLOYEES ##
 @employee_bp.route('/manage-employees')
 def manage_employees():
 	employees = Personnel.query.filter_by(deleted=False).all()
-	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url)
+	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url, page='employees')
 
 @employee_bp.route('/add-employee', methods=['POST', 'GET'])
 def add_employee():
@@ -107,10 +115,10 @@ def add_employee():
 			return {'success': False, 'message': 'Error adding employee'}, 500
 	else:
 		print('\033[94m - GET: Showing add employee form\033[0m')
-		return render_template('add.html')
+		return render_template('add.html', page='employees')
 
-@employee_bp.route('/edit-employee/<cin>', methods=['POST', 'GET'])
-def edit_employee(cin):
+@employee_bp.route('/edit-employee-details/<cin>', methods=['POST', 'GET'])
+def edit_employee_details(cin):
 	employee = Personnel.query.filter_by(cin=cin).first()
 	if request.method == 'POST':
 		print('\033[94m - POST: Editing employee\033[0m')
@@ -161,7 +169,7 @@ def edit_employee(cin):
 			return {'success': False, 'message': 'Error editing employee'}, 500
 	else:
 		print('\033[94m - GET: Showing edit employee form\033[0m')
-		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url)
+		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url, page='employees')
 
 @employee_bp.route('/delete-employee/<cin>', methods=['POST'])
 def delete_employee(cin):
@@ -190,65 +198,103 @@ def restore_employee(cin):
 @employee_bp.route('/trash-bin')
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
-	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url)
+	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url, page='trash')
 
-@employee_bp.route('/AddTableTime/<personnel_reg_num>', methods=['GET', 'POST'])
-def AddTableTime(personnel_reg_num):
-    if request.method == 'POST':
-        timetable_json = request.form.get('timetable_json')
-        if timetable_json:
-            timetable_data = json.loads(timetable_json)
-            new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
-            db.session.add(new_entry)
-            db.session.commit()
-            print('reg_num : ', personnel_reg_num, ' added by post method')
-        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
-    else:
-        print('reg_num : ', personnel_reg_num, ' accessed by get method')
-        return render_template('edit.html', employee=GetEMPBy_reg_num(personnel_reg_num), cloudinary_url=cloudinary_url)
 
-def GetEMPBy_reg_num(reg_num):
-    return Personnel.query.filter_by(reg_num=reg_num).first()
+## TIMETABLE ##
+@employee_bp.route('/edit-employee-timetable/<personnel_reg_num>', methods=['GET', 'POST'])
+def edit_employee_timetable(personnel_reg_num):
+	employee = Personnel.query.filter_by(reg_num=personnel_reg_num).first()
+	if request.method == 'POST':
+		timetable_json = request.form.get('timetable_json')
+		if timetable_json:
+			timetable_data = json.loads(timetable_json)
+			#* HERE
+			# Check if the employee already has a timetable
+			existing_employee = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).first()
+			# Load the existing timetable data if it exists
+			existing_timetable = json.loads(existing_employee.json) if existing_employee else {}
+			# Add the new time to the timetable
+			add_time(timetable_data, existing_timetable, personnel_reg_num)
 
-@employee_bp.route('/timetable/<personnel_reg_num>', methods=['GET'])
-def TimeView(personnel_reg_num):
-    timetable = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).all()
-    print(f"Requested timetable for personnel_reg_num: {personnel_reg_num}")
-    if timetable:
-        timetable_data = [entry.json for entry in timetable]
-        return jsonify({'timetable': timetable_data})
-    else:
-        print(f"No timetable found for personnel_reg_num: {personnel_reg_num}")
-        return jsonify({'error': 'Timetable not found'}), 404
+			#?{
+			#new_entry = TimeTable(personnel_reg_num=personnel_reg_num, json=timetable_data)
+			#db.session.add(new_entry)
+			#db.session.commit()
+			#?}
+			return jsonify({'success': True, 'message': 'Timetable updated successfully'}), 200
+		else:
+			return jsonify({'success': False, 'message': 'No timetable data provided'}), 400
+	else:
+		return render_template('timetable.html', employee=employee, cloudinary_url=cloudinary_url, page='employees')
+
+#* HERE
+# This function converts a time interval to a list of integers for easier comparison
+def to_interval(timetable_data):
+	# Convert the time to integers for easier comparison (e.g. "08:00" -> 8)
+	from_time = int(timetable_data["from"].split(":")[0])
+	to_time = int(timetable_data["to"].split(":")[0])
+	return [from_time, to_time]
+# This function converts a time string to a datetime object
+def to_datetime(time_str):
+    return datetime.strptime(time_str, '%H:%M')
+# This function adds a time interval to the timetable
+def add_time(timetable_data, timetable, reg_num):
+	day = timetable_data["day"]
+	interval = {"from": timetable_data["from"], "to": timetable_data["to"]}
+	interval_int = to_interval(timetable_data)
+	# Check if the day is already in the timetable
+	if day in timetable:
+		overlapping_intervals = []
+		# Check if the interval is already in the timetable
+		for existing_interval in timetable[day]:
+			# Convert the existing interval to integers for easier comparison
+			existing_interval_int = to_interval(existing_interval)
+
+			# Check if the intervals overlap
+			if (interval_int[0] >= existing_interval_int[0] and interval_int[0] <= existing_interval_int[1]) or \
+			   (interval_int[1] >= existing_interval_int[0] and interval_int[1] <= existing_interval_int[1]):
+				
+				overlapping_intervals.append(existing_interval)
+				# The intervals overlap, merge them and convert them back to strings
+				interval['from'] = min(interval['from'], existing_interval['from'], key=to_datetime)
+				interval['to'] = max(interval['to'], existing_interval['to'], key=to_datetime)
+				# To compare with other intervals, we replace the interval to insert with the merged interval
+				interval_int = to_interval(interval)
+				
+		# Remove the overlapping intervals from the timetable
+		for existing_interval in overlapping_intervals:
+			timetable[day].remove(existing_interval)
+		# Add the merged interval to the timetable
+		timetable[day].append(interval)
+	# If the day is not in the timetable then add it
+	else:
+		# Add the day and interval to the timetable
+		timetable[day] = [interval]
 	
-delete_tableTime = Blueprint('deleteTableTime', __name__)
-@delete_tableTime.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
-def deleteTableTime(personnel_reg_num):
-    try:
-        day = request.args.get('day')
-        time = request.args.get('time')
-        
-        if not day or not time:
-            return jsonify({'error': 'Missing day or time parameter'}), 400
-        
-        print(f"Received delete request for: {personnel_reg_num}, Day: {day}, Time: {time}")
+	employee = TimeTable.query.filter_by(personnel_reg_num=reg_num).first()
+	if employee:
+		employee.json = json.dumps(timetable)
+	else:
+		new_entry = TimeTable(personnel_reg_num=reg_num, json=json.dumps(timetable))
+		db.session.add(new_entry)
+	db.session.commit()
 
-        entry = TimeTable.query.filter(
-            TimeTable.personnel_reg_num == personnel_reg_num,
-            func.json_extract(TimeTable.json, '$.day') == day,
-            func.json_extract(TimeTable.json, '$.from') == time
-        ).first()
+@employee_bp.route('/edit-employee-timetable/json/<personnel_reg_num>', methods=['GET'])
+def employee_timetable(personnel_reg_num):
+	timetable = TimeTable.query.filter_by(personnel_reg_num=personnel_reg_num).all()
+	print(f"Requested timetable for personnel_reg_num: {personnel_reg_num}")
+	if timetable:
+		timetable_data = [entry.json for entry in timetable]
+		return jsonify({'timetable': timetable_data})
+	else:
+		print(f"No timetable found for personnel_reg_num: {personnel_reg_num}")
+		return jsonify({'error': 'Timetable not found'}), 404
+	
+@employee_bp.route('/deleteTableTime/<personnel_reg_num>', methods=['GET'])
+def deleteTableTime():
+	pass
 
-        if not entry:
-            print('mablanech')
-            return jsonify({'error': 'Entry not found'}), 404
-
-        db.session.delete(entry)
-        db.session.commit()
-        return jsonify({'message': 'Deleted successfully'})
-    except SQLAlchemyError as e:
-        print(f"Error deleting entry: {e}")
-        return jsonify({'error': 'Internal Server Error'}), 500
 
 ####### EVENTS ROUTES #######
 events_bp = Blueprint('events', __name__)
@@ -256,57 +302,58 @@ events_bp = Blueprint('events', __name__)
 # Création du dossier QR codes si nécessaire
 qr_codes_dir = os.path.join('static', 'qr_codes')
 if not os.path.exists(qr_codes_dir):
-    os.makedirs(qr_codes_dir)
+	os.makedirs(qr_codes_dir)
 
 @events_bp.route('/events', methods=['POST', 'GET'])
 def events():
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    hours = [f'{hour:02}:00 - ' for hour in range(23)] + ['23:00 - 00:00']
-    
-    if request.method == 'POST':
-        try:
-            day = request.form.get('day')
-            start_hour = request.form.get('start_hour')
-            end_hour = request.form.get('end_hour')
-            event = request.form.get('event')
-            event_type = request.form.get('event_type')
+	days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	hours = [f'{hour:02}:00 - ' for hour in range(23)] + ['23:00 - 00:00']
+	employees = Personnel.query.filter_by(deleted=False).all()
+	
+	if request.method == 'POST':
+		try:
+			day = request.form.get('day')
+			start_hour = request.form.get('start_hour')
+			end_hour = request.form.get('end_hour')
+			event = request.form.get('event')
+			event_type = request.form.get('event_type')
 
-            if not all([day, start_hour, end_hour, event, event_type]):
-                return jsonify({'success': False, 'message': 'Missing data'}), 400
+			if not all([day, start_hour, end_hour, event, event_type]):
+				return jsonify({'success': False, 'message': 'Missing data'}), 400
 
-            event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
-            db.session.add(event_obj)
-            db.session.commit()
+			event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
+			db.session.add(event_obj)
+			db.session.commit()
 
-            qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
-            qr_code = qrcode.make(qr_code_data)
-            qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
-            qr_code.save(qr_code_path)
+			qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
+			qr_code = qrcode.make(qr_code_data)
+			qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
+			qr_code.save(qr_code_path)
 
-            event_obj.qr_code_path = qr_code_path
-            db.session.commit()
+			event_obj.qr_code_path = qr_code_path
+			db.session.commit()
 
-            return render_template('template.html')
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'success': False, 'message': str(e)}), 500
+			return render_template('template.html')
+		except Exception as e:
+			db.session.rollback()
+			return jsonify({'success': False, 'message': str(e)}), 500
 
-    events = Event.query.all()
-    schedule = {day: {hour: [] for hour in hours} for day in days}
-    for event in events:
-        start_index = hours.index(event.start_hour)
-        end_index = hours.index(event.end_hour)
-        if start_index <= end_index:
-            for hour in hours[start_index:end_index + 1]:
-                if (event.event, event.event_type) not in schedule[event.day][hour]:
-                    schedule[event.day][hour].append((event.event, event.event_type))
-        else:
-            for hour in hours[start_index:]:
-                if (event.event, event.event_type) not in schedule[event.day][hour]:
-                    schedule[event.day][hour].append((event.event, event.event_type))
-            next_day = days[(days.index(event.day) + 1) % 7]
-            for hour in hours[:end_index + 1]:
-                if (event.event, event.event_type) not in schedule[next_day][hour]:
-                    schedule[next_day][hour].append((event.event, event.event_type))
-    
-    return render_template('template.html', days=days, hours=hours, schedule=schedule)
+	events = Event.query.all()
+	schedule = {day: {hour: [] for hour in hours} for day in days}
+	for event in events:
+		start_index = hours.index(event.start_hour)
+		end_index = hours.index(event.end_hour)
+		if start_index <= end_index:
+			for hour in hours[start_index:end_index + 1]:
+				if (event.event, event.event_type) not in schedule[event.day][hour]:
+					schedule[event.day][hour].append((event.event, event.event_type))
+		else:
+			for hour in hours[start_index:]:
+				if (event.event, event.event_type) not in schedule[event.day][hour]:
+					schedule[event.day][hour].append((event.event, event.event_type))
+			next_day = days[(days.index(event.day) + 1) % 7]
+			for hour in hours[:end_index + 1]:
+				if (event.event, event.event_type) not in schedule[next_day][hour]:
+					schedule[next_day][hour].append((event.event, event.event_type))
+	
+	return render_template('events.html', days=days, hours=hours, schedule=schedule, page='events', employees=employees)

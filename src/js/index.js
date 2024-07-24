@@ -25,7 +25,7 @@ function createWindow() {
 
 	win.on('closed', () => {
 		win.destroy();
-		fetch('/exit', {
+		fetch('http://localhost:5000/exit', {
 			method: 'POST'
 		}).then(() => {
 			console.log('Server stopped');
@@ -37,8 +37,8 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-	createWindow();
 	console.log('App ready');
+	createWindow();
 
 	//! This is for development purposes only
 	//storage.clear();
@@ -51,8 +51,6 @@ ipcMain.on('save-session', (event, user) => {
 	console.log('Session saved');
 	// Current date in milliseconds
 	const date = Date.now();
-
-	console.log(user);
 
 	storage.set('session', JSON.stringify({ user, date }));
 });
