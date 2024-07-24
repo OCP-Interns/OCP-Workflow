@@ -35,6 +35,14 @@
                 <th>Sunday</th>
             </tr>
         </thead>
+
+
+
+
+
+
+
+
         <tbody>
             {% for hour in hours %}
             <tr>
@@ -44,8 +52,13 @@
                     {% for event, event_type in schedule[day][hour] %}
                     <div class="event {{ event_type }}">
                         {{ event }}
+
+                       
+                        
                         {% for e in events %}
+                        
                         {% if e.event == event and e.day == day and e.start_hour == hour %}
+                        
                         <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">
                         {% endif %}
                         {% endfor %}
@@ -56,6 +69,18 @@
             </tr>
             {% endfor %}
         </tbody>
+        
+        
+        
+        
+        
+       
+
+
+
+
+
+
     </table>
     
     <!-- Form to add events -->
@@ -91,4 +116,38 @@
 
     
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const deleteButtons = document.querySelectorAll('.delete-event-btn');
+    
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const eventId = button.getAttribute('data-event-id');
+    
+                fetch('/delete_event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `event_id=${eventId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Event deleted successfully');
+                        location.reload(); // Reload the page to update the schedule
+                    } else {
+                        alert('Failed to delete event: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the event.');
+                });
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}

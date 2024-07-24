@@ -65,6 +65,7 @@ form .form-group label:not([class=form-check-label]) {
   margin-bottom: 0.35rem;
 }
 form .form-group input.text-field {
+ 
   padding: 1rem;
   border: none;
   font-size: inherit;

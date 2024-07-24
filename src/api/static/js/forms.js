@@ -95,6 +95,7 @@ handleFormSubmit('add-event-form', '/events', (data, formData) => {
 		location.reload(); 
 	}, 'Failed to add event', true);
 
+
 // ========= General =========
 // A generic function to handle all the form submissions
 function handleFormSubmit(formId, event, url, callback, successCallback, message = '', use_json = false) {
