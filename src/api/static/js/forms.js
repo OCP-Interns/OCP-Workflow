@@ -96,20 +96,22 @@ handleFormSubmit('add-event-form', '/events', (data, formData) => {
 	}, 'Failed to add event', true);
 
 // ========= Manage Time Table =========
-handleFormSubmit('add-timetable-form', 'form-validated', `/edit-employee-timetable/${employeeNum}`,
-	(formData) => {
-		// Check if the start time is before (or equal to) the end time
-		const from = parseInt(formData.get('from').split(':')[0]);
-		const to = parseInt(formData.get('to').split(':')[0]);
-		if (from >= to) {
-			alert('Start time should be before the end time');
-			return false;
-		}
-		return true;
-	}, (data, formData) => {
-		alert('Time table added successfully');
-		window.location.href = `/edit-employee-timetable/${employeeNum}`;
-	}, 'Failed to add time table');
+if (typeof employeeNum !== 'undefined') {
+	handleFormSubmit('add-timetable-form', 'form-validated', `/edit-employee-timetable/${employeeNum}`,
+		(formData) => {
+			// Check if the start time is before (or equal to) the end time
+			const from = parseInt(formData.get('from').split(':')[0]);
+			const to = parseInt(formData.get('to').split(':')[0]);
+			if (from >= to) {
+				alert('Start time should be before the end time');
+				return false;
+			}
+			return true;
+		}, (data, formData) => {
+			alert('Time table added successfully');
+			window.location.href = `/edit-employee-timetable/${employeeNum}`;
+		}, 'Failed to add time table');
+}
 
 // ========= General =========
 // A generic function to handle all the form submissions
