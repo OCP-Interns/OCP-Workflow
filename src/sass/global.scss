@@ -1,5 +1,6 @@
 // <== Imports ==>
 @use 'variables' as *; // Import all variables from the variables.scss file
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 
 // <== Global ==>
@@ -43,25 +44,36 @@ a {
 .g-border-radius { // Global border radius
 	border-radius: $g-border-radius;
 }
+	
+.btn {
+	padding: 0.6rem;
+	color: white !important;
+}
 
 .btn-primary { // Primary button
-	background-color: $primary-color;
-	color: white;
-	border: none;
+	background-color: $primary-color !important;
+	color: white !important;
+	border: none !important;
 	font-size: 1rem;
 	letter-spacing: 0.05rem;
 	cursor: pointer;
 	transition: all $transition-speed;
 
 	&:hover {
+		color: white;
 		background-color: darken($primary-color, 10%) !important;
+		text-decoration: none;
 	}
 	&:focus {
+		color: white;
 		background-color: darken($primary-color, 10%) !important;
 		box-shadow: 0px 0px 0px 2px $select-color !important;
+		text-decoration: none;
 	}
 	&:active {
+		color: white;
 		background-color: darken($primary-color, 20%) !important;
+		text-decoration: none;
 	}
 }
 
@@ -76,7 +88,7 @@ form {
 			margin-bottom: 0.35rem;
 		}
 
-		input.text-field {
+		input.text-field, select.form-select {
 			padding: 1rem;
 			border: none;
 			font-size: inherit;
@@ -94,11 +106,12 @@ form {
 				color: rgba($color: #000, $alpha: 0.5);
 			}
 		}
+
+		select.form-select {
+			background-color: white;
+			box-shadow: inset 0px 0px 0px 2px $gray;
+		}
 	}
-}
-	
-.btn {
-	padding: 0.6rem;
 }
 
 
@@ -107,14 +120,15 @@ form {
 	position: absolute;
 	top: 0;
 	right: 0;
-	padding: 0.5rem 0.75rem;
+	padding: $window-bar-padding 1rem;
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
 	
 	span#minimize-btn, span#maximize-btn, span#close-btn {
-		display: inline-block;
-		width: 1rem;
-		height: 1rem;
+		width: $window-bar-height;
+		height: $window-bar-height;
 		border-radius: 1000px;
-		margin: 0.2rem;
 		cursor: pointer;
 	}
 
@@ -126,5 +140,11 @@ form {
 	}
 	span#close-btn {
 		background-color: #FF6347;
+	}
+
+	&.solid {
+		position: relative;
+		width: 100%;
+		background-color: white;
 	}
 }

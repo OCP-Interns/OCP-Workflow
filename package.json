@@ -11,7 +11,7 @@
 		"flask:run": "cd src/api && .\\venv\\Scripts\\activate && flask run --port=5010",
 
 		"start": "npm run sass:watch",
-		"dev": "concurrently -k \"npm run sass:watch\" \"electron .\""
+		"dev": "concurrently -k \"npm run sass:watch\" \"electron .\" "
 	},
 	"repository": {
 		"type": "git",

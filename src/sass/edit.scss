@@ -1,6 +1,10 @@
+// <== Imports ==>
+@use 'variables' as *; // Import all variables from the variables.scss file
+
+
 #timetable {
 	width: 100%;
-	overflow-x: scroll;
+	//overflow-x: scroll;
 
 	table {
 		width: 100%;
@@ -17,6 +21,10 @@
 			border: 1px solid #ddd;
 			text-align: center;
 			padding: 8px;
+
+			&.filled {
+				background-color: $dark-blue;
+			}
 		}
 	}
 }

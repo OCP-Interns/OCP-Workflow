@@ -70,7 +70,7 @@ handleFormSubmit('add-employee-form', 'form-validated', '/add-employee',
 	}, 'Failed to add employee');
 
 if (typeof employeeCIN !== 'undefined') {
-	handleFormSubmit('edit-employee-form', 'form-validated', `/edit-employee/${employeeCIN}`,
+	handleFormSubmit('edit-employee-form', 'form-validated', `/edit-employee-details/${employeeCIN}`,
 		(formData) => {
 			// Check the size of the image if an image was uploaded
 			const file = formData.get('photo');
@@ -95,6 +95,23 @@ handleFormSubmit('add-event-form', '/events', (data, formData) => {
 		location.reload(); 
 	}, 'Failed to add event', true);
 
+// ========= Manage Time Table =========
+if (typeof employeeNum !== 'undefined') {
+	handleFormSubmit('add-timetable-form', 'form-validated', `/edit-employee-timetable/${employeeNum}`,
+		(formData) => {
+			// Check if the start time is before (or equal to) the end time
+			const from = parseInt(formData.get('from').split(':')[0]);
+			const to = parseInt(formData.get('to').split(':')[0]);
+			if (from >= to) {
+				alert('Start time should be before the end time');
+				return false;
+			}
+			return true;
+		}, (data, formData) => {
+			alert('Time table added successfully');
+			window.location.href = `/edit-employee-timetable/${employeeNum}`;
+		}, 'Failed to add time table');
+}
 
 // ========= General =========
 // A generic function to handle all the form submissions
@@ -121,6 +138,7 @@ function handleFormSubmit(formId, event, url, callback, successCallback, message
 			method: 'POST',
 			body: formData
 		});
+		console.log(response);
 
 		const data = await response.json();
 		if (data.success) {
@@ -143,15 +161,11 @@ const formValidatedEvent = new Event('form-validated', {
 	Array.from(forms).forEach((form) => {
 		console.log(form);
 		form.addEventListener('submit', async (event) => {
-			if (!form.checkValidity()) {
-				event.preventDefault();
-				event.stopPropagation();
-			} else {
-				if (form.id === 'add-employee-form') {
-					event.preventDefault();
-					event.stopPropagation();
-					form.dispatchEvent(formValidatedEvent);
-				}
+			event.preventDefault();
+			event.stopPropagation();
+
+			if (form.checkValidity()) {
+				form.dispatchEvent(formValidatedEvent);
 			}
 
 			form.classList.add('was-validated');

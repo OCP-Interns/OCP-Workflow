@@ -4,8 +4,6 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
 <script>
 	const employeeCIN = "{{ employee.cin }}";
@@ -15,9 +13,9 @@
 
 {% block content %}
 <div class="links">
-	<a href="#" onclick="showEditForm()">Edit Details</a>
+	<span>Edit Details</span>
 	/
-	<a href="#" onclick="showTimetable()">Edit Timetable</a>
+	<a href="{{ url_for('employee_routes.edit_employee_timetable', personnel_reg_num=employee.reg_num) }}">Edit Timetable</a>
 </div>
 
 <form class="container1 needs-validation form-group" id="edit-employee-form" method="POST" novalidate>
@@ -104,101 +102,4 @@
 		<button class="btn submit-button" type="submit">Submit</button>
 	</div>
 </form>
-
-<!--<form action="{{ url_for('employee_routes.edit_employee', cin=employee.cin) }}" method="POST" id="edit-form"
-	enctype="multipart/form-data">
-	<h2>Edit Employee</h2>
-	<div class="form-group">
-		<label for="cin">CID</label>
-		<input type="text" id="cin" name="cin" value="{{ employee.cin }}" readonly>
-	</div>
-	<div class="form-group">
-		<label for="last_name">Last Name</label>
-		<input type="text" id="last_name" name="last_name" value="{{ employee.last_name }}">
-	</div>
-	<div class="form-group">
-		<label for="first_name">First Name</label>
-		<input type="text" id="first_name" name="first_name" value="{{ employee.first_name }}">
-	</div>
-	<div class="form-group">
-		<label for="function">Fonction</label>
-		<input type="text" id="function" name="function" value="{{ employee.fonction }}">
-	</div>
-	<div class="form-group">
-		<label for="email">Email</label>
-		<input type="email" id="email" name="email" value="{{ employee.email }}">
-	</div>
-	<div class="form-group">
-		<label for="phone">Phone</label>
-		<input type="text" id="phone" name="phone" value="{{ employee.phone }}">
-	</div>
-	<div class="form-group">
-		<label for="type">Type</label>
-		<input type="text" id="type" name="type" value="{{ employee.emp_type }}">
-	</div>
-	<div class="form-group">
-		<label for="photo">Photo</label>
-		<div class="photo-preview">
-			<img src="{{ cloudinary_url(employee.photo)[0] }}" alt="Employee Photo">
-		</div>
-		<input type="file" id="photo" name="photo">
-	</div>
-	<button type="submit" class="submit-btn">Submit</button>
-</form>-->
-
-<div class="table" id="timetable" style="display: none;">
-	<button onclick="handleADD_show()">Add</button>
-	<div class="card" id="card" style="display: none;">
-		<form action="{{ url_for('employee_routes.AddTableTime', personnel_reg_num=employee.reg_num) }}" method="POST" onsubmit="addTableTimeTonJson(event)">
-		<button type="button" id="back" class="back" onclick="handleADD_hide()">Back</button>
-		<h1>Add your Time-Table</h1>
-		<div class="day">
-			<label for="day">Select the Day:</label>
-			<select id="day" name="day">
-				<option value="Monday">Monday</option>
-				<option value="Tuesday">Tuesday</option>
-				<option value="Wednesday">Wednesday</option>
-				<option value="Thursday">Thursday</option>
-				<option value="Friday">Friday</option>
-				<option value="Saturday">Saturday</option>
-				<option value="Sunday">Sunday</option>
-			</select>
-		</div>
-		<div class="from">
-			<label for="from">From:</label>
-			<select class="from" id="from" name="from"></select>
-		</div>
-		<div class="To">
-			<label for="To">To:</label>
-			<select class="To" id="To" name="To"></select>
-		</div>
-		<input type="hidden" name="timetable_json" id="timetable_json">
-		<input type="submit" value="ADD">
-	</form>
-	</div>
-	<table>
-		<thead>
-			<tr>
-				<th class="time">Time</th>
-				{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
-					<th class="day">{{ day }}</th>
-				{% endfor %}
-			</tr>
-		</thead>
-		<tbody>
-			{% for i in range(24) %}
-				<tr>
-					<th class="time">{{ '%02d:00'|format(i) }}</th>
-					{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
-						<td class="time" id="{{ day }}-{{ '%02d:00'|format(i) }}"></td>
-					{% endfor %}
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/tabletime.js') }}" defer></script>
 {% endblock %}
