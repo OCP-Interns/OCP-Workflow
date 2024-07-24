@@ -328,30 +328,30 @@ def events():
 			event = request.form.get('event')
 			event_type = request.form.get('event_type')
 
-            if not all([day, start_hour, end_hour, event, event_type]):
-                return jsonify({'success': False, 'message': 'Missing data'}), 400
+			if not all([day, start_hour, end_hour, event, event_type]):
+				return jsonify({'success': False, 'message': 'Missing data'}), 400
 
-            event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
-            db.session.add(event_obj)
-            db.session.commit()
+			event_obj = Event(day=day, start_hour=start_hour, end_hour=end_hour, event=event, event_type=event_type)
+			db.session.add(event_obj)
+			db.session.commit()
 
-            qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
-            qr_code = qrcode.make(qr_code_data)
-            qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
-            qr_code.save(qr_code_path)
+			qr_code_data = f'Event: {event}, Type: {event_type}, Day: {day}, Start: {start_hour}, End: {end_hour}'
+			qr_code = qrcode.make(qr_code_data)
+			qr_code_path = os.path.join(qr_codes_dir, f'event_{event_obj.id}.png')
+			qr_code.save(qr_code_path)
 
-            event_obj.qr_code_path = qr_code_path
-            db.session.commit()
+			event_obj.qr_code_path = qr_code_path
+			db.session.commit()
 
-            # Option 1: Redirection après succès
-            return redirect(url_for('events.events'))
+			# Option 1: Redirection après succès
+			return redirect(url_for('events.events'))
 
-            # Option 2: Message de succès
-            # return render_template('template.html', success_message='Event created successfully!')
+			# Option 2: Message de succès
+			# return render_template('template.html', success_message='Event created successfully!')
 
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'success': False, 'message': str(e)}), 500
+		except Exception as e:
+			db.session.rollback()
+			return jsonify({'success': False, 'message': str(e)}), 500
 
 	events = Event.query.all()
 	schedule = {day: {hour: [] for hour in hours} for day in days}

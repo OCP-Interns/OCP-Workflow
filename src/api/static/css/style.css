@@ -68,6 +68,7 @@
   padding-right: 1rem;
   cursor: default;
   inset: 0 auto;
+  color: black !important;
 }
 #sign-in-page .container-fluid form .form-group #show-password-btn .bi-eye-slash-fill,
 #sign-in-page .container-fluid form .form-group #show-password-btn .bi-eye-fill {
