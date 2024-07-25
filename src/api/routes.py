@@ -197,6 +197,25 @@ def restore_employee(cin):
 def trash():
 	employees = Personnel.query.filter_by(deleted=True).all()
 	return render_template('trash.html', employees=employees, cloudinary_url=cloudinary_url, page='trash')
+@employee_bp.route('/permanent-delete-employee/<cin>', methods=['POST'])
+def permanent_delete_employee(cin):
+    employee = Personnel.query.filter_by(cin=cin).first()
+    if employee:
+        try:
+            # Manually delete related timetable entries
+            TimeTable.query.filter_by(personnel_reg_num=employee.reg_num).delete()
+
+            # Now delete the employee
+            db.session.delete(employee)
+            db.session.commit()
+            print('\033[94m + Employee permanently deleted successfully\033[0m')
+            return {'success': True, 'message': 'Employee permanently deleted successfully'}, 200
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            print('\033[91m - Error permanently deleting employee: ', e, '\033[0m')
+            return {'success': False, 'message': 'Error permanently deleting employee'}, 500
+    else:
+        return {'success': False, 'message': 'Employee not found'}, 404
 
 
 ## TIMETABLE ##
@@ -368,3 +387,8 @@ def events():
 					schedule[next_day][hour].append((event.event, event.event_type))
 	
 	return render_template('events.html', days=days, hours=hours, schedule=schedule, page='events', employees=employees)
+
+
+@employee_bp.route('/camera')
+def camera():
+	return render_template('cameras.html',  cloudinary_url=cloudinary_url, page='cameras')

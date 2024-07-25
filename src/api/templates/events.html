@@ -4,6 +4,8 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/event.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
     .A {
         background-color: lightblue;
@@ -40,6 +42,9 @@
                     {% for event, event_type in schedule[day][hour] %}
                     <div class="event {{ event_type }}">
                         {{ event }}
+                        <form action="">
+                            <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                        </form>
                         {% for e in events %}
                         {% if e.event == event and e.day == day and e.start_hour == hour %}
                         <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">

@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+*{
+    font-family: "Inter", sans-serif;
+}
+
+
+.custom-card {
+    height: 200px; /* Set the desired height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px; /* Add border radius */
+    overflow: hidden; /* Ensure content fits within the border radius */
+    transition: transform 0.2s; /* Optional: add a transition effect */
+}
+
+.custom-card:hover {
+    transform: scale(1.05); /* Optional: add a hover effect */
+}

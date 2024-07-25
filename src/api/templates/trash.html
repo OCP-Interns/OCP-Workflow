@@ -32,6 +32,8 @@
 			<td>
 				<form action="{{ url_for('employee_routes.restore_employee', cin=employee.cin) }}" method="POST" style="display:inline;">
 					<button type="submit" class="btn restore"><i class="fa-solid fa-rotate-left"></i></button>
+				</form>
+				<form action="{{ url_for('employee_routes.permanent_delete_employee', cin=employee.cin) }}" method="POST" style="display:inline;">
 					<button type="submit" class="btn delete"><i class="fa-solid fa-trash"></i></button>
 
 				</form>
