@@ -57,7 +57,7 @@ function addTimeTableToJson(event) {
 document.addEventListener('DOMContentLoaded', () => {
 
     console.log(`matricule: ${employeeNum}`);
-    fetch(`http://localhost:5000/edit-employee-timetable/json/${employeeNum}`)
+    fetch(`/edit-employee-timetable/json/${employeeNum}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay ' + response.statusText);

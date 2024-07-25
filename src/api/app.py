@@ -1,11 +1,9 @@
-import face_recognition
-
 from db import init_db
 from sign_in import sign_in_bp
 from routes import general_bp, employee_bp, events_bp
 from init import *
 
-def create_app():	
+def create_app():
 	cors.init_app(app)
 	bcrypt.init_app(app)
 	db = init_db(app)
