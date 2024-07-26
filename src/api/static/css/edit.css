@@ -34,3 +34,8 @@
 	border-radius: 50%;
 	cursor: pointer;
 }
+
+.filled {
+  background-color: black; /* Light green background for filled slots */
+}
+

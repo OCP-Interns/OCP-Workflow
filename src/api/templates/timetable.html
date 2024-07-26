@@ -22,7 +22,7 @@
 	<button onclick="handleADD_show()">Add</button>
 	<div class="card" id="card" style="display: none;">
 		<form method="POST" class="row g-3 needs-validation" id="add-timetable-form" novalidate onsubmit="addTimeTableToJson(event)"
-			{#!action="{{ url_for('employee_routes.edit_employee_timetable', personnel_reg_num=employee.reg_num) }}" #}>
+			action="{{ url_for('employee_routes.edit_employee_timetable', personnel_reg_num=employee.reg_num) }}">
 			<button type="button" id="back" class="back btn btn-primary" onclick="handleADD_hide()">Back</button>
 			<h1>Add hours</h1>
 
@@ -81,7 +81,9 @@
 			<tr>
 				<th>Time</th>
 				{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
-				<th class="day" id="{{day}}">{{ day }}</th>
+				<th class="day" id="{{ day }}">
+					{{ day }}
+				</th>                
 				{% endfor %}
 			</tr>
 		</thead>
@@ -90,12 +92,12 @@
 			<tr>
 				<th>{{ '%02d:00-%02d:00'|format(i, i+1) }}</th>
 				{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
-				<td id="{{ day }}-{{ '%02d'|format(i) }}"></td>
+				<td id="{{ day }}-{{ '%02d'|format(i) }}"></td>    
 				{% endfor %}
 			</tr>
 			{% endfor %}
 		</tbody>
-	</table>
+	</table>	
 </div>
 {% endblock %}
 
