@@ -363,7 +363,8 @@ def events():
 			db.session.commit()
 
 			# Option 1: Redirection après succès
-			return redirect(url_for('events.events'))
+			#return redirect(url_for('events.events'))
+			return jsonify({'success': True, 'message': 'Event created successfully'}), 200
 
 			# Option 2: Message de succès
 			# return render_template('template.html', success_message='Event created successfully!')
