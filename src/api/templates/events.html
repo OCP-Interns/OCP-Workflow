@@ -38,14 +38,17 @@
                 {% for day in days %}
                 <td>
                     {% for event, event_type in schedule[day][hour] %}
-                    <div class="event {{ event_type }}">
-                        {{ event }}
-                        {% for e in events %}
-                        {% if e.event == event and e.day == day and e.start_hour == hour %}
-                        <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">
-                        {% endif %}
-                        {% endfor %}
-                    </div>
+                        <a href="">
+                            <div class="event {{ event_type }}">
+                                {{ event }}
+                                {% for e in events %}
+                                {% if e.event == event and e.day == day and e.start_hour == hour %}
+                                <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+        
+                        </a>
                     {% endfor %}
                 </td>
                 {% endfor %}

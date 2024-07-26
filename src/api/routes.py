@@ -240,6 +240,7 @@ def edit_employee_timetable(personnel_reg_num):
                 add_time(timetable_data, existing_timetable, personnel_reg_num)
 
             db.session.commit()
+            return jsonify({'success': True, 'message': 'Entry added successfully'}), 200
         except Exception as e:
             print(f'Error committing timetable data: {e}')
             db.session.rollback()

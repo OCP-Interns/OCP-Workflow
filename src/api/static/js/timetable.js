@@ -54,12 +54,11 @@ function addTimeTableToJson(event) {
 
     console.log('timetable list: ', timetableEntries);
     document.getElementById('timetable_json').value = JSON.stringify(timetableEntries);
-
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log(`matricule: ${employeeNum}`);
-    fetch(`http://localhost:5000/timetable/json/${employeeNum}`)
+    fetch(`/timetable/json/${employeeNum}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay ' + response.statusText);
@@ -97,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Create and append button to the cell
                             if (!cell.querySelector('button')) {
                                 const button = document.createElement('button');
-                                button.innerText = 'Action';
                                 button.addEventListener('click', () => handleDelete(employeeNum, day, from));
                                 cell.appendChild(button);
                             }
@@ -114,11 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function handleDelete(personnelRegNum, day, fromTime) {
     console.log(`id: ${personnelRegNum}, day: ${day}, time: ${fromTime}`)
-    fetch(`http://localhost:5000/delete-timetable-entry/${personnelRegNum}`, {
+    fetch(`/delete-timetable-entry/${personnelRegNum}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
         body: new URLSearchParams({
             'day': day,
             'from': fromTime
@@ -132,6 +127,7 @@ function handleDelete(personnelRegNum, day, fromTime) {
         return response.json();
     })
     .then(data => {
+        window.location.href = `/edit-employee-timetable/${employeeNum}`;
         console.log('Success:', data);
     })
     .catch(error => {

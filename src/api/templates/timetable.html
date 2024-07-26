@@ -19,7 +19,7 @@
 </div>
 
 <div class="table" id="timetable">
-	<button onclick="handleADD_show()">Add</button>
+	<button onclick="handleADD_show()" class="add">Add</button>
 	<div class="card" id="card" style="display: none;">
 		<form method="POST" class="row g-3 needs-validation" id="add-timetable-form" novalidate onsubmit="addTimeTableToJson(event)"
 			action="{{ url_for('employee_routes.edit_employee_timetable', personnel_reg_num=employee.reg_num) }}">
