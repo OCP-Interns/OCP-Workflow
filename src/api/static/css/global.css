@@ -18,16 +18,16 @@ a {
 
 a {
   text-decoration: none;
-  color: #4EAAED;
+  color: #16B47B;
   transition: all 0.2s;
 }
 a:hover {
   text-decoration: underline;
-  color: #2094e8;
+  color: #10875c;
 }
 a:focus {
   text-decoration: underline;
-  color: #1478c1;
+  color: #0b593d;
 }
 
 .fully-rounded {
@@ -60,7 +60,7 @@ a:focus {
 .btn-primary:focus {
   color: white;
   background-color: #10875c !important;
-  box-shadow: 0px 0px 0px 2px #4EAAED !important;
+  box-shadow: 0px 0px 0px 2px #16B47B !important;
   text-decoration: none;
 }
 .btn-primary:active {
@@ -88,7 +88,7 @@ form .form-group input.text-field, form .form-group select.form-select {
 }
 form .form-group input.text-field:focus, form .form-group select.form-select:focus {
   background-color: #F8F8F8;
-  box-shadow: inset 0px 0px 0px 2px #4EAAED;
+  box-shadow: inset 0px 0px 0px 2px #16B47B;
 }
 form .form-group input.text-field ::placeholder, form .form-group select.form-select ::placeholder {
   color: rgba(0, 0, 0, 0.5);
