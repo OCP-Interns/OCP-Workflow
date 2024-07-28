@@ -36,20 +36,43 @@ function addTimeTableToJson(event) {
     const fromHour = parseInt(from.split(':')[0]);
     const toHour = parseInt(to.split(':')[0]);
 
-    // if (fromHour >= toHour) {
-    //     alert(`Can't add in timetable from: ${from} to: ${to}`);
-    //     return;
-    // }
-
     const timetableEntries = [];
 
-    for (let hour = fromHour; hour < toHour; hour++) {
-        const entry = {
-            day: day,
-            from: `${hour < 10 ? '0' + hour : hour}:00`,
-            to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
-        };
-        timetableEntries.push(entry);
+    function getNextDay(currentDay) {
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const currentIndex = daysOfWeek.indexOf(currentDay);
+        const nextIndex = (currentIndex + 1) % daysOfWeek.length;
+        return daysOfWeek[nextIndex];
+    }
+
+    if (fromHour >= toHour) {
+        for (let hour = fromHour; hour < 24; hour++) {
+            const entry = {
+                day: day,
+                from: `${hour < 10 ? '0' + hour : hour}:00`,
+                to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
+            };
+            timetableEntries.push(entry);
+        }
+        
+        const nextDay = getNextDay(day);
+        for (let hour = 0; hour < toHour; hour++) {
+            const entry = {
+                day: nextDay,
+                from: `${hour < 10 ? '0' + hour : hour}:00`,
+                to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
+            };
+            timetableEntries.push(entry);
+        }
+    } else {
+        for (let hour = fromHour; hour < toHour; hour++) {
+            const entry = {
+                day: day,
+                from: `${hour < 10 ? '0' + hour : hour}:00`,
+                to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
+            };
+            timetableEntries.push(entry);
+        }
     }
 
     console.log('timetable list: ', timetableEntries);
@@ -68,34 +91,28 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             console.log('Data fetched successfully: ', data);
             
-            // Convert the timetable JSON string to an object
             const timetable = JSON.parse(data.timetable || '{}');
             console.log('Timetable: ', timetable);
 
-            // Iterate over the timetable entries
             for (const day in timetable) {
-                // Get the entries (intervals) for the current day
                 const entries = timetable[day];
-                // Iterate over the entries and add the `filled` class to the cells
                 entries.forEach(entry => {
                     const from = entry.from;
                     const to = entry.to;
                     
-                    // Add the class `filled` to the cells that are occupied (including the cells in between)
                     const fromH = parseInt(from.split(':')[0]);
                     const toH = parseInt(to.split(':')[0]);
 
                     for (let i = fromH; i < toH; i++) {
-                        // Select cells by their ID (composed of the day and the hour)
                         const cellID = `${day}-${i < 10 ? '0' + i : i}`;
                         const cell = document.getElementById(cellID);
                         if (cell) {
                             cell.classList.add('filled');
-                            cell.style.backgroundColor = 'black';  // Use assignment
+                            cell.style.backgroundColor = 'black';  
 
-                            // Create and append button to the cell
                             if (!cell.querySelector('button')) {
                                 const button = document.createElement('button');
+                                button.className = 'trash'
                                 button.addEventListener('click', () => handleDelete(employeeNum, day, from));
                                 cell.appendChild(button);
                             }

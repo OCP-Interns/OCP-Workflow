@@ -1,0 +1,42 @@
+.body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    padding: 15px;
+}
+
+.camWidget {
+    width: 400px;
+    height: 250px;
+    background: rgb(0, 0, 0);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    margin: 5px;
+    /* transition: width 0.3s, height 0.3s;  */
+    position: relative;
+}
+
+.camera-stream {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+/* .full_screen {
+    width: 25px;
+    height: 25px;
+    border: none;
+    background-color: transparent;
+    background-image: url('../images/full-screen.png');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+} */
+
+.camWidget.expanded {
+    width: 1000px;
+    height: 600px;
+}

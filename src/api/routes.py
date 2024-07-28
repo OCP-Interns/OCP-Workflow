@@ -389,12 +389,7 @@ def events():
 			event_obj.qr_code_path = qr_code_path
 			db.session.commit()
 
-			# Option 1: Redirection après succès
-			return redirect(url_for('events.events'))
-
-			# Option 2: Message de succès
-			# return render_template('template.html', success_message='Event created successfully!')
-
+			return render_template('template.html')
 		except Exception as e:
 			db.session.rollback()
 			return jsonify({'success': False, 'message': str(e)}), 500
@@ -423,3 +418,4 @@ def events():
 @employee_bp.route('/camera')
 def camera():
 	return render_template('cameras.html',  cloudinary_url=cloudinary_url, page='cameras')
+

@@ -107,7 +107,7 @@
 					<ul class="menu">
 						<li class="menu-item {% if page == 'dashboard' %}active{% endif %}">
 							<a href="/dashboard">
-								<i class="fas fa-tachometer-alt"></i>
+								<i class="fa-solid fa-chart-pie"></i>
 								<span>Dashboard</span>
 							</a>
 						</li>
@@ -117,15 +117,15 @@
 								<span>Employees</span>
 							</a>
 						</li>
-						{#<li class="menu-item {% if page == 'meetings' %}active{% endif %}">
+						<li class="menu-item {% if page == 'meetings' %}active{% endif %}">
 							<a href="">
-								<i class="fas fa-calendar-alt"></i>
+								<i class="fa-solid fa-handshake"></i>
 								<span>Meetings</span>
 							</a>
-						</li>#}
+						</li>
 						<li class="menu-item {% if page == 'events' %}active{% endif %}">
 							<a href="/events">
-								<i class="fas fa-sign-out-alt"></i>
+								<i class="fa-solid fa-calendar-days"></i>
 								<span>Events</span>
 							</a>
 						</li>
@@ -133,6 +133,12 @@
 							<a href="/trash-bin">
 								<i class="fas fa-trash"></i>
 								<span>Trash bin</span>
+							</a>
+						</li>
+						<li class="menu-item {% if page == 'cameras' %}active{% endif %}">
+							<a href="/camera">
+								<i class="fa-solid fa-camera"></i>
+				                <span>Camera</span>
 							</a>
 						</li>
 						<li class="menu-item">

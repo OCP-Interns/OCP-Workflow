@@ -82,18 +82,18 @@ if (typeof employeeCIN !== 'undefined') {
 		},
 		(data, formData) => {
 			alert('Employee updated successfully');
-			window.location.href = '/manage-employees';
+			location.reload();
 		}, 'Failed to update employee');
 }
 
 // ========= Manage Events =========
-handleFormSubmit('add-event-form', '/events', (data, formData) => {
+handleFormSubmit('add-event-form', 'form-validated', '/events', (data, formData) => {
 		console.log(data);
+		return true;
 	}, (data, formData) => {
 		alert('Event added successfully');
-		document.getElementById('add-event-form').reset();
-		location.reload(); 
-	}, 'Failed to add event', true);
+		location.reload();
+	}, 'Failed to add event');
 
 // ========= Manage Time Table =========
 if (typeof employeeNum !== 'undefined') {
@@ -102,10 +102,6 @@ if (typeof employeeNum !== 'undefined') {
 			// Check if the start time is before (or equal to) the end time
 			const from = parseInt(formData.get('from').split(':')[0]);
 			const to = parseInt(formData.get('to').split(':')[0]);
-			if (from >= to) {
-				alert('Start time should be before the end time');
-				return false;
-			}
 			return true;
 		}, (data, formData) => {
 			alert('Time table added successfully');

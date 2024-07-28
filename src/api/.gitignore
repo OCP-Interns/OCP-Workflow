@@ -24,3 +24,6 @@ i_*.jpg
 i_*.jpeg
 i_*.gif
 i_*.svg
+
+# Certificates
+*.pem

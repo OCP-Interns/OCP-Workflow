@@ -20,7 +20,7 @@ console.log('Preload script loaded');
 
 ipcRenderer.on('validate-session', (event, userSession) => {
 	//const serverUrl = 'https://graceful-gladys-ocp-interns-5dc15e30.koyeb.app';
-	const serverUrl = 'http://localhost:5000';
+	const serverUrl = 'http://localhost:5010';
 	const pingEndpoint = `${serverUrl}/ping`;
 	const signInUrl = `${serverUrl}/sign-in`;
 	const dashboardUrl = `${serverUrl}/dashboard`;
@@ -53,7 +53,7 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 		}
 
 		const date = JSON.parse(userSession).date;
-		if (Date.now() - date > 3 * 24 * 60 * 60 * 1000) {
+		if (Date.now() - date > 1000) {
 			console.log('Session expired');
 			ipcRenderer.send('clear-session');
 			window.location.href = signInUrl;

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/camera.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="body">
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam1" controls></video>
+    </div>
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam2" controls></video>
+    </div>
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam3" controls></video>
+    </div>
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam4" controls></video>
+    </div>
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam5" controls></video>
+    </div>
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam6" controls></video>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+{% endblock %}
