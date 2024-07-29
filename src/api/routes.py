@@ -389,7 +389,13 @@ def events():
 			event_obj.qr_code_path = qr_code_path
 			db.session.commit()
 
-			return render_template('template.html')
+			# Option 1: Redirection après succès
+			#return redirect(url_for('events.events'))
+			return jsonify({'success': True, 'message': 'Event created successfully'}), 200
+
+			# Option 2: Message de succès
+			# return render_template('template.html', success_message='Event created successfully!')
+
 		except Exception as e:
 			db.session.rollback()
 			return jsonify({'success': False, 'message': str(e)}), 500
