@@ -112,6 +112,13 @@ body {
   overflow-y: auto;
   max-height: calc(100% - 64px);
 }
-.main-window .base-wrapper .main-content main .container {
-  width: 100%;
+
+.main-window .base-wrapper .main-content main::-webkit-scrollbar {
+  width: 0px;  
+  background: transparent; 
+}
+
+.main-window .base-wrapper .main-content main {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
 }

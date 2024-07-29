@@ -102,10 +102,6 @@ if (typeof employeeNum !== 'undefined') {
 			// Check if the start time is before (or equal to) the end time
 			const from = parseInt(formData.get('from').split(':')[0]);
 			const to = parseInt(formData.get('to').split(':')[0]);
-			if (from >= to) {
-				alert('Start time should be before the end time');
-				return false;
-			}
 			return true;
 		}, (data, formData) => {
 			alert('Time table added successfully');

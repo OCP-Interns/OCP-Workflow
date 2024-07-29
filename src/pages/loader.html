@@ -5,7 +5,242 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 </head>
+<style>
+	.modelViewPort {
+		width: 50%;
+		height: 50%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: transparent;
+		overflow: hidden;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	.eva {
+		--EVA-ROTATION-DURATION: 4s;
+		transform-style: preserve-3d;
+		animation: rotateRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
+	}
+	.head {
+		position: relative;
+		width: 6rem;
+		height: 4rem;
+		border-radius: 48% 53% 45% 55% / 79% 79% 20% 22%;
+		background: linear-gradient(to right, #16b47b 39%, rgb(28, 94, 50));
+	}
+	.eyeChamber {
+		width: 4.5rem;
+		height: 2.75rem;
+		position: relative;
+		left: 50%;
+		top: 55%;
+		border-radius: 45% 53% 45% 48% / 62% 59% 35% 34%;
+		background-color: #ffffff;
+		box-shadow: 0px 0px 2px 2px white, inset 0px 0px 0px 2px rgb(67, 248, 122);
+		transform: translate(-50%, -50%);
+		animation: moveRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
+	}
+	.eye {
+		width: 1.2rem;
+		height: 1.5rem;
+		position: absolute;
+		border-radius: 50%;
+	}
+	.eye:first-child {
+		left: 12px;
+		top: 50%;
+		background: repeating-linear-gradient(
+			65deg,
+			#aaff99 0px,
+			#b9ff81 1px,
+			white 2px
+		);
+		box-shadow: inset 0px 0px 5px 1px #000e07;
+		transform: translate(0, -50%) rotate(-65deg);
+	}
+	.eye:nth-child(2) {
+		right: 12px;
+		top: 50%;
+		background: repeating-linear-gradient(
+			-65deg,
+			#aaff99 0px,
+			#b9ff81 1px,
+			white 2px
+		);
+		box-shadow: inset 0px 0px 5px 1px #000e07;
+		transform: translate(0, -50%) rotate(65deg);
+	}
+	.body {
+		width: 6rem;
+		height: 8rem;
+		position: relative;
+		margin-block-start: 0.25rem;
+		border-radius: 47% 53% 45% 55% / 12% 9% 90% 88%;
+		background: linear-gradient(to right, #16b47b 29%, rgb(28, 94, 50));
+	}
+	.hand {
+		position: absolute;
+		left: -1.5rem;
+		top: 0.75rem;
+		width: 2rem;
+		height: 5.5rem;
+		border-radius: 40%;
+		background: linear-gradient(to left, #16b47b 15%, rgb(28, 94, 50));
+		box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.25);
+		transform: rotateY(55deg) rotateZ(10deg);
+	}
+	.hand:first-child {
+		animation: compensateRotation var(--EVA-ROTATION-DURATION) linear infinite
+			alternate;
+	}
+	.hand:nth-child(2) {
+		left: 92%;
+		background: linear-gradient(to right, #16b47b 15%, rgb(28, 94, 50));
+		transform: rotateY(55deg) rotateZ(-10deg);
+		animation: compensateRotationRight var(--EVA-ROTATION-DURATION) linear
+			infinite alternate;
+	}
+	.scannerThing {
+		width: 0;
+		height: 0;
+		position: absolute;
+		left: 60%;
+		top: 10%;
+		border-top: 180px solid #44fd72;
+		border-left: 250px solid transparent;
+		border-right: 250px solid transparent;
+		transform-origin: top left;
+		mask: linear-gradient(to right, white, transparent 35%);
+		animation: glow 2s cubic-bezier(0.86, 0, 0.07, 1) infinite;
+	}
+	.scannerOrigin {
+		position: absolute;
+		width: 8px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		left: 60%;
+		top: 10%;
+		background: #44fd72;
+		box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.5);
+		animation: moveRight var(--EVA-ROTATION-DURATION) linear infinite;
+	}
+
+	@keyframes rotateRight {
+		from {
+			transform: rotateY(0deg);
+		}
+		to {
+			transform: rotateY(25deg);
+		}
+	}
+	@keyframes moveRight {
+		from {
+			transform: translate(-50%, -50%);
+		}
+		to {
+			transform: translate(-40%, -50%);
+		}
+	}
+	@keyframes compensateRotation {
+		from {
+			transform: rotateY(55deg) rotateZ(10deg);
+		}
+		to {
+			transform: rotatey(30deg) rotateZ(10deg);
+		}
+	}
+	@keyframes compensateRotationRight {
+		from {
+			transform: rotateY(55deg) rotateZ(-10deg);
+		}
+		to {
+			transform: rotateY(70deg) rotateZ(-10deg);
+		}
+	}
+	@keyframes glow {
+		from {
+			opacity: 0;
+		}
+		20% {
+			opacity: 1;
+		}
+		45% {
+			transform: rotate(-25deg);
+		}
+		75% {
+			transform: rotate(5deg);
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes typeAndDelete {
+		0%,
+		10% {
+			width: 0;
+		}
+		35%,
+		45% {
+			width: 6.7em;
+		} 
+		65%,
+		100% {
+			width: 0em;
+		}
+
+	}
+
+	.control {
+		display: inline-block;
+		width: 0.6em;
+		height: 0.6em;
+		margin-left: 0.4em;
+		border-radius: 50%;
+		background-color: #777;
+	}
+
+	.text {
+		color: #16b47b;
+		display: inline-block;
+		white-space: nowrap;
+		overflow: hidden;
+		border-right: 0.2em solid rgb(28, 94, 50); /* Cursor */
+		animation: typeAndDelete 4s steps(11) infinite,
+		blinkCursor 0.5s step-end infinite alternate;
+		margin-top: 40%;
+		margin-left: 45.5%;
+		font-weight: bold;
+		font-size: large;
+	}
+
+</style>
+</head>
 <body>
-	<h1>Loading...</h1>
+<div class="modelViewPort">
+	<div class="eva">
+		<div class="head">
+			<div class="eyeChamber">
+				<div class="eye"></div>
+				<div class="eye"></div>
+			</div>
+		</div>
+		<div class="body">
+			<div class="hand"></div>
+			<div class="hand"></div>
+			<div class="scannerThing"></div>
+			<div class="scannerOrigin"></div>
+		</div>
+	</div>
+</div>
+
+<div class="text">OCP GROUP...</div>
+
+
 </body>
 </html>

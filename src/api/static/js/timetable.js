@@ -1,13 +1,3 @@
-//function showEditForm() {
-//    document.getElementById('edit-employee-form').style.display = 'flex';
-//    document.getElementById('timetable').style.display = 'none';
-//}
-
-//function showTimetable() {
-//    document.getElementById('edit-employee-form').style.display = 'none';
-//    document.getElementById('timetable').style.display = 'block';
-//}
-
 function handleADD_show() {
     document.getElementById('card').style.display = 'block';
 
@@ -43,21 +33,55 @@ function addTimeTableToJson(event) {
     const from = fromElement.value;
     const to = toElement.value;
 
-    const timetable = {
-        day: day,
-        from: from,
-        to: to
-    };
+    const fromHour = parseInt(from.split(':')[0]);
+    const toHour = parseInt(to.split(':')[0]);
 
-    console.log(timetable);
-    document.getElementById('timetable_json').value = JSON.stringify(timetable);
-    //!event.target.submit();
+    const timetableEntries = [];
+
+    function getNextDay(currentDay) {
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const currentIndex = daysOfWeek.indexOf(currentDay);
+        const nextIndex = (currentIndex + 1) % daysOfWeek.length;
+        return daysOfWeek[nextIndex];
+    }
+
+    if (fromHour >= toHour) {
+        for (let hour = fromHour; hour < 24; hour++) {
+            const entry = {
+                day: day,
+                from: `${hour < 10 ? '0' + hour : hour}:00`,
+                to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
+            };
+            timetableEntries.push(entry);
+        }
+        
+        const nextDay = getNextDay(day);
+        for (let hour = 0; hour < toHour; hour++) {
+            const entry = {
+                day: nextDay,
+                from: `${hour < 10 ? '0' + hour : hour}:00`,
+                to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
+            };
+            timetableEntries.push(entry);
+        }
+    } else {
+        for (let hour = fromHour; hour < toHour; hour++) {
+            const entry = {
+                day: day,
+                from: `${hour < 10 ? '0' + hour : hour}:00`,
+                to: `${hour + 1 < 10 ? '0' + (hour + 1) : hour + 1}:00`
+            };
+            timetableEntries.push(entry);
+        }
+    }
+
+    console.log('timetable list: ', timetableEntries);
+    document.getElementById('timetable_json').value = JSON.stringify(timetableEntries);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
     console.log(`matricule: ${employeeNum}`);
-    fetch(`/edit-employee-timetable/json/${employeeNum}`)
+    fetch(`/timetable/json/${employeeNum}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay ' + response.statusText);
@@ -66,73 +90,65 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             console.log('Data fetched successfully: ', data);
-			
-			//* HERE
-			// Convert the timetable JSON string to an object
-			const timetable = JSON.parse(data.timetable);
-			console.log('Timetable: ', timetable);
+            
+            const timetable = JSON.parse(data.timetable || '{}');
+            console.log('Timetable: ', timetable);
 
-			// Iterate over the timetable entries
-			for (const day in timetable) {
-				// Get the entries (intervals) for the current day
-				const entries = timetable[day];
-				// Iterate over the entries and add the `filled` class to the cells
-				entries.forEach(entry => {
-					const from = entry.from;
-					const to = entry.to;
-					
-					// Add the class `filled` to the cells that are occupied (including the cells in between)
-					const fromH = parseInt(from.split(':')[0]);
-					const toH = parseInt(to.split(':')[0]);
-					var cells = [];
-					// Iterate over the hours in the interval
-					for (let i = fromH; i < toH; i++) {
-						// Select cells by their ID (composed of the day and the hour)
-						const cellID = `${day}-${i < 10 ? '0' + i : i % 24}`;
-						const cell = document.getElementById(cellID);
-						if (cell) {
-							cell.classList.add('filled');
-							cells.push(cell);
-						} else {
-							console.error(`No cell found for ID: ${cellID}`);
-						}
-					}
-				});
-			}
+            for (const day in timetable) {
+                const entries = timetable[day];
+                entries.forEach(entry => {
+                    const from = entry.from;
+                    const to = entry.to;
+                    
+                    const fromH = parseInt(from.split(':')[0]);
+                    const toH = parseInt(to.split(':')[0]);
 
-			//?{
-            //const timetable = data.timetable;
-            //timetable.forEach(entry => {
-            //    const day = entry.day;
-            //    const from = entry.from;
-            //    const to = entry.to;
+                    for (let i = fromH; i < toH; i++) {
+                        const cellID = `${day}-${i < 10 ? '0' + i : i}`;
+                        const cell = document.getElementById(cellID);
+                        if (cell) {
+                            cell.classList.add('filled');
+                            cell.style.backgroundColor = 'black';  
 
-            //    let [fromH, fromM] = from.split(':').map(Number);
-            //    let [toH, toM] = to.split(':').map(Number);
-
-            //    let firstHour = fromH;
-            //    let lastHour = toH
-
-            //    const time1 = `${firstHour < 10 ? '0' : ''}${firstHour}:00`;
-            //    const cellID1 = `${day}-${time1}`;
-            //    const cell1 = document.getElementById(cellID1);
-            //    const time2 = `${lastHour < 10 ? '0' : ''}${lastHour}:00`;
-            //    const cellID2 = `${day}-${time2}`
-            //    const cell2 = document.getElementById(cellID2)
-
-            //    console.log(cellID1);
-
-            //    if (cell1 || cell2) {
-            //        console.log('OK')
-            //        cell1.style.backgroundColor = 'black';
-            //        cell2.style.backgroundColor = 'black';
-            //    } else {
-            //        console.error(`No cell found for ID: ${cellID1}`);
-            //    }
-
-            //});
-			//?}
+                            if (!cell.querySelector('button')) {
+                                const button = document.createElement('button');
+                                button.className = 'trash'
+                                button.addEventListener('click', () => handleDelete(employeeNum, day, from));
+                                cell.appendChild(button);
+                            }
+                        } else {
+                            console.error(`No cell found for ID: ${cellID}`);
+                        }
+                    }
+                });
+            }
         })
         .catch(error => console.error('Error fetching timetable: ', error));
 });
-    
+
+
+function handleDelete(personnelRegNum, day, fromTime) {
+    console.log(`id: ${personnelRegNum}, day: ${day}, time: ${fromTime}`)
+    fetch(`/delete-timetable-entry/${personnelRegNum}`, {
+        method: 'POST',
+        body: new URLSearchParams({
+            'day': day,
+            'from': fromTime
+        })
+    })
+    .then(response => {
+        console.log()
+        if (!response.ok) {
+            throw new Error('Network response was not okay');
+        }
+        return response.json();
+    })
+    .then(data => {
+        window.location.href = `/edit-employee-timetable/${employeeNum}`;
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
