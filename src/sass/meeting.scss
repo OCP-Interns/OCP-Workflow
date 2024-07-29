@@ -1,0 +1,120 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+h1 {
+	font-size: 24px;
+	margin: 0;
+	align-items: start;
+	justify-content: start;
+}
+
+.add-employee, .add-tableTime {
+	display: inline-block;
+	outline: none;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 20px;
+	background-color: #16B47B;
+	color: white;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background-color 0.3s;
+	text-decoration: none;
+
+
+}
+
+.add-employee:hover, .add-tableTime {
+	background-color: #218838;
+}
+
+.employee-card {
+	display: inline-block;
+	background-color: #D9F6E4;
+	border-radius: 15px;
+	margin: 2%;
+	width: 200px;
+	padding: 10px;
+	position: relative;
+	box-shadow: 10px 4px 8px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	align-items: center;
+	justify-items: center;
+
+}
+
+.profile-image {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	margin-bottom: 10px;
+}
+
+/*.employee-details {
+	text-align: left;
+}*/
+
+.employee-details h2 {
+	font-size: 18px;
+	margin: 5px 0;
+}
+
+.employee-details p {
+	font-size: 14px;
+	margin: 5px 0 10px;
+	color: #6c757d;
+}
+
+.btn {
+	display: inline-block;
+	padding: 5px 10px;
+	margin: 5px;
+	border: none;
+	background-color: #16B47B;
+	color: white;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.3s;
+	border-radius: 20px;
+	padding: 9px;
+	text-decoration: none;
+}
+
+.btn:hover {
+	background-color: #108f60;	
+}
+.btn.edit {
+	background-color: #16B47B;	
+
+}
+.btn.edit a{
+	color: white;
+	text-decoration:none;
+
+}
+
+.btn.edit:hover {
+	background-color: #16B47B;
+}
+
+.btn.delete {
+	background-color: red;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 2px;
+	right: 1px;
+}
+
+.btn.delete i {
+	color: white;
+}

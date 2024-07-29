@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Event{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/meeting.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+{% block content %}
+<div class="header">
+    <h1>Manage Events</h1>
+</div>
+<div class="dashboard-cards">
+    <div class="card">
+        <a href="{{ url_for('events.events_by_type', event_type='A') }}">
+            <div class="card-content">
+                <i class="fas fa-user"></i>
+                <p>{{ total_A }}</p> 
+                <h5>A</h5>
+            </div>
+        </a>
+    </div>
+    <div class="card">
+        <a href="{{ url_for('events.events_by_type', event_type='B') }}">
+            <div class="card-content">
+                <i class="fas fa-chart-bar"></i>
+                <p>{{ total_B }}</p> 
+                <h5>B</h5>
+            </div>
+        </a>
+    </div>
+    <div class="card">
+        <a href="{{ url_for('events.events_by_type', event_type='C') }}">
+            <div class="card-content">
+                <i class="fas fa-users"></i>
+                <p>{{ total_C }}</p> 
+                <h5>C</h5>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% for event in events %}
+<div class="employee-card">
+   
+    <div class="event-details">
+        <p> <span>Day: </span>  {{ event.day }}</p>
+        <p>Start Hour: {{ event.start_hour }}</p>
+        <p>End Hour: {{ event.end_hour }}</p>
+        <p>Event: {{ event.event }}</p>
+        <p>Type: {{ event.event_type }}</p>
+    </div>
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-primary" href="{{ url_for('events.edit_event', id=event.id) }}">Edit</a>
+        <form action="{{ url_for('events.delete_event', id=event.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn delete"><i class="fa fa-trash"></i></button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

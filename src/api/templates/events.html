@@ -37,20 +37,22 @@
             <tr>
                 <td>{{ hour }}</td>
                 {% for day in days %}
+                
                 <td>
                     {% for event, event_type in schedule[day][hour] %}
-                    <div class="event {{ event_type }}">
-                        {{ event }}
-                        <form action="">
-                            <button type="submit"><i class="fa-solid fa-trash"></i></button>
-                        </form>
-                        {% for e in events %}
-                        {% if e.event == event and e.day == day and e.start_hour == hour %}
-                        <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">
-                        {% endif %}
-                        {% endfor %}
-                    </div>
+                        <div class="event {{ event_type }}">
+                         {{ event }}
+                            {% for e in events %}
+                             {% if e.event == event and e.day == day and e.start_hour == hour %}
+                                <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">
+                                 <form action="{{ url_for('delete_event', event_id=e.id) }}" method="post" style="display:inline;">
+                                     <button type="submit" class="delete-button">Delete</button>
+                                        </form>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
                     {% endfor %}
+
                 </td>
                 {% endfor %}
             </tr>

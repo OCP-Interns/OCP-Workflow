@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, jsonify, render_template, session, url_for
+from flask import Blueprint, flash, redirect, request, jsonify, render_template, session, url_for
 from db import Personnel, Event, TimeTable, db
 import cloudinary
 from cloudinary.utils import cloudinary_url
@@ -43,11 +43,13 @@ def dashboard():
 # Combine all the employee routes into a single blueprint
 employee_bp = Blueprint('employee_routes', __name__)
 
+
 ## EMPLOYEES ##
 @employee_bp.route('/manage-employees')
 def manage_employees():
 	employees = Personnel.query.filter_by(deleted=False).all()
 	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url, page='employees')
+
 
 @employee_bp.route('/add-employee', methods=['POST', 'GET'])
 def add_employee():
@@ -364,12 +366,10 @@ def events():
 			event_obj.qr_code_path = qr_code_path
 			db.session.commit()
 
-			# Option 1: Redirection après succès
-			#return redirect(url_for('events.events'))
+			
 			return jsonify({'success': True, 'message': 'Event created successfully'}), 200
 
-			# Option 2: Message de succès
-			# return render_template('template.html', success_message='Event created successfully!')
+			
 
 		except Exception as e:
 			db.session.rollback()
@@ -395,6 +395,71 @@ def events():
 	
 	return render_template('events.html', days=days, hours=hours, schedule=schedule, page='events', employees=employees)
 
+@events_bp.route('/manage_meeting')
+def manage_meeting():
+    events = Event.query.all()
+    
+    total_A = Event.query.filter_by(event_type='A').count()
+    total_B = Event.query.filter_by(event_type='B').count()
+    total_C = Event.query.filter_by(event_type='C').count()
+    
+    return render_template('meeting.html', 
+                           cloudinary_url=cloudinary_url,
+                           page='meetings', 
+                           events=events,
+                           total_A=total_A, 
+                           total_B=total_B, 
+                           total_C=total_C)
+
+@events_bp.route('/events/type/<string:event_type>')
+def events_by_type(event_type):
+    events = Event.query.filter_by(event_type=event_type).all()
+    total_A = Event.query.filter_by(event_type='A').count()
+    total_B = Event.query.filter_by(event_type='B').count()
+    total_C = Event.query.filter_by(event_type='C').count()
+
+    return render_template('meeting.html', 
+                           cloudinary_url=cloudinary_url,
+                           page='meetings', 
+                           events=events,
+                           total_A=total_A, 
+                           total_B=total_B, 
+                           total_C=total_C,
+                           filtered_type=event_type)
+@events_bp.route('/events/edit/<int:id>', methods=['GET', 'POST'])
+def edit_event(id):
+    event = Event.query.get_or_404(id)
+    if request.method == 'POST':
+        event.day = request.form['day']
+        event.start_hour = request.form['start_hour']
+        event.end_hour = request.form['end_hour']
+        event.event = request.form['event']
+        event.event_type = request.form['event_type']
+
+        try:
+            db.session.commit()
+            flash('Event updated successfully!', 'success')
+            return render_template('meeting.html')
+        except:
+            db.session.rollback()
+            flash('Error updating event. Please try again.', 'danger')
+            return redirect(url_for('events.edit_event', id=id))
+    return render_template('edit_event.html', event=event)
+
+@events_bp.route('/events/delete/<int:id>', methods=['POST'])
+def delete_event(id):
+    event = Event.query.get_or_404(id)
+    try:
+        db.session.delete(event)
+        db.session.commit()
+        flash('Event deleted successfully!', 'success')
+        return render_template('meeting.html')
+    except:
+        db.session.rollback()
+        flash('Error deleting event. Please try again.', 'danger')
+        return render_template('meeting.html')
+
+	
 
 @employee_bp.route('/camera')
 def camera():

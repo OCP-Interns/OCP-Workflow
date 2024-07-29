@@ -13,6 +13,7 @@ def create_app():
 	app.register_blueprint(employee_bp)
 	app.register_blueprint(events_bp)
 
+
 	return app, db
 
 app, db = create_app()
