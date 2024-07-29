@@ -1,14 +1,19 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const video = document.getElementById('cam1');
+    const cameraIds = ['cam1'];
 
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
-                // Attach the video stream to the video element
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(function(err) {
-                console.error("Error accessing the camera: " + err);
-            });
-
+    cameraIds.forEach(function(id) {
+        const video = document.getElementById(id);
+        if (video) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    sendFrames(video)
+                })
+                .catch(function(err) {
+                    console.error("Error accessing the camera for " + id + ": " + err);
+                });
+        }
+    });
 });
+
