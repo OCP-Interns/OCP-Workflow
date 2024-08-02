@@ -1,19 +1,39 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const cameraIds = ['cam1'];
+const video = document.getElementById('cam1');
+const canvas = document.createElement('canvas');
+const context = canvas.getContext('2d');
+let lastFrameTime = 0;
+const frameInterval = 100;
 
-    cameraIds.forEach(function(id) {
-        const video = document.getElementById(id);
-        if (video) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    video.srcObject = stream;
-                    video.play();
-                    sendFrames(video)
-                })
-                .catch(function(err) {
-                    console.error("Error accessing the camera for " + id + ": " + err);
-                });
-        }
-    });
-});
+function sendFrame(timestamp) {
+    if (timestamp - lastFrameTime > frameInterval) {
+        lastFrameTime = timestamp;
 
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL('image/jpeg');
+
+        fetch('/frame', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `image=${encodeURIComponent(dataURL)}`
+        })
+        .then(response => response.text())
+        .then(data => console.log(data))
+        .catch(err => console.error('Fetch error: ', err));
+    }
+    requestAnimationFrame(sendFrame);
+}
+
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({video: true})
+    .then(stream => {
+        video.srcObject = stream;
+        sendFrame();
+    })
+    .catch(err => console.error('Accessing webcam error: ', err));
+} else {
+    console.error("Browser doesn't support user media");
+}

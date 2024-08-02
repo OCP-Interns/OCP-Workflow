@@ -1,0 +1,68 @@
+from flask import Blueprint, Response, render_template
+import cv2
+import face_recognition
+import os
+import glob
+
+cam_bp = Blueprint('camera', __name__)
+cap = cv2.VideoCapture(0)
+data = 'faces/'
+
+known_faces = []
+known_names = []
+
+def incodingImage(img):
+  image = face_recognition.load_image_file(img)
+  face_encoding = face_recognition.face_encodings(image)
+  if len(face_encoding) > 0:
+    return face_encoding[0]
+  return None
+
+for name in os.listdir(data):
+  image_mask = os.path.join(data, name, '*jpg')
+  images_paths = glob.glob(image_mask)
+  for image_path in images_paths:
+    encoding = incodingImage(image_path)
+    if encoding is not None:
+      known_faces.append(encoding)
+      known_names.append(name)
+
+def generate_frames():
+  ret, frame = cap.read()
+  if ret:
+    return 
+  
+  frame_rgb = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+  faces = face_recognition.face_locations(frame_rgb)
+  time(faces)
+
+  for face in faces:
+    top, right, bottom, left = face
+    cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+    encoding_faces = face_recognition.face_encodings(frame_rgb, [face])[0]
+
+    result = face_recognition.compare_faces(known_faces, encoding_faces)
+    if result:
+      name = known_names[result.index(True)]
+      cv2.putText(frame, name, (left + 30, bottom + 15), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+      cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+    else:
+      name = 'unknown face detected'
+      cv2.putText(frame, name, (left + 30, bottom + 15), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 2)
+      cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
+
+  ret, buffer = cv2.imencode('.jpe', frame)
+  frame = buffer.tobytes()
+
+  yield (b'--frame\r\n'
+        b'Content-Type: image/jpeg\r\n\r\n' 
+        + frame + 
+        b'\r\n')
+  
+@cam_bp.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+    
+def time(face):
+  pass
