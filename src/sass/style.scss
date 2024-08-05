@@ -1,0 +1,122 @@
+// <== Imports ==>
+@use 'variables' as *;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+
+// <== Sign In Page ==>
+#sign-in-page {
+	height: 100%;
+	font-size: 0.9rem;
+	font-weight: light;
+	letter-spacing: 0.07rem;
+
+	h1 {
+		font-size: 2.5rem;
+		font-weight: bold;
+		letter-spacing: 0.15rem;
+	}
+
+	.container-fluid {
+		height: 100%;
+
+		.row,
+		.col {
+			height: 100%;
+		}
+
+		.line {
+			width: 100%;
+			height: 1px;
+			background-color: #E0E0E0;
+		}
+
+		#logo-container {
+			background: linear-gradient(180deg, $primary-color 35%, $secondary-color 100%);
+
+			padding: 128px;
+
+			@media screen and (max-width: 992px) {
+				padding: 88px;
+			}
+
+			@media screen and (max-width: 768px) {
+				padding: 64px;
+			}
+		}
+
+		form {
+			.form-group {
+				text-align: left;
+
+				label:not([class="form-check-label"]) {
+					font-weight: 500;
+					margin-bottom: 0.35rem;
+				}
+
+				#password {
+					padding-right: 3.2rem;
+
+					&:focus {
+						z-index: -1;
+					}
+				}
+
+				input[type="checkbox"] {
+					width: 1rem;
+					height: 1rem;
+					transition: all $transition-speed;
+
+					&:checked {
+						background-color: $primary-color;
+						border: none;
+					}
+
+					&:focus {
+						box-shadow: 0px 0px 0px 1px $select-color;
+
+						&:checked {
+							background-color: darken($primary-color, 10%);
+						}
+					}
+				}
+
+				#show-password-btn {
+					padding-right: 1rem;
+					cursor: default;
+					inset: 0 auto;
+					color: black !important;
+
+					.bi-eye-slash-fill,
+					.bi-eye-fill {
+						display: none;
+					}
+					.bi-eye-slash,
+					.bi-eye-slash-fill,
+					.bi-eye-fill {
+						font-size: 1.2rem;
+						transition: all $transition-speed;
+					}
+					&:hover .bi-eye-slash,
+					&:hover .bi-eye-fill {
+						display: none;
+					}
+					&:hover .bi-eye-slash-fill {
+						display: inline;
+					}
+					&:focus {
+						outline: none;
+						border: 1px solid $gray;
+					}
+				}
+			}
+		}
+
+		#face-id-btn {
+			padding: 0.6rem 1.5rem;
+
+			i {
+				font-size: 1.5rem;
+			}
+		}
+	}
+}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Employee - {{ employee.last_name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
+
+<script>
+	const employeeCIN = "{{ employee.cin }}";
+	const employeeNum = "{{ employee.reg_num }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="links">
+	<span>Edit Details</span>
+	/
+	<a href="{{ url_for('employee_routes.edit_employee_timetable', personnel_reg_num=employee.reg_num) }}">Edit Timetable</a>
+</div>
+
+<form class="container1 needs-validation form-group" id="edit-employee-form" method="POST" novalidate>
+	<div class="col-md-4">
+		<label for="first-name" class="form-label">First name</label>
+		<input type="text " class="form-control text-field" id="first-name" placeholder="First name" pattern="[A-Za-z]{3,}"
+			name="first_name" value="{{ employee.first_name }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid first name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="last-name" class="form-label">Last name</label>
+		<input type="text " class="form-control text-field" id="last-name" placeholder="Last name" pattern="[A-Za-z]{3,}"
+			name="last_name" value="{{ employee.last_name }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid last name.
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label for="cin" class="form-label">CIN</label>
+		<input type="text " class="form-control text-field" id="cin" placeholder="CIN" pattern="[A-Z]{1,2}[0-9]{6}" name="cin"
+			value="{{ employee.cin }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid CIN. (e.g. AA123456)
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<label for="email" class="form-label">Email</label>
+		<input type="email" class="form-control text-field" id="email" placeholder="Email" name="email"
+			value="{{ employee.email }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid email address.
+		</div>
+	</div>
+	<div class="col-md-5">
+		<label for="phone" class="form-label">Phone</label>
+		<input type="text" class="form-control text-field" id="phone" placeholder="Phone" pattern="[0-9]{10}" name="phone"
+			value="{{ employee.phone }}" required>
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please enter a valid phone number. (Moroccan phone number)
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<label for="shift" class="form-label">Shift Type</label>
+		<select class="form-select text-field" id="shift" name="shift" required>
+			<option value="normal" {% if employee.shift=="normal" %}selected{% endif %}>Normal Shift</option>
+			<option value="split" {% if employee.shift=="split" %}selected{% endif %}>Split Shift</option>
+			<option value="rotating" {% if employee.shift=="rotating" %}selected{% endif %}>Rotating Shift</option>
+		</select>
+	</div>
+	<div class="col-md-6">
+		<label for="photo" class="form-label ">Photo</label>
+		<input type="file" class="form-control text-field" id="photo" accept="image/*" name="photo">
+		<div class="valid-feedback">
+			Looks good!
+		</div>
+		<div class="invalid-feedback">
+			Please upload a valid image.
+		</div>
+	</div>
+	<div class="col-md-2 ">
+		<img src="{{ cloudinary_url(employee.photo)[0] }}" alt="Employee Photo" class="img-thumbnail">
+	</div>
+
+	<div class="col-12">
+		<button class="btn submit-button" type="submit">Submit</button>
+	</div>
+</form>
+{% endblock %}

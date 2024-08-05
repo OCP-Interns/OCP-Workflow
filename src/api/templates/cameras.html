@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/camera.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="body">
+    {% for i in range(1, 7) %}
+    <div class="camWidget">
+        <video autoplay class="camera-stream" id="cam{{ i }}" controls src="/camera/video_feed"></video>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+{% endblock %}

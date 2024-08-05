@@ -1,0 +1,35 @@
+# Node.js dependencies
+/node_modules
+
+# Electron build artifacts
+/dist
+
+# Python cache files
+__pycache__/
+
+# Flask virtual environment
+src/api/venv
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# Editor and IDE files
+.vscode/
+.idea/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# Images
+i_*.png
+i_*.jpg
+i_*.jpeg
+i_*.gif
+i_*.svg
+
+# Certificates
+*.pem
