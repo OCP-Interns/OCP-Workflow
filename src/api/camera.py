@@ -12,7 +12,10 @@ from datetime import datetime
 known_faces = []
 known_names = []
 face_detected_time = None
-face_undetected_time = None
+face_detected_timeLeaving = None
+arrive = []
+depart = []
+duration_list = []
 day = None
 faces_folder = 'C:/Users/marou/OneDrive/Desktop/OCP-Workflow-mrf/faces/'
 
@@ -46,7 +49,7 @@ cam_bp = Blueprint('frame', __name__)
 
 @cam_bp.route('/frame', methods=['POST'])
 def proc_frame():
-    global face_detected_time, face_undetected_time, day
+    global face_detected_time, face_detected_timeLeaving, day
     
     try:
         image_data = request.form['image']
@@ -71,7 +74,7 @@ def proc_frame():
                 name = known_names[first_match]
                 names.append(name)
         
-        time_message = update_time(faces)
+        time_message = update_time(len(faces) > 0)
         
         return f'Face recognized: {names} matches found //// timing : {time_message}'
 
@@ -79,14 +82,33 @@ def proc_frame():
         return f"Internal Server Error: {str(e)}", 500
 
 def update_time(face):
-    global face_detected_time, day
+    global face_detected_time, face_detected_timeLeaving, day
     
     if face:
         if face_detected_time is None:
             face_detected_time = datetime.now()
             day = face_detected_time.date()
-            return f"Face detected at: {face_detected_time.strftime('%H:%M:%S')} on {day}"
+            arrive.append(face_detected_time)
+             
         else:
-            return f"Face detected, but detection time already set. at: {face_detected_time}"
-    else:
-        return 'no face detected for now'
+            face_detected_timeLeaving = datetime.now()
+            day = face_detected_timeLeaving.date()
+            depart.append(face_detected_timeLeaving)
+        
+        duratin_message = calculate_duration(arrive, depart)
+        return f"Face detected at: {min(arrive)} on {day} and face leving at: {max(depart)} on {day}, duration: {duratin_message}"
+
+    return "no face detected"
+            
+def calculate_duration(arrive, depart):
+    if arrive and depart:
+        min_arriv = min(arrive)
+        max_dep = max(depart)
+        
+        duree = max_dep - min_arriv
+        
+        duration_list.append(duree)
+        
+        return f"duration detecting face: {max(duration_list)}"
+    
+    return '_'
