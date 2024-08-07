@@ -49,3 +49,13 @@ class Event(db.Model):
     event = db.Column(db.String(255), nullable=False)
     event_type = db.Column(db.String(255), nullable=False)
     qr_code_path = db.Column(db.String(255), nullable=True)
+    
+class DurationWorked(db.Model):  
+    __tablename__ = 'duration_worked'  
+    id = db.Column(db.Integer, primary_key=True)
+    personnel_reg_num = db.Column(db.String(255), db.ForeignKey('personnel.reg_num'), nullable=False)
+    day_in = db.Column(db.String(255), nullable=False)
+    day_off = db.Column(db.String(255), nullable=False)
+    time_in = db.Column(db.String(255), nullable=False)
+    time_off = db.Column(db.String(255), nullable=False)
+    duration = db.Column(db.String(255), nullable=False)
