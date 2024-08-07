@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request
+from flask import Flask, Blueprint, request, jsonify
 import cv2
 import numpy as np
 import base64
@@ -8,6 +8,7 @@ import face_recognition
 import os
 import glob
 from datetime import datetime
+from db import DurationWorked 
 
 known_faces = []
 known_names = []
@@ -26,7 +27,7 @@ def get_encoding(img):
     face_encoding = face_recognition.face_encodings(image)
     if len(face_encoding) > 0:
         return face_encoding[0]
-    return "no fuond on the folder"
+    return None
 
 def filtering_img(faces_folder):
     if os.path.exists(faces_folder):
@@ -41,7 +42,7 @@ def filtering_img(faces_folder):
                 else:
                     return 'no data found'
     else:
-        return 'path not fuond'
+        return 'path not found'
 
 filtering_img(faces_folder)
 
@@ -61,7 +62,7 @@ def proc_frame():
         faces = face_recognition.face_locations(frame)
     
         if not faces:
-            return 'No faces detected'
+            return jsonify({"msg " : 'No faces detected'})
 
         names = []
         
@@ -76,10 +77,10 @@ def proc_frame():
         
         time_message = update_time(len(faces) > 0)
         
-        return f'Face recognized: {names} matches found //// timing : {time_message}'
+        return jsonify({'message': f'Face recognized: {names} matches found', 'timing': time_message})
 
     except Exception as e:
-        return f"Internal Server Error: {str(e)}", 500
+        return jsonify({'error': f"Internal Server Error: {str(e)}"}), 500
 
 def update_time(face):
     global face_detected_time, face_detected_timeLeaving, day

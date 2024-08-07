@@ -2,7 +2,7 @@ const video = document.getElementById('cam1');
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 let lastFrameTime = 0;
-const frameInterval = 100;
+const frameInterval = 1000;
 
 function sendFrame(timestamp) {
     if (timestamp - lastFrameTime > frameInterval) {
@@ -31,7 +31,10 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({video: true})
     .then(stream => {
         video.srcObject = stream;
-        sendFrame();
+        video.onloadeddata = () => {
+            video.play();
+            requestAnimationFrame(sendFrame)
+        }
     })
     .catch(err => console.error('Accessing webcam error: ', err));
 } else {
