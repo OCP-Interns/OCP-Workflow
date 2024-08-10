@@ -47,6 +47,7 @@ def manage_employees():
 	employees = Personnel.query.filter_by(deleted=False).all()
 	return render_template('manage.html', employees=employees, cloudinary_url=cloudinary_url, page='employees')
 
+
 @employee_bp.route('/add-employee', methods=['POST', 'GET'])
 def add_employee():
 	if request.method == 'POST':
@@ -167,6 +168,15 @@ def edit_employee_details(cin):
 	else:
 		print('\033[94m - GET: Showing edit employee form\033[0m')
 		return render_template('edit.html', employee=employee, cloudinary_url=cloudinary_url, page='employees')
+
+@employee_bp.route('/statistics/<cin>', methods=['POST', 'GET'])
+def statistics(cin):
+    employee = Personnel.query.filter_by(cin=cin).first()
+    if request.method == 'POST':
+        # Handle POST request if needed
+        pass
+    else:
+        return render_template('stat.html', employee=employee, cloudinary_url=cloudinary_url, page='employees')
 
 @employee_bp.route('/delete-employee/<cin>', methods=['POST'])
 def delete_employee(cin):
