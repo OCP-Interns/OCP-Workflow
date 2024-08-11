@@ -2,29 +2,15 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/camera.css') }}">
-<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="body">
+    {% for i in range(1, 7) %}
     <div class="camWidget">
-        <video autoplay class="camera-stream" id="cam1" controls></video>
+        <video autoplay class="camera-stream" id="cam{{ i }}" controls src="/camera/video_feed"></video>
     </div>
-    <div class="camWidget">
-        <video autoplay class="camera-stream" id="cam2" controls></video>
-    </div>
-    <div class="camWidget">
-        <video autoplay class="camera-stream" id="cam3" controls></video>
-    </div>
-    <div class="camWidget">
-        <video autoplay class="camera-stream" id="cam4" controls></video>
-    </div>
-    <div class="camWidget">
-        <video autoplay class="camera-stream" id="cam5" controls></video>
-    </div>
-    <div class="camWidget">
-        <video autoplay class="camera-stream" id="cam6" controls></video>
-    </div>
+    {% endfor %}
 </div>
 {% endblock %}
 

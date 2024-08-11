@@ -53,7 +53,7 @@ ipcRenderer.on('validate-session', (event, userSession) => {
 		}
 
 		const date = JSON.parse(userSession).date;
-		if (Date.now() - date > 1000) {
+		if (Date.now() - date > 86,4000) {
 			console.log('Session expired');
 			ipcRenderer.send('clear-session');
 			window.location.href = signInUrl;

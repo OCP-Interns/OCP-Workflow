@@ -5,18 +5,23 @@ import os
 db = SQLAlchemy()
 
 def init_db(app):
-	load_dotenv()
+    load_dotenv()
 
-	app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI').replace('mysql://', 'mysql+pymysql://')
-	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
-	
-	db.init_app(app)
+    db_uri = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///default.db')
+    if db_uri is None:
+        raise ValueError("The environment variable 'SQLALCHEMY_DATABASE_URI' is not set")
 
-	with app.app_context():
-		db.create_all()
-		print('\033[92m + Database initialized successfully\033[0m')
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri.replace('mysql://', 'mysql+pymysql://')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', 'False')
 
-	return db
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+        print('\033[92m + Database initialized successfully\033[0m')
+
+    return db
+
 
 class Personnel(db.Model):
 	__tablename__ = 'personnel'
@@ -49,3 +54,13 @@ class Event(db.Model):
     event = db.Column(db.String(255), nullable=False)
     event_type = db.Column(db.String(255), nullable=False)
     qr_code_path = db.Column(db.String(255), nullable=True)
+    
+class DurationWorked(db.Model):  
+    __tablename__ = 'duration_worked'  
+    id = db.Column(db.Integer, primary_key=True)
+    personnel_reg_num = db.Column(db.String(255), db.ForeignKey('personnel.reg_num'), nullable=False)
+    day_in = db.Column(db.String(255), nullable=False)
+    day_off = db.Column(db.String(255), nullable=False)
+    time_in = db.Column(db.String(255), nullable=False)
+    time_off = db.Column(db.String(255), nullable=False)
+    duration = db.Column(db.String(255), nullable=False)

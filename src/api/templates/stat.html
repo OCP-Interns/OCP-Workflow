@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Statistics{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="statistics">
+    <div class="stat">
+        <h2>Absence</h2>
+        <h3>15</h3>h
+    </div>
+    <div class="stat">
+        <h2>Overtime</h2>
+        <h3>60</h3>h
+    </div>
+    <div class="stat">
+        <h2>Latetime</h2>
+        <h3>3</h3>h
+    </div>
+</div>
+{% endblock %}

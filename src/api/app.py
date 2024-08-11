@@ -1,4 +1,3 @@
-from flask_socketio import emit
 from db import init_db
 from sign_in import sign_in_bp
 from routes import general_bp, employee_bp, events_bp
@@ -14,17 +13,14 @@ def create_app():
 	app.register_blueprint(general_bp)
 	app.register_blueprint(employee_bp)
 	app.register_blueprint(events_bp)
-	app.register_blueprint(cam_bp, url_prefix='/camera')
+	app.register_blueprint(cam_bp)
 
 	return app, db
 
 app, db = create_app()
 
 from db import Personnel
-from cloudinary.utils import cloudinary_url
-from urllib.request import urlopen
 
-# Insert the default personnel data
 with app.app_context():
 	if not Personnel.query.first():
 		db.session.add(Personnel(
