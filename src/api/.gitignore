@@ -1,0 +1,29 @@
+# Virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# Editor and IDE files
+.vscode/
+.idea/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# Images
+i_*.png
+i_*.jpg
+i_*.jpeg
+i_*.gif
+i_*.svg
+
+# Certificates
+*.pem

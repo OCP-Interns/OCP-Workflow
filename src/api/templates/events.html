@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Schedule{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/event.css') }}">
+
+<style>
+    .A {
+        background-color: lightblue;
+    }
+    .B {
+        background-color: lightgreen;
+    }
+    .C {
+        background-color: lightcoral;
+    }
+</style>
+
+<div class="container">
+    <h1>Event Schedule</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hour in hours %}
+            <tr>
+                <td>{{ hour }}</td>
+                {% for day in days %}
+                <td>
+                    {% for event, event_type in schedule[day][hour] %}
+                    <div class="event {{ event_type }}">
+                        {{ event }}
+                        <form action="">
+                            <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                        {% for e in events %}
+                        {% if e.event == event and e.day == day and e.start_hour == hour %}
+                        <img src="{{ url_for('static', filename=e.qr_code_path) }}" alt="QR Code" width="50">
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <div class="box">
+        <a class="button" href="#popup1">Add Event</a>
+    </div> 
+</div>
+
+
+<div id="popup1" class="overlay">
+    <div class="popup">
+        <h2>Add Event</h2>
+        <a class="close" href="#">&times;</a>
+        <div class="content">
+            {#<form id="add-event-form" method="POST">
+                <div class="form-group">
+                    <label for="day">Day:</label>
+                    <select name="day" id="day">
+                        {% for day in days %}
+                        <option value="{{ day }}">{{ day }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="start_hour">Start Hour:</label>
+                    <select name="start_hour" id="start_hour">
+                        {% for hour in hours %}
+                        <option value="{{ hour }}">{{ hour }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="end_hour">End Hour:</label>
+                    <select name="end_hour" id="end_hour">
+                        {% for hour in hours %}
+                        <option value="{{ hour }}">{{ hour }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="event">Event:</label>
+                    <input type="text" id="event" name="event" required>
+                </div>
+                <div class="form-group">
+                    <label for="event_type">Event Type:</label>
+                    <select name="event_type" id="event_type">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event_emp">Employee:</label>
+                    
+                    <select name="event_emp" id="event_emp">
+                        {% for employee in employees %}
+                        <option value="{{ employee.cin }}">{{ employee.last_name }} {{ employee.first_name }}</option>
+                        {% endfor %}
+                    </select>
+                   
+                </div>
+                
+                <div class="box">
+                    <button class="button" type="submit">Add Event</button>
+                </div>
+            </form>#}
+
+			{# Transform the form into a bootstrap form with bootstrap validation #}
+			<form class="row g-3 needs-validation" id="add-event-form" method="POST" novalidate>
+				<div class="col-md-4 form-group">
+					<label for="day" class="form-label text-white">Day</label>
+					<select name="day" id="day" class="form-select" required>
+						<option value="" selected disabled hidden>Select a day</option>
+						{% for day in days %}
+						<option value="{{ day }}">{{ day }}</option>
+						{% endfor %}
+					</select>
+					<div class="valid-feedback">
+						Looks good!
+					</div>
+					<div class="invalid-feedback">
+						Please select a day.
+					</div>
+				</div>
+				<div class="col-md-4 form-group">
+					<label for="start_hour" class="form-label text-white">Start Hour</label>
+					<select name="start_hour" id="start_hour" class="form-select" required>
+						<option value="" selected disabled hidden>Select a start hour</option>
+						{% for hour in hours %}
+						<option value="{{ hour }}">{{ hour }}</option>
+						{% endfor %}
+					</select>
+					<div class="valid-feedback">
+						Looks good!
+					</div>
+					<div class="invalid-feedback">
+						Please select a start hour.
+					</div>
+				</div>
+				<div class="col-md-4 form-group">
+					<label for="end_hour" class="form-label text-white">End Hour</label>
+					<select name="end_hour" id="end_hour" class="form-select" required>
+						<option value="" selected disabled hidden>Select an end hour</option>
+						{% for hour in hours %}
+						<option value="{{ hour }}">{{ hour }}</option>
+						{% endfor %}
+					</select>
+					<div class="valid-feedback">
+						Looks good!
+					</div>
+					<div class="invalid-feedback">
+						Please select an end hour.
+					</div>
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="event" class="form-label text-white">Event</label>
+					<input type="text" name="event" id="event" class="form-control" required>
+					<div class="valid-feedback">
+						Looks good!
+					</div>
+					<div class="invalid-feedback">
+						Please enter an event.
+					</div>
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="event_type" class="form-label text-white">Event Type</label>
+					<select name="event_type" id="event_type" class="form-select" required>
+						<option value="" selected disabled hidden>Select an event type</option>
+						<option value="A">A</option>
+						<option value="B">B</option>
+						<option value="C">C</option>
+					</select>
+					<div class="valid-feedback">
+						Looks good!
+					</div>
+					<div class="invalid-feedback">
+						Please select an event type.
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<label for="event_emp" class="form-label text-white">Employee</label>
+					<select name="event_emp" id="event_emp" class="form-select" required>
+						<option value="" selected disabled hidden>Select an employee</option>
+						{% for employee in employees %}
+						<option value="{{ employee.cin }}">{{ employee.last_name }} {{ employee.first_name }}</option>
+						{% endfor %}
+					</select>
+					<div class="valid-feedback">
+						Looks good!
+					</div>
+					<div class="invalid-feedback">
+						Please select an employee.
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<button class="btn btn-primary" type="submit">Add Event</button>
+				</div>
+			</form>
+        </div>
+    </div>
+</div>
+{% endblock %}

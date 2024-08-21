@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OCP Workflow</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+</head>
+
+<body>
+	<div class="window-controls">
+		<span id="minimize-btn"></span>
+		<span id="maximize-btn"></span>
+		<span id="close-btn"></span>
+	</div>
+
+	<div id="sign-in-page" class="wrapper">
+		<div class="container-fluid">
+			<div class="row">
+				<div id="logo-container" class="col col-sm-4 col-md-5 d-flex justify-content-center align-items-center">
+					<img src="{{ url_for('static', filename='images/ocp-logo-white.png') }}" alt="OCP Group Logo" class="img-fluid">
+				</div>
+
+				<div class="col col-sm-8 col-md-7 d-flex justify-content-center align-items-center">
+					<div
+						class="container w-75 d-flex flex-column justify-content-center align-items-center text-center gap-2">
+						<h1 class='text-center fw-bold'>Sign in</h1>
+						<p class='text-center mb-2'>
+							Welcome to OCP Group!<br />
+							Please enter your credentials to get access to employee details.
+						</p>
+
+						<div class='line'></div>
+
+						<form action="" class="d-flex flex-column gap-2 w-100 mt-2"
+							method="POST" id="sign-in-form">
+							<div class="form-group mb-2">
+								<label for="reg-num">Employee Number</label>
+								<input type="text" class="form-control text-field" id="reg-num" name="reg_num"
+									placeholder="Enter your registration number" required>
+							</div>
+							<div class="form-group mb-2">
+								<label for="password">Password</label>
+								<div class="input-group">
+									<input type="password" class="form-control text-field" id="password" name="password"
+										placeholder="Enter your password" required>
+									<button class="btn g-border-radius position-absolute end-0" type="button"
+										id="show-password-btn">
+										<i class="bi bi-eye-slash"></i>
+										<i class="bi bi-eye-slash-fill"></i>
+										<i class="bi bi-eye-fill"></i>
+									</button>
+								</div>
+							</div>
+							<div class="d-flex justify-content-between align-items-center gap-2">
+								<div class="form-group form-check d-flex align-items-start gap-2">
+									<input type="checkbox" class="form-check-input fully-rounded" id="remember-me"
+										name="remember_me">
+									<label class="form-check-label" for="remember-me" data-bs-toggle="tooltip"
+										data-bs-placement="top" data-bs-custom-class="tooltip"
+										data-bs-title="If checked, your session will be remembered for a week."
+										title="If checked, your session will be remembered for a week.">Remember
+										me</label>
+								</div>
+								<a href="#" class="text-decoration-none">Forgot password?</a>
+							</div>
+							<input type="submit" class="btn btn-primary g-border-radius" value="Sign in">
+						</form>
+
+						<div class='separator-or w-100 d-flex align-items-center justify-content-center gap-2'>
+							<div class='line'></div>
+							<span>or</span>
+							<div class='line'></div>
+						</div>
+
+						<button id="face-id-btn" type="button"
+							class="btn btn-primary fully-rounded d-flex align-items-center gap-2">
+							<i class="bi bi-camera-fill"></i>
+							<span>Sign in with Face ID</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/window_controls.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/forms.js') }}"></script>
+</body>
+
+</html>
